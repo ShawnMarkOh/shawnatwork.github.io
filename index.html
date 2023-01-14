@@ -51,11 +51,22 @@
                     <div class="col-lg-8">
 						<h1>
 							<div class="greeting"></div>
-								<script>
-    const gettingHours = new Date().getHours()
-    const actualHours = (gettingHours >= 10 && gettingHours < 18) ? 'Open' :
-'Closed';
-    document.querySelector('.closeOrOpened').innerHTML = actualHours;
+								<h2 class="text-white mb-4">Shawn's Local Time Is Currently <span id="span"></span> </h2>
+
+<script>
+var span = document.getElementById('span');
+
+function time() {
+  var d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}))
+  var s = d.getSeconds();
+  var m = d.getMinutes();
+  var h = d.getHours();
+  
+  span.textContent = 
+    ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
+}
+
+setInterval(time, 1000);
 </script>
 
                         <h2 class="text-white mb-4">Shawn Currently Works NIGHT SHIFT</h2>
