@@ -68,7 +68,15 @@ function time() {
 
 setInterval(time, 10);
 </script>
+<h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
 
+<script>
+const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+const d = new Date();
+let day = weekday[d.getDay()];
+document.getElementById("Day").innerHTML = day;
+</script>
                         <h2 class="text-white mb-4">Shawn Currently Works NIGHT SHIFT</h2>
                         <p class="text-white-50">
                             This means he is asleep for most of the day and working most of the night.
