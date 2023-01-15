@@ -20,9 +20,9 @@ setInterval(time, 100);
 <h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
 
 <script>
-const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
+var d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
 var day = weekday[d.getDay()];
 document.getElementById("Day").innerHTML = day;
 setInterval(day, 100);
