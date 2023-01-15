@@ -16,7 +16,7 @@ function time() {
 setInterval(time, 100);
 </script>
 
-<h2 class="text-white mb-4">Shawn's Local DAY Is Currently <span id="DY"></span> EST </h2>
+<h2 class="text-white mb-4">Shawn's Local DAY Is Currently <span id="DY"></span> </h2>
 
 <script>
 var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
@@ -25,7 +25,7 @@ var day = weekday[d.getDay()];
 function workday() {
   var d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}))
   
-  DY.textContent = 
+  document.getElementById("DY").innerHTML = day;
     (d);
 }
 
