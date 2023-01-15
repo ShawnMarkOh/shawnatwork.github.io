@@ -78,7 +78,7 @@ setInterval(time, 100);
 <script>
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-const d = new Date();
+const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
 let day = weekday[d.getDay()];
 document.getElementById("Day").innerHTML = day;
 </script>
