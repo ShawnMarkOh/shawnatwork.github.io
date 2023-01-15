@@ -25,5 +25,5 @@ const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Sa
 const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
 var day = weekday[d.getDay()];
 document.getElementById("Day").innerHTML = day;
-setInterval(weekday, 100);
+setInterval(day, 100);
 </script>
