@@ -16,7 +16,7 @@ function time() {
 setInterval(time, 100);
 </script>
 
-<h2 class="text-white mb-4">Shawn's Local Time Is Currently <span id="day"></span> EST </h2>
+<h2 class="text-white mb-4">Shawn's Local day is <span id="day"></span> </h2>
 
 <script>
 var span = document.getElementById('day');
@@ -25,13 +25,11 @@ function dow() {
   var d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}))
   var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
   var day = weekday[d.getDay()];
-document.getElementById("Day").innerHTML = day;
-setInterval(day, 100);
-  span.textContent = 
-    ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
-}
 
-setInterval(time, 100);
+  span.textContent = 
+    document.getElementById("Day").innerHTML = day;
+setInterval(day, 100);
+
 </script>
 
 <h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
