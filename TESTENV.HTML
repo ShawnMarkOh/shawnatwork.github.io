@@ -16,19 +16,20 @@ function time() {
 setInterval(time, 100);
 </script>
 
-<h2 class="text-white mb-4">Shawn's Local day is <span id="day"></span> </h2>
+<h2 class="text-white mb-4">Shawn's Local DAY Is Currently <span id="DY"></span> EST </h2>
 
 <script>
-var span = document.getElementById('day');
-
-function dow() {
+var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+var day = weekday[d.getDay()];
+  
+function workday() {
   var d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}))
-  var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  var day = weekday[d.getDay()];
-
-  span.textContent = 
+  
+  DY.textContent = 
     (d);
-setInterval(dow, 100);
+}
+
+setInterval(workday, 100);
 </script>
 
 <h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
