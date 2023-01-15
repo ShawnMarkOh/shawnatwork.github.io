@@ -1,1 +1,29 @@
+<h2 class="text-white mb-4">Shawn's Local Time Is Currently <span id="span"></span> EST </h2>
 
+<script>
+var span = document.getElementById('span');
+
+function time() {
+  var d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}))
+  var s = d.getSeconds();
+  var m = d.getMinutes();
+  var h = d.getHours();
+  
+  span.textContent = 
+    ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
+}
+
+setInterval(time, 100);
+</script>
+
+
+<h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
+
+<script>
+const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
+var day = weekday[d.getDay()];
+document.getElementById("Day").innerHTML = day;
+setInterval(weekday, 100);
+</script>
