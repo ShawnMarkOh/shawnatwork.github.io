@@ -1,51 +1,62 @@
-function generateMountain() {
-  var mountain = [];
-  for (var i = 0; i < 100; i++) {
-    var height = Math.random() * 100;
-    var width = Math.random() * 100;
-    mountain.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      height: height,
-      width: width
-    });
-  }
-  return mountain;
+<!DOCTYPE html>
+<html>
+<head>
+<title>Smile Emoji Platformer</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.12.0/p5.min.js"></script>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400"></canvas>
+<script>
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+var mountain = new Array();
+for (var i = 0; i < 100; i++) {
+  mountain[i] = {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    width: Math.random() * 100,
+    height: Math.random() * 100
+  };
 }
+
+var emoji = {
+  x: 0,
+  y: 0,
+  width: 50,
+  height: 50
+};
 
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   for (var i = 0; i < mountain.length; i++) {
-    var color = "black";
-    if (mountain[i].height > 50) {
-      color = "green";
-    } else if (mountain[i].height > 25) {
-      color = "yellow";
-    }
-    ctx.fillStyle = color;
+    ctx.fillStyle = "black";
     ctx.fillRect(mountain[i].x, mountain[i].y, mountain[i].width, mountain[i].height);
   }
 
-  ctx.fillStyle = "white";
-  ctx.fillRect(smile.x, smile.y, smile.width, smile.height);
+  ctx.fillStyle = "yellow";
+  ctx.fillRect(emoji.x, emoji.y, emoji.width, emoji.height);
 }
 
 window.addEventListener("keydown", function(event) {
   switch (event.keyCode) {
     case 38: // up arrow
-      smile.y -= 10;
+      emoji.y -= 10;
       break;
     case 40: // down arrow
-      smile.y += 10;
+      emoji.y += 10;
       break;
     case 37: // left arrow
-      smile.x -= 10;
+      emoji.x -= 10;
       break;
     case 39: // right arrow
-      smile.x += 10;
+      emoji.x += 10;
       break;
   }
 });
 
 setInterval(draw, 20);
+</script>
+</body>
+</html>
