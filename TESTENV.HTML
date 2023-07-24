@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Time-Sensitive Message</title>
+  <title>Shawn's Work Status</title>
 </head>
 <body>
-  <h1>Time-Sensitive Message</h1>
-  <p>This message will only be displayed on Tuesdays and Wednesdays between 10:00 AM and 11:00 AM Eastern Standard Time.</p>
+  <h1>Shawn's Work Status</h1>
+  <p id="status"></p>
   <script>
-    function isTimeSensitive() {
+    function isShawnAtWork() {
       const now = new Date();
       const dayOfWeek = now.getDay();
       const hour = now.getHours();
       const minute = now.getMinutes();
 
-      return dayOfWeek === 1 || dayOfWeek === 2 && hour >= 10 && hour <= 20;
+      return dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 && hour >= 13 && hour <= 23;
     }
 
-    if (isTimeSensitive()) {
-      document.querySelector("p").innerHTML = "This is a time-sensitive message.";
-    }
+    const status = isShawnAtWork() ? "Shawn is Currently At Work" : "Shawn is Not Currently At Work";
+    document.querySelector("#status").innerHTML = status;
   </script>
 </body>
 </html>
