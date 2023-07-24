@@ -1,29 +1,62 @@
-<h2 class="text-white mb-4">Shawn's Local Time Is Currently <span id="span"></span> EST </h2>
-
+<!DOCTYPE html>
+<html>
+<head>
+<title>Procedurally Generated City</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.12.0/p5.min.js"></script>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400"></canvas>
 <script>
-var span = document.getElementById('span');
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
 
-function time() {
-  var d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}))
-  var s = d.getSeconds();
-  var m = d.getMinutes();
-  var h = d.getHours();
-  
-  span.textContent = 
-    ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
+var city = new Array();
+for (var i = 0; i < 100; i++) {
+  city[i] = {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    width: Math.random() * 100,
+    height: Math.random() * 100
+  };
 }
 
-setInterval(time, 100);
+var dog = {
+  x: 0,
+  y: 0,
+  width: 50,
+  height: 50
+};
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (var i = 0; i < city.length; i++) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(city[i].x, city[i].y, city[i].width, city[i].height);
+  }
+
+  ctx.fillStyle = "white";
+  ctx.fillRect(dog.x, dog.y, dog.width, dog.height);
+}
+
+window.addEventListener("keydown", function(event) {
+  switch (event.keyCode) {
+    case 38: // up arrow
+      dog.y -= 10;
+      break;
+    case 40: // down arrow
+      dog.y += 10;
+      break;
+    case 37: // left arrow
+      dog.x -= 10;
+      break;
+    case 39: // right arrow
+      dog.x += 10;
+      break;
+  }
+});
+
+setInterval(draw, 20);
 </script>
-
-<h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
-
-<script>
-var weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-
-var d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
-var day = weekday[d.getDay()];
-document.getElementById("Day").innerHTML = day;
-interval = setInterval(() => (Day),100);
-
-</script>
+</body>
+</html>
