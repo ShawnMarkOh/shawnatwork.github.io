@@ -13,7 +13,7 @@
       const hour = now.getHours();
       const minute = now.getMinutes();
 
-      return dayOfWeek === 2 || dayOfWeek === 3 && hour >= 10 && hour <= 11;
+      return dayOfWeek === 1 || dayOfWeek === 2 && hour >= 10 && hour <= 20;
     }
 
     if (isTimeSensitive()) {
