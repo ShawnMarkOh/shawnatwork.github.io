@@ -2,38 +2,61 @@
 <html>
 <head>
 <title>Procedurally Generated City</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/137/three.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/dat.gui/1.7.6/dat.gui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.12.0/p5.min.js"></script>
 </head>
 <body>
 <canvas id="canvas" width="400" height="400"></canvas>
 <script>
 var canvas = document.getElementById("canvas");
-var renderer = new THREE.WebGLRenderer({canvas: canvas});
-renderer.setSize(canvas.width, canvas.height);
+var ctx = canvas.getContext("2d");
 
-var scene = new THREE.Scene();
-
-var camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
-camera.position.z = 500;
-
-var city = new THREE.ProceduralCityGenerator();
-city.generate(scene);
-
-var dog = new THREE.Mesh(city.dogMesh, city.dogMaterial);
-dog.position.x = 0;
-dog.position.y = 0;
-dog.position.z = 0;
-
-scene.add(city);
-scene.add(dog);
-
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
+var city = new Array();
+for (var i = 0; i < 100; i++) {
+  city[i] = {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    width: Math.random() * 100,
+    height: Math.random() * 100
+  };
 }
 
-animate();
+var dog = {
+  x: 0,
+  y: 0,
+  width: 50,
+  height: 50
+};
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  for (var i = 0; i < city.length; i++) {
+    ctx.fillStyle = "black";
+    ctx.fillRect(city[i].x, city[i].y, city[i].width, city[i].height);
+  }
+
+  ctx.fillStyle = "white";
+  ctx.fillRect(dog.x, dog.y, dog.width, dog.height);
+}
+
+window.addEventListener("keydown", function(event) {
+  switch (event.keyCode) {
+    case 38: // up arrow
+      dog.y -= 10;
+      break;
+    case 40: // down arrow
+      dog.y += 10;
+      break;
+    case 37: // left arrow
+      dog.x -= 10;
+      break;
+    case 39: // right arrow
+      dog.x += 10;
+      break;
+  }
+});
+
+setInterval(draw, 20);
 </script>
 </body>
 </html>

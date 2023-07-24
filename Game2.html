@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Procedurally Generated City</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/137/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dat.gui/1.7.6/dat.gui.min.js"></script>
+</head>
+<body>
+<canvas id="canvas" width="400" height="400"></canvas>
+<script>
+var canvas = document.getElementById("canvas");
+var renderer = new THREE.WebGLRenderer({canvas: canvas});
+renderer.setSize(canvas.width, canvas.height);
+
+var scene = new THREE.Scene();
+
+var camera = new THREE.PerspectiveCamera(75, canvas.width / canvas.height, 0.1, 1000);
+camera.position.z = 500;
+
+var city = new THREE.ProceduralCityGenerator();
+city.generate(scene);
+
+var dog = new THREE.Mesh(city.dogMesh, city.dogMaterial);
+dog.position.x = 0;
+dog.position.y = 0;
+dog.position.z = 0;
+
+scene.add(city);
+scene.add(dog);
+
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+
+animate();
+</script>
+</body>
+</html>
