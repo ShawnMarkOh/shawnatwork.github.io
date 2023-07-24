@@ -13,7 +13,7 @@
       const hour = now.getHours();
       const minute = now.getMinutes();
 
-      return dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 && hour >= 13.75 && hour <= 23.75;
+      return dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 && hour >= 13 && hour <= 24;
     }
 
     const status = isShawnAtWork() ? "Shawn is Currently At Work" : "Shawn is Not Currently At Work";
