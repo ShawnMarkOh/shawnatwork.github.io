@@ -1,66 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>High Card</title>
-<link rel="stylesheet" href="style.css">
+  <title>Bouncing Ball</title>
 </head>
 <body>
-<div id="game">
-<h1>High Card</h1>
-<div id="player1">
-<h2>Player 1</h2>
-<img src="card-back.png" alt="Player 1's card">
-</div>
-<div id="player2">
-<h2>Player 2</h2>
-<img src="card-back.png" alt="Player 2's card">
-</div>
-<div id="winner">
-<h2>Winner</h2>
-</div>
-</div>
-<script src="script.js"></script>
+  <canvas id="canvas" width="500" height="500"></canvas>
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    const ball = {
+      x: 250,
+      y: 250,
+      radius: 50,
+      velocityX: 10,
+      velocityY: 10,
+    };
+
+    function drawBall() {
+      ctx.fillStyle = "red";
+      ctx.beginPath();
+      ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+
+    function updateBall() {
+      ball.x += ball.velocityX;
+      ball.y += ball.velocityY;
+
+      if (ball.x < 0 || ball.x > canvas.width) {
+        ball.velocityX *= -1;
+      }
+
+      if (ball.y < 0 || ball.y > canvas.height) {
+        ball.velocityY *= -1;
+      }
+    }
+
+    setInterval(updateBall, 100);
+    drawBall();
+  </script>
 </body>
 </html>
-// This function deals a random card from the deck.
-function dealCard() {
-  var card = Math.floor(Math.random() * 52) + 1;
-  return card;
-}
-
-// This function gets the image URL for a card.
-function getCardImage(card) {
-  var suit = card % 13;
-  var value = Math.floor(card / 13) + 1;
-  var imageUrl = "card-" + suit + "-" + value + ".png";
-  return imageUrl;
-}
-
-// This function updates the UI with the new cards.
-function updateUI(player1Card, player2Card) {
-  document.getElementById("player1").innerHTML = "<img src='" + getCardImage(player1Card) + "' alt='Player 1's card'>";
-  document.getElementById("player2").innerHTML = "<img src='" + getCardImage(player2Card) + "' alt='Player 2's card'>";
-}
-
-// This function determines the winner of the round.
-function getWinner(player1Card, player2Card) {
-  if (player1Card > player2Card) {
-    return "Player 1";
-  } else if (player1Card < player2Card) {
-    return "Player 2";
-  } else {
-    return "Tie";
-  }
-}
-
-// This function runs the game.
-function runGame() {
-  var player1Card = dealCard();
-  var player2Card = dealCard();
-  updateUI(player1Card, player2Card);
-  var winner = getWinner(player1Card, player2Card);
-  document.getElementById("winner").innerHTML = winner;
-}
-
-// This function is called when the page loads.
-window.onload = runGame;
