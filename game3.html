@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Smile Emoji Platformer</title>
+<title>Castle Defense</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.12.0/p5.min.js"></script>
 </head>
 <body>
@@ -10,9 +10,9 @@
 var canvas = document.getElementById("canvas");
 var ctx = canvas.getContext("2d");
 
-var mountain = new Array();
-for (var i = 0; i < 100; i++) {
-  mountain[i] = {
+var world = new Array();
+for (var i = 0; i < 100000; i++) {
+  world[i] = {
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
     width: Math.random() * 100,
@@ -20,38 +20,64 @@ for (var i = 0; i < 100; i++) {
   };
 }
 
-var emoji = {
+var player = {
   x: 0,
   y: 0,
   width: 50,
   height: 50
 };
 
+var weapons = [
+  {
+    name: "Sword",
+    image: "sword.png",
+    damage: 10
+  },
+  {
+    name: "Bow and Arrow",
+    image: "bow_and_arrow.png",
+    damage: 15
+  },
+  {
+    name: "Magic Missile",
+    image: "magic_missile.png",
+    damage: 20
+  }
+];
+
+var currentWeapon = weapons[0];
+
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  for (var i = 0; i < mountain.length; i++) {
+  for (var i = 0; i < world.length; i++) {
     ctx.fillStyle = "black";
-    ctx.fillRect(mountain[i].x, mountain[i].y, mountain[i].width, mountain[i].height);
+    ctx.fillRect(world[i].x, world[i].y, world[i].width, world[i].height);
   }
 
   ctx.fillStyle = "yellow";
-  ctx.fillRect(emoji.x, emoji.y, emoji.width, emoji.height);
+  ctx.fillRect(player.x, player.y, player.width, player.height);
+
+  ctx.drawImage(currentWeapon.image, player.x, player.y);
 }
 
 window.addEventListener("keydown", function(event) {
   switch (event.keyCode) {
     case 38: // up arrow
-      emoji.y -= 10;
+      player.y -= 10;
       break;
     case 40: // down arrow
-      emoji.y += 10;
+      player.y += 10;
       break;
     case 37: // left arrow
-      emoji.x -= 10;
+      player.x -= 10;
       break;
     case 39: // right arrow
-      emoji.x += 10;
+      player.x += 10;
+      break;
+
+    case 32: // spacebar
+      currentWeapon = weapons[Math.floor(Math.random() * weapons.length)];
       break;
   }
 });
