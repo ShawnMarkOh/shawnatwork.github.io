@@ -519,7 +519,7 @@
   {"iataCode": "TZN", "name": "South Andros Airport", "city": "Congo Town",  "island": "Andros", "timeZone": "America/Nassau"},
   ];
 
-  const airportIntervals = {};
+ const airportIntervals = {};
 
   function updateAirportTime(foundAirport) {
     const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
@@ -537,10 +537,6 @@
       if (foundAirport.city) {
         locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
       }
-      if (foundAirport.state) {
-        locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
-      }
-      }
       if (foundAirport.province) {
         locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
       }
@@ -554,7 +550,7 @@
 
       airportIntervals[foundAirport.iataCode] = setInterval(() => {
         updateAirportTime(foundAirport);
-      }, 500); // Set the interval to 1 second (1000 milliseconds)
+      }, 500); // Set the interval to .5 second (500 milliseconds)
     } else {
       searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
 
@@ -568,7 +564,7 @@
 
   document.getElementById("search-input").addEventListener("keyup", searchAirport);
 </script>
-
+  
   <div id="footer">
     <b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please teams me!</b>
   </div>
