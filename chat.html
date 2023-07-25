@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Chat</title>
+</head>
+<body>
+<h1>Chat</h1>
+<ul>
+<?php
+$chat_history = file_get_contents('chat_history.txt');
+$lines = explode("\n", $chat_history);
+foreach ($lines as $line) {
+  echo '<li>' . $line . '</li>';
+}
+?>
+</ul>
+<form action="chat.php" method="post">
+<input type="text" name="message" placeholder="Enter your message here">
+<input type="submit" value="Send">
+</form>
+</body>
+</html>
