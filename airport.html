@@ -6,6 +6,7 @@
   <title>Airport Time Zone Search</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/luxon/2.0.0/luxon.min.js"></script>
   <style>
     body {
       background-color: #f0f0f0;
@@ -205,21 +206,23 @@
     ];
 
     function searchAirport() {
-      const searchInput = document.getElementById("search-input").value.toUpperCase();
-      const searchResultsDiv = document.getElementById("search-results");
-      searchResultsDiv.innerHTML = "";
+    const searchInput = document.getElementById("search-input").value.toUpperCase();
+    const searchResultsDiv = document.getElementById("search-results");
+    searchResultsDiv.innerHTML = "";
 
-      const foundAirport = airports.find((airport) => airport.iataCode === searchInput);
-      if (foundAirport) {
-        const currentTime = moment().tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-        const airportInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p><p><strong>Time Zone:</strong> ${currentTime}</p>`;
-        searchResultsDiv.innerHTML = airportInfo;
-      } else {
-        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
-      }
+    const foundAirport = airports.find((airport) => airport.iataCode === searchInput);
+    if (foundAirport) {
+      const now = luxon.DateTime.utc();
+      const airportTime = now.setZone(foundAirport.timeZone);
+      const currentTime = airportTime.toFormat("yyyy-MM-dd HH:mm:ss ZZZZ");
+      const airportInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p><p><strong>Time Zone:</strong> ${currentTime}</p>`;
+      searchResultsDiv.innerHTML = airportInfo;
+    } else {
+      searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
     }
+  }
 
-    document.getElementById("search-input").addEventListener("keyup", searchAirport);
+  document.getElementById("search-input").addEventListener("keyup", searchAirport);
   </script>
 </body>
 </html>
