@@ -14,12 +14,18 @@
     p {
       margin: 10px auto;
     }
+    .output {
+      width: 400px;
+      margin: 10px auto;
+      background-color: white;
+    }
   </style>
 </head>
 <body>
   <h1>Airport Time Zone</h1>
   <input type="text" id="iataCode" placeholder="Enter an IATA airport code" style="background-color: white;">
   <p id="timezone" style="background-color: white;"></p>
+  <div class="output"></div>
   <script>
     function getAirportTimeZone() {
       const iataCode = document.querySelector("#iataCode").value;
@@ -33,6 +39,13 @@
           const minute = time.getMinutes();
           const formattedTime = `${hour}:${minute}`;
           document.querySelector("#timezone").innerHTML = `${timezone} (${formattedTime})`;
+
+          const output = document.querySelector(".output");
+          output.innerHTML = `
+            <p>Airport Code: ${iataCode}</p>
+            <p>Timezone: ${timezone}</p>
+            <p>Local Time: ${formattedTime}</p>
+          `;
         });
     }
 
