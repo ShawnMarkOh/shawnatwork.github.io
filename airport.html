@@ -532,41 +532,45 @@
     searchResultsDiv.innerHTML = "";
 
     const foundAirport = airports.find((airport) => airport.iataCode === searchInput);
-    if (foundAirport) {
-      let locationInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
-      if (foundAirport.city) {
-        locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
-      }
-      if (foundAirport.province) {
-        locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
-      }
-      if (foundAirport.state) {
+     if (foundAirport) {
+        const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+        let locationInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
+        if (foundAirport.city) {
+          locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
+        }
+        if (foundAirport.state) {
           locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
         }
-      if (foundAirport.island) {
-        locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
-      }
-      locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}"></span></p>`;
-      searchResultsDiv.innerHTML = locationInfo;
+        if (foundAirport.province) {
+          locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
+        }
+        if (foundAirport.island) {
+          locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
+        }
+        locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
+        searchResultsDiv.innerHTML = locationInfo;
 
-      clearInterval(airportIntervals[foundAirport.iataCode]);
+        clearInterval(airportIntervals[foundAirport.iataCode]);
 
-      airportIntervals[foundAirport.iataCode] = setInterval(() => {
+        // Display the initial time immediately
         updateAirportTime(foundAirport);
-      }, 100); // Set the interval to .5 second (500 milliseconds)
-    } else {
-      searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
 
-      if (Object.keys(airportIntervals).length > 0) {
-        // Clear all intervals when no airport is found
-        Object.values(airportIntervals).forEach(interval => clearInterval(interval));
-        airportIntervals = {};
+        // Update the time every 1 second (1000 milliseconds)
+        airportIntervals[foundAirport.iataCode] = setInterval(() => {
+          updateAirportTime(foundAirport);
+        }, 1000);
+      } else {
+        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
+
+        // Clear the interval for the current airport
+        if (airportIntervals[foundAirport.iataCode]) {
+          clearInterval(airportIntervals[foundAirport.iataCode]);
+        }
       }
     }
-  }
 
-  document.getElementById("search-input").addEventListener("keyup", searchAirport);
-</script>
+    document.getElementById("search-input").addEventListener("keyup", searchAirport);
+  </script>
   
   <div id="footer">
     <b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please teams me!</b>
