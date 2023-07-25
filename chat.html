@@ -2,21 +2,56 @@
 <html>
 <head>
 <title>Chat</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function() {
+  // Create a new div to hold the chat messages.
+  var chat = $('<div id="chat"></div>');
+  // Add the chat div to the body of the document.
+  $('body').append(chat);
+
+  // Create a function to add a new chat message.
+  function addMessage(message) {
+    // Create a new div to hold the message.
+    var messageDiv = $('<div class="message"></div>');
+    // Add the message to the div.
+    messageDiv.text(message);
+    // Add the div to the chat div.
+    chat.append(messageDiv);
+  }
+
+  // Create a function to get the latest chat messages from the server.
+  function getMessages() {
+    // Make an AJAX request to the server.
+    $.ajax({
+      url: '/messages',
+      success: function(data) {
+        // Add the messages to the chat div.
+        for (var i = 0; i < data.length; i++) {
+          addMessage(data[i]);
+        }
+      }
+    });
+  }
+
+  // SetInterval to get the latest chat messages every second.
+  setInterval(getMessages, 1000);
+
+  // Add a click event listener to the send button.
+  $('#send').click(function() {
+    // Get the message from the input field.
+    var message = $('#message').val();
+    // Add the message to the chat div.
+    addMessage(message);
+    // Clear the input field.
+    $('#message').val('');
+  });
+});
+</script>
 </head>
 <body>
 <h1>Chat</h1>
-<ul>
-<?php
-$chat_history = file_get_contents('chat_history.txt');
-$lines = explode("\n", $chat_history);
-foreach ($lines as $line) {
-  echo '<li>' . $line . '</li>';
-}
-?>
-</ul>
-<form action="chat.php" method="post">
-<input type="text" name="message" placeholder="Enter your message here">
-<input type="submit" value="Send">
-</form>
+<input type="text" id="message" placeholder="Enter your message here">
+<input type="submit" id="send" value="Send">
 </body>
 </html>
