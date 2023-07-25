@@ -33,8 +33,75 @@ const codes = [
   "DFW",
   "MIA",
   "SEA",
-  "PHX"
+  "PHX",
+  "ANC",
+  "BWI",
+  "CLT",
+  "DEN",
+  "EWR",
+  "FLL",
+  "IAH",
+  "MCO",
+  "MSP",
+  "PHL",
+  "SAN",
+  "TPA",
+  "AUS",
+  "BHM",
+  "BNA",
+  "BUF",
+  "CHS",
+  "CLT",
+  "COS",
+  "DAL",
+  "DSM",
+  "EWR",
+  "FLL",
+  "GEG",
+  "HOU",
+  "IAD",
+  "IND",
+  "ISP",
+  "JAX",
+  "LAS",
+  "LGA",
+  "MCI",
+  "MCO",
+  "MDW",
+  "MSP",
+  "MSY",
+  "OAK",
+  "ONT",
+  "PHX",
+  "PIT",
+  "RDU",
+  "SAN",
+  "SAV",
+  "SDF",
+  "SEA",
+  "SFO",
+  "SJC",
+  "SNA",
+  "STL",
+  "TPA",
+  "TUL",
+  "TUS",
+  "YVR"
 ];
+
+// Get the time zone for the detected IATA code.
+const getTimeZone = (code) => {
+  // Get the airport name for the code.
+  const airportName = codes.find(code => code === code);
+
+  // Get the time zone for the airport.
+  const tz = new Date(airportName).getTimezoneOffset();
+
+  // Convert the time zone offset to a human-readable string.
+  const tzStr = tz > 0 ? `UTC+${tz}` : `UTC-${Math.abs(tz)}`;
+
+  return tzStr;
+};
 
 // Listen for changes to the search input.
 const searchInput = document.getElementById("search");
@@ -44,9 +111,9 @@ searchInput.addEventListener("input", () => {
 
   // Check if the code is a valid IATA code.
   if (code.length === 3 && codes.includes(code)) {
-    // Display the airport name for the code.
-    const airportName = codes.find(code => code === code);
-    document.querySelector(".output").innerHTML = airportName;
+    // Display the airport name and time zone for the code.
+    const tzStr = getTimeZone(code);
+    document.querySelector(".output").innerHTML = `${airportName} (${tzStr})`;
   } else {
     // Clear the output.
     document.querySelector(".output").innerHTML = "";
