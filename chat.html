@@ -72,6 +72,15 @@ $(document).ready(function() {
     addMessage(message, username);
     // Clear the input field.
     $('#message').val('');
+
+    // Send the message to the server.
+    $.ajax({
+      url: '/message',
+      data: {
+        message: message,
+        username: username
+      }
+    });
   });
 });
 </script>
