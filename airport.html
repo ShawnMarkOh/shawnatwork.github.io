@@ -60,8 +60,1175 @@
 <script>
   // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
   const airports = [
-    { "iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York" },
-    // Add more airport data here if needed
+    {
+  "iataCode": "ABE",
+  "name": "Lehigh Valley International Airport",
+  "city": "Allentown",
+  "state": "Pennsylvania",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "ABQ",
+  "name": "Albuquerque International Sunport",
+  "city": "Albuquerque",
+  "state": "New Mexico",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "BFL",
+  "name": "Meadows Field Airport",
+  "city": "Bakersfield",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "BTR",
+  "name": "Baton Rouge Metropolitan Airport",
+  "city": "Baton Rouge",
+  "state": "Louisiana",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "ECP",
+  "name": "Northwest Florida Beaches International Airport",
+  "city": "Panama City Beach",
+  "state": "Florida",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "ACY",
+  "name": "Atlantic City International Airport",
+  "city": "Atlantic City",
+  "state": "New Jersey",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "ANC",
+  "name": "Ted Stevens Anchorage International Airport",
+  "city": "Anchorage",
+  "state": "Alaska",
+  "timeZone": "America/Anchorage"
+},
+{
+  "iataCode": "ATL",
+  "name": "Hartsfield-Jackson Atlanta International Airport",
+  "city": "Atlanta",
+  "state": "Georgia",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "AUS",
+  "name": "Austin-Bergstrom International Airport",
+  "city": "Austin",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "AVL",
+  "name": "Asheville Regional Airport",
+  "city": "Asheville",
+  "state": "North Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "BDL",
+  "name": "Bradley International Airport",
+  "city": "Windsor Locks",
+  "state": "Connecticut",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "BGR",
+  "name": "Bangor International Airport",
+  "city": "Bangor",
+  "state": "Maine",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "BHM",
+  "name": "Birmingham-Shuttlesworth International Airport",
+  "city": "Birmingham",
+  "state": "Alabama",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "BIS",
+  "name": "Bismarck Airport",
+  "city": "Bismarck",
+  "state": "North Dakota",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "BLI",
+  "name": "Bellingham International Airport",
+  "city": "Bellingham",
+  "state": "Washington",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "BMI",
+  "name": "Central Illinois Regional Airport",
+  "city": "Bloomington",
+  "state": "Illinois",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "BNA",
+  "name": "Nashville International Airport",
+  "city": "Nashville",
+  "state": "Tennessee",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "BOI",
+  "name": "Boise Airport",
+  "city": "Boise",
+  "state": "Idaho",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "BOS",
+  "name": "Boston Logan International Airport",
+  "city": "Boston",
+  "state": "Massachusetts",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "BTV",
+  "name": "Burlington International Airport",
+  "city": "Burlington",
+  "state": "Vermont",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "BUF",
+  "name": "Buffalo Niagara International Airport",
+  "city": "Buffalo",
+  "state": "New York",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "BWI",
+  "name": "Baltimore/Washington International Thurgood Marshall Airport",
+  "city": "Baltimore",
+  "state": "Maryland",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "CAE",
+  "name": "Columbia Metropolitan Airport",
+  "city": "Columbia",
+  "state": "South Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "CHA",
+  "name": "Chattanooga Metropolitan Airport",
+  "city": "Chattanooga",
+  "state": "Tennessee",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "CHO",
+  "name": "Charlottesville Albemarle Airport",
+  "city": "Charlottesville",
+  "state": "Virginia",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "CHS",
+  "name": "Charleston International Airport",
+  "city": "Charleston",
+  "state": "South Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "CID",
+  "name": "The Eastern Iowa Airport",
+  "city": "Cedar Rapids",
+  "state": "Iowa",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "CLE",
+  "name": "Cleveland Hopkins International Airport",
+  "city": "Cleveland",
+  "state": "Ohio",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "CLT",
+  "name": "Charlotte Douglas International Airport",
+  "city": "Charlotte",
+  "state": "North Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "CMH",
+  "name": "John Glenn Columbus International Airport",
+  "city": "Columbus",
+  "state": "Ohio",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "COS",
+  "name": "Colorado Springs Airport",
+  "city": "Colorado Springs",
+  "state": "Colorado",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "CRW",
+  "name": "Yeager Airport",
+  "city": "Charleston",
+  "state": "West Virginia",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "CVG",
+  "name": "Cincinnati/Northern Kentucky International Airport",
+  "city": "Cincinnati",
+  "state": "Ohio",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "DAL",
+  "name": "Dallas Love Field",
+  "city": "Dallas",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "DAY",
+  "name": "Dayton International Airport",
+  "city": "Dayton",
+  "state": "Ohio",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "DBQ",
+  "name": "Dubuque Regional Airport",
+  "city": "Dubuque",
+  "state": "Iowa",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "DCA",
+  "name": "Ronald Reagan Washington National Airport",
+  "city": "Washington",
+  "state": "D.C.",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "DEN",
+  "name": "Denver International Airport",
+  "city": "Denver",
+  "state": "Colorado",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "DFW",
+  "name": "Dallas/Fort Worth International Airport",
+  "city": "Dallas",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "DRO",
+  "name": "Durango-La Plata County Airport",
+  "city": "Durango",
+  "state": "Colorado",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "DSM",
+  "name": "Des Moines International Airport",
+  "city": "Des Moines",
+  "state": "Iowa",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "DTW",
+  "name": "Detroit Metropolitan Wayne County Airport",
+  "city": "Detroit",
+  "state": "Michigan",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "ELP",
+  "name": "El Paso International Airport",
+  "city": "El Paso",
+  "state": "Texas",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "EUG",
+  "name": "Eugene Airport",
+  "city": "Eugene",
+  "state": "Oregon",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "EVV",
+  "name": "Evansville Regional Airport",
+  "city": "Evansville",
+  "state": "Indiana",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "EWR",
+  "name": "Newark Liberty International Airport",
+  "city": "Newark",
+  "state": "New Jersey",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "FAR",
+  "name": "Hector International Airport",
+  "city": "Fargo",
+  "state": "North Dakota",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "FAT",
+  "name": "Fresno Yosemite International Airport",
+  "city": "Fresno",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "FLL",
+  "name": "Fort Lauderdale-Hollywood International Airport",
+  "city": "Fort Lauderdale",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "FSD",
+  "name": "Sioux Falls Regional Airport",
+  "city": "Sioux Falls",
+  "state": "South Dakota",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "FWA",
+  "name": "Fort Wayne International Airport",
+  "city": "Fort Wayne",
+  "state": "Indiana",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "GEG",
+  "name": "Spokane International Airport",
+  "city": "Spokane",
+  "state": "Washington",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "GPT",
+  "name": "Gulfport-Biloxi International Airport",
+  "city": "Gulfport",
+  "state": "Mississippi",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "GRB",
+  "name": "Austin Straubel International Airport",
+  "city": "Green Bay",
+  "state": "Wisconsin",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "GRR",
+  "name": "Gerald R. Ford International Airport",
+  "city": "Grand Rapids",
+  "state": "Michigan",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "GSO",
+  "name": "Piedmont Triad International Airport",
+  "city": "Greensboro",
+  "state": "North Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "GSP",
+  "name": "Greenville-Spartanburg International Airport",
+  "city": "Greer",
+  "state": "South Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "HDN",
+  "name": "Yampa Valley Airport",
+  "city": "Hayden",
+  "state": "Colorado",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "HNL",
+  "name": "Daniel K. Inouye International Airport",
+  "city": "Honolulu",
+  "state": "Hawaii",
+  "timeZone": "Pacific/Honolulu"
+},
+{
+  "iataCode": "HOU",
+  "name": "William P. Hobby Airport",
+  "city": "Houston",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "HSV",
+  "name": "Huntsville International Airport",
+  "city": "Huntsville",
+  "state": "Alabama",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "HVN",
+  "name": "Tweed New Haven Regional Airport",
+  "city": "New Haven",
+  "state": "Connecticut",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "IAD",
+  "name": "Washington Dulles International Airport",
+  "city": "Washington",
+  "state": "D.C.",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "IAH",
+  "name": "George Bush Intercontinental Airport",
+  "city": "Houston",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "ICT",
+  "name": "Wichita Dwight D. Eisenhower National Airport",
+  "city": "Wichita",
+  "state": "Kansas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "ILM",
+  "name": "Wilmington International Airport",
+  "city": "Wilmington",
+  "state": "North Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "IND",
+  "name": "Indianapolis International Airport",
+  "city": "Indianapolis",
+  "state": "Indiana",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "JAN",
+  "name": "Jackson-Medgar Wiley Evers International Airport",
+  "city": "Jackson",
+  "state": "Mississippi",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "JAX",
+  "name": "Jacksonville International Airport",
+  "city": "Jacksonville",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "JFK",
+  "name": "John F. Kennedy International Airport",
+  "city": "New York",
+  "state": "New York",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "JFK",
+  "name": "New York John F. Kennedy International Airport",
+  "city": "New York",
+  "state": "New York",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "LAS",
+  "name": "McCarran International Airport",
+  "city": "Las Vegas",
+  "state": "Nevada",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "LAX",
+  "name": "Los Angeles International Airport",
+  "city": "Los Angeles",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "LEX",
+  "name": "Blue Grass Airport",
+  "city": "Lexington",
+  "state": "Kentucky",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "LGA",
+  "name": "LaGuardia Airport",
+  "city": "New York",
+  "state": "New York",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "LGB",
+  "name": "Long Beach Airport",
+  "city": "Long Beach",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "LIT",
+  "name": "Bill and Hillary Clinton National Airport",
+  "city": "Little Rock",
+  "state": "Arkansas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "LSE",
+  "name": "La Crosse Regional Airport",
+  "city": "La Crosse",
+  "state": "Wisconsin",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MAF",
+  "name": "Midland International Air & Space Port",
+  "city": "Midland",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MBS",
+  "name": "MBS International Airport",
+  "city": "Saginaw",
+  "state": "Michigan",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "MCI",
+  "name": "Kansas City International Airport",
+  "city": "Kansas City",
+  "state": "Missouri",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MCO",
+  "name": "Orlando International Airport",
+  "city": "Orlando",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "MDT",
+  "name": "Harrisburg International Airport",
+  "city": "Harrisburg",
+  "state": "Pennsylvania",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "MDW",
+  "name": "Chicago Midway International Airport",
+  "city": "Chicago",
+  "state": "Illinois",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MEM",
+  "name": "Memphis International Airport",
+  "city": "Memphis",
+  "state": "Tennessee",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MEX",
+  "name": "Aeropuerto Internacional Benito Juárez (Mexico City International Airport)",
+  "city": "Mexico City",
+  "state": "Mexico",
+  "timeZone": "America/Mexico_City"
+},
+{
+  "iataCode": "MFE",
+  "name": "McAllen-Miller International Airport",
+  "city": "McAllen",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MFR",
+  "name": "Rogue Valley International-Medford Airport",
+  "city": "Medford",
+  "state": "Oregon",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "MHT",
+  "name": "Manchester-Boston Regional Airport",
+  "city": "Manchester",
+  "state": "New Hampshire",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "MIA",
+  "name": "Miami International Airport",
+  "city": "Miami",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "MKE",
+  "name": "General Mitchell International Airport",
+  "city": "Milwaukee",
+  "state": "Wisconsin",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MLI",
+  "name": "Quad City International Airport",
+  "city": "Moline",
+  "state": "Illinois",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MLU",
+  "name": "Monroe Regional Airport",
+  "city": "Monroe",
+  "state": "Louisiana",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MOB",
+  "name": "Mobile Regional Airport",
+  "city": "Mobile",
+  "state": "Alabama",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MRY",
+  "name": "Monterey Regional Airport",
+  "city": "Monterey",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "MSN",
+  "name": "Dane County Regional Airport",
+  "city": "Madison",
+  "state": "Wisconsin",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MSO",
+  "name": "Missoula International Airport",
+  "city": "Missoula",
+  "state": "Montana",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "MSP",
+  "name": "Minneapolis-Saint Paul International Airport",
+  "city": "Minneapolis",
+  "state": "Minnesota",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MSY",
+  "name": "Louis Armstrong New Orleans International Airport",
+  "city": "New Orleans",
+  "state": "Louisiana",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "MTJ",
+  "name": "Montrose Regional Airport",
+  "city": "Montrose",
+  "state": "Colorado",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "MYR",
+  "name": "Myrtle Beach International Airport",
+  "city": "Myrtle Beach",
+  "state": "South Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "OAK",
+  "name": "Oakland International Airport",
+  "city": "Oakland",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "OGG",
+  "name": "Kahului Airport",
+  "city": "Kahului",
+  "state": "Hawaii",
+  "timeZone": "Pacific/Honolulu"
+},
+{
+  "iataCode": "OKC",
+  "name": "Will Rogers World Airport",
+  "city": "Oklahoma City",
+  "state": "Oklahoma",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "OMA",
+  "name": "Eppley Airfield",
+  "city": "Omaha",
+  "state": "Nebraska",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "ONT",
+  "name": "Ontario International Airport",
+  "city": "Ontario",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "ORD",
+  "name": "Chicago O'Hare International Airport",
+  "city": "Chicago",
+  "state": "Illinois",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "ORF",
+  "name": "Norfolk International Airport",
+  "city": "Norfolk",
+  "state": "Virginia",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "PBI",
+  "name": "Palm Beach International Airport",
+  "city": "West Palm Beach",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "PDX",
+  "name": "Portland International Airport",
+  "city": "Portland",
+  "state": "Oregon",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "PFN",
+  "name": "Northwest Florida Beaches International Airport",
+  "city": "Panama City Beach",
+  "state": "Florida",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "PHL",
+  "name": "Philadelphia International Airport",
+  "city": "Philadelphia",
+  "state": "Pennsylvania",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "PHX",
+  "name": "Phoenix Sky Harbor International Airport",
+  "city": "Phoenix",
+  "state": "Arizona",
+  "timeZone": "America/Phoenix"
+},
+{
+  "iataCode": "PIA",
+  "name": "General Wayne A. Downing Peoria International Airport",
+  "city": "Peoria",
+  "state": "Illinois",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "PIE",
+  "name": "St. Pete-Clearwater International Airport",
+  "city": "Clearwater",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "PIT",
+  "name": "Pittsburgh International Airport",
+  "city": "Pittsburgh",
+  "state": "Pennsylvania",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "PSC",
+  "name": "Tri-Cities Airport",
+  "city": "Pasco",
+  "state": "Washington",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "PSP",
+  "name": "Palm Springs International Airport",
+  "city": "Palm Springs",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "PVD",
+  "name": "T.F. Green Airport",
+  "city": "Providence",
+  "state": "Rhode Island",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "PWM",
+  "name": "Portland International Jetport",
+  "city": "Portland",
+  "state": "Maine",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "RDU",
+  "name": "Raleigh-Durham International Airport",
+  "city": "Raleigh",
+  "state": "North Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "RFD",
+  "name": "Chicago Rockford International Airport",
+  "city": "Rockford",
+  "state": "Illinois",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "RIC",
+  "name": "Richmond International Airport",
+  "city": "Richmond",
+  "state": "Virginia",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "RNO",
+  "name": "Reno-Tahoe International Airport",
+  "city": "Reno",
+  "state": "Nevada",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "ROC",
+  "name": "Greater Rochester International Airport",
+  "city": "Rochester",
+  "state": "New York",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "RST",
+  "name": "Rochester International Airport",
+  "city": "Rochester",
+  "state": "Minnesota",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "RSW",
+  "name": "Southwest Florida International Airport",
+  "city": "Fort Myers",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "SAN",
+  "name": "San Diego International Airport",
+  "city": "San Diego",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SAT",
+  "name": "San Antonio International Airport",
+  "city": "San Antonio",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "SAV",
+  "name": "Savannah/Hilton Head International Airport",
+  "city": "Savannah",
+  "state": "Georgia",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "SBA",
+  "name": "Santa Barbara Airport",
+  "city": "Santa Barbara",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SBN",
+  "name": "South Bend International Airport",
+  "city": "South Bend",
+  "state": "Indiana",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "SBP",
+  "name": "San Luis Obispo County Regional Airport",
+  "city": "San Luis Obispo",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SDF",
+  "name": "Louisville Muhammad Ali International Airport",
+  "city": "Louisville",
+  "state": "Kentucky",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "SEA",
+  "name": "Seattle-Tacoma International Airport",
+  "city": "Seattle",
+  "state": "Washington",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SFO",
+  "name": "San Francisco International Airport",
+  "city": "San Francisco",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SGF",
+  "name": "Springfield-Branson National Airport",
+  "city": "Springfield",
+  "state": "Missouri",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "SHV",
+  "name": "Shreveport Regional Airport",
+  "city": "Shreveport",
+  "state": "Louisiana",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "SJC",
+  "name": "Norman Y. Mineta San Jose International Airport",
+  "city": "San Jose",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SJT",
+  "name": "San Angelo Regional Airport",
+  "city": "San Angelo",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "SLC",
+  "name": "Salt Lake City International Airport",
+  "city": "Salt Lake City",
+  "state": "Utah",
+  "timeZone": "America/Denver"
+},
+{
+  "iataCode": "SMF",
+  "name": "Sacramento International Airport",
+  "city": "Sacramento",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SMX",
+  "name": "Santa Maria Public Airport",
+  "city": "Santa Maria",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SNA",
+  "name": "John Wayne Airport",
+  "city": "Santa Ana",
+  "state": "California",
+  "timeZone": "America/Los_Angeles"
+},
+{
+  "iataCode": "SPI",
+  "name": "Abraham Lincoln Capital Airport",
+  "city": "Springfield",
+  "state": "Illinois",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "SPS",
+  "name": "Wichita Falls Municipal Airport/Sheppard Air Force Base",
+  "city": "Wichita Falls",
+  "state": "Texas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "SRQ",
+  "name": "Sarasota Bradenton International Airport",
+  "city": "Sarasota",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "SSC",
+  "name": "Shaw Air Force Base",
+  "city": "Sumter",
+  "state": "South Carolina",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "STL",
+  "name": "St. Louis Lambert International Airport",
+  "city": "St. Louis",
+  "state": "Missouri",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "STT",
+  "name": "Cyril E. King Airport",
+  "city": "St. Thomas",
+  "state": "U.S. Virgin Islands",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "STX",
+  "name": "Henry E. Rohlsen Airport",
+  "city": "St. Croix",
+  "state": "U.S. Virgin Islands",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "SUS",
+  "name": "Spirit of St. Louis Airport",
+  "city": "St. Louis",
+  "state": "Missouri",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "SUX",
+  "name": "Sioux Gateway Airport",
+  "city": "Sioux City",
+  "state": "Iowa",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "SWF",
+  "name": "Stewart International Airport",
+  "city": "New Windsor",
+  "state": "New York",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "SYR",
+  "name": "Syracuse Hancock International Airport",
+  "city": "Syracuse",
+  "state": "New York",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "TLH",
+  "name": "Tallahassee International Airport",
+  "city": "Tallahassee",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "TOL",
+  "name": "Toledo Express Airport",
+  "city": "Toledo",
+  "state": "Ohio",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "TPA",
+  "name": "Tampa International Airport",
+  "city": "Tampa",
+  "state": "Florida",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "TRI",
+  "name": "Tri-Cities Airport",
+  "city": "Blountville",
+  "state": "Tennessee",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "TTN",
+  "name": "Trenton-Mercer Airport",
+  "city": "Trenton",
+  "state": "New Jersey",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "TUL",
+  "name": "Tulsa International Airport",
+  "city": "Tulsa",
+  "state": "Oklahoma",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "TUS",
+  "name": "Tucson International Airport",
+  "city": "Tucson",
+  "state": "Arizona",
+  "timeZone": "America/Phoenix"
+},
+{
+  "iataCode": "TYS",
+  "name": "McGhee Tyson Airport",
+  "city": "Knoxville",
+  "state": "Tennessee",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "VPS",
+  "name": "Destin-Fort Walton Beach Airport/Eglin Air Force Base",
+  "city": "Valparaiso",
+  "state": "Florida",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "WRB",
+  "name": "Robins Air Force Base",
+  "city": "Warner Robins",
+  "state": "Georgia",
+  "timeZone": "America/New_York"
+},
+{
+  "iataCode": "XNA",
+  "name": "Northwest Arkansas National Airport",
+  "city": "Bentonville",
+  "state": "Arkansas",
+  "timeZone": "America/Chicago"
+},
+{
+  "iataCode": "YUM",
+  "name": "Yuma International Airport",
+  "city": "Yuma",
+  "state": "Arizona",
+  "timeZone": "America/Phoenix"
+}
   ];
 
   const airportIntervals = {};
