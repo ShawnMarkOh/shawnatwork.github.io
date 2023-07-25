@@ -13,6 +13,13 @@
   "timeZone": "America/Denver"
 },
 {
+"iataCode": "GJT",
+"name": "Grand Junction Regional Airport",
+"city": "Grand Junction",
+"state": "Colorado",
+"timeZone": "America/Denver"
+},
+{
   "iataCode": "BFL",
   "name": "Meadows Field Airport",
   "city": "Bakersfield",
