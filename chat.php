@@ -13,8 +13,8 @@ if (!isset($_SESSION['username'])) {
 // Get the username of the logged in user.
 $username = $_SESSION['username'];
 
-// Create a new chat message.
-$message = htmlspecialchars($_POST['message']);
+// Get the message from the POST request.
+$message = $_POST['message'];
 
 // Add the message to the chat history.
 $chat_history = file_get_contents('chat_history.txt');
@@ -25,6 +25,7 @@ file_put_contents('chat_history.txt', $chat_history);
 header('Location: chat.php');
 exit;
 
-// Set the Content-Type header to text/html.
-header('Content-Type: text/html');
+// Make the file readable by everyone.
+chmod('chat_history.txt', 0644);
+
 ?>
