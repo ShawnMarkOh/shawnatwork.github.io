@@ -1,56 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Current Time and Day</title>
+<title>Web Page from the 1990s</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+body {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  background-color: #ffffff;
+}
+
+h1 {
+  font-size: 24px;
+  margin-top: 0;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+a {
+  text-decoration: none;
+  color: #000000;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.container {
+  width: 600px;
+  margin: 0 auto;
+}
+</style>
 </head>
 <body>
-<h1>Current Time and Day</h1>
-<div id="currentTime"></div>
-<div id="Day"></div>
-<div id="greeting"></div>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script>
-const currentTime = document.querySelector('#currentTime');
-
-function getCurrentTime() {
-  const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
-  const s = d.getSeconds();
-  const m = d.getMinutes();
-  const h = d.getHours();
-
-  currentTime.textContent =
-    `Current Time: ${('0' + h).substr(-2)}:${('0' + m).substr(-2)}:${('0' + s).substr(-2)}`;
-}
-
-setInterval(getCurrentTime, 100);
-
-const currentDay = document.querySelector('#Day');
-
-function getDay() {
-  const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
-  const day = weekday[d.getDay()];
-
-  currentDay.innerHTML = `The Current Day of the Week is ${day}`;
-}
-
-setInterval(getDay, 100);
-
-const greeting = document.querySelector('#greeting');
-
-function getGreeting() {
-  const d = new Date();
-  const hour = d.getHours();
-
-  if (hour >= 12) {
-    greeting.textContent = "Good Afternoon!";
-  } else {
-    greeting.textContent = "Good Morning!";
-  }
-}
-
-setInterval(getGreeting, 1000);
-</script>
+<div class="container">
+<h1>Web Page from the 1990s</h1>
+<p>This is a web page that mimics the look and feel of web pages from the 1990s.</p>
+<p>It uses a simple design with a limited color palette. The text is large and easy to read. The links are underlined.</p>
+<p>This web page is a reminder of a simpler time when the internet was new and exciting.</p>
+<p>Click <a href="#">here</a> to learn more about web pages from the 1990s.</p>
+</div>
 </body>
 </html>
