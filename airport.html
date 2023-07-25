@@ -204,26 +204,24 @@
    
     ];
 
-    function searchAirport() {
-      const searchInput = document.getElementById("search-input").value.toUpperCase();
-      const searchResultsDiv = document.getElementById("search-results");
-      searchResultsDiv.innerHTML = "";
+function searchAirport() {
+  const searchInput = document.getElementById("search-input").value.toUpperCase();
+  const searchResultsDiv = document.getElementById("search-results");
+  searchResultsDiv.innerHTML = "";
 
-      airports.forEach((airport) => {
-        if (airport.iataCode === searchInput) {
-          const currentTime = new Date().toLocaleString("en-US", {
-            timeZone: airport.timeZone,
-            timeZoneName: "short" // Display the time zone abbreviation
-          });
-          const airportInfo = `<p><strong>Airport:</strong> ${airport.name}</p><p><strong>Time Zone:</strong> ${currentTime}</p>`;
-          searchResultsDiv.innerHTML = airportInfo;
-        }
-      });
-
-      if (searchResultsDiv.innerHTML === "") {
-        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
-      }
+  airports.forEach((airport) => {
+    if (airport.iataCode === searchInput) {
+      const currentTime = moment().tz(airport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+      const airportInfo = `<p><strong>Airport:</strong> ${airport.name}</p><p><strong>Time Zone:</strong> ${currentTime}</p>`;
+      searchResultsDiv.innerHTML = airportInfo;
     }
+  });
+
+  if (searchResultsDiv.innerHTML === "") {
+    searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
+  }
+}
+
 
     document.getElementById("search-input").addEventListener("keyup", searchAirport);
   </script>
