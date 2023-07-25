@@ -22,71 +22,48 @@ input {
 <input type="text" id="search" placeholder="Enter an IATA code">
 <div class="output"></div>
 <script>
-// Get the list of IATA airport codes in the United States.
-const codes = [
-  ["ATL", "UTC-5"],
-  ["LAX", "UTC-8"],
-  ["ORD", "UTC-6"],
-  ["JFK", "UTC-5"],
-  ["DEN", "UTC-7"],
-  ["SFO", "UTC-8"],
-  ["DFW", "UTC-6"],
-  ["MIA", "UTC-5"],
-  ["SEA", "UTC-8"],
-  ["PHX", "UTC-7"],
-  ["ANC", "UTC-9"],
-  ["BWI", "UTC-5"],
-  ["CLT", "UTC-5"],
-  ["DEN", "UTC-7"],
-  ["EWR", "UTC-5"],
-  ["FLL", "UTC-5"],
-  ["IAH", "UTC-6"],
-  ["MCO", "UTC-5"],
-  ["MSP", "UTC-6"],
-  ["PHL", "UTC-5"],
-  ["SAN", "UTC-8"],
-  ["TPA", "UTC-5"],
-  ["AUS", "UTC-6"],
-  ["BHM", "UTC-6"],
-  ["BNA", "UTC-6"],
-  ["BUF", "UTC-5"],
-  ["CHS", "UTC-5"],
-  ["CLT", "UTC-5"],
-  ["COS", "UTC-7"],
-  ["DAL", "UTC-6"],
-  ["DSM", "UTC-6"],
-  ["EWR", "UTC-5"],
-  ["FLL", "UTC-5"],
-  ["GEG", "UTC-8"],
-  ["HOU", "UTC-6"],
-  ["IAD", "UTC-5"],
-  ["IND", "UTC-5"],
-  ["ISP", "UTC-5"],
-  ["JAX", "UTC-5"],
-  ["LAS", "UTC-8"],
-  ["LGA", "UTC-5"],
-  ["MCI", "UTC-6"],
-  ["MCO", "UTC-5"],
-  ["MDW", "UTC-6"],
-  ["MSP", "UTC-6"],
-  ["MSY", "UTC-6"],
-  ["OAK", "UTC-8"],
-  ["ONT", "UTC-8"],
-  ["PHX", "UTC-7"],
-  ["PIT", "UTC-5"],
-  ["RDU", "UTC-5"],
-  ["SAN", "UTC-8"],
-  ["SAV", "UTC-5"],
-  ["SDF", "UTC-6"],
-  ["SEA", "UTC-8"],
-  ["SFO", "UTC-8"],
-  ["SJC", "UTC-8"],
-  ["SNA", "UTC-8"],
-  ["STL", "UTC-6"],
-  ["TPA", "UTC-5"],
-  ["TUL", "UTC-7"],
-  ["TUS", "UTC-7"],
-  ["YVR" ,"UTC-8"]
+// Get the list of time zones associated with IATA codes.
+const timeZones = [
+  "UTC-5",
+  "UTC-8",
+  "UTC-6",
+  "UTC-5",
+  "UTC-7",
+  "UTC-8",
+  "UTC-6",
+  "UTC-5",
+  "UTC-8",
+  "UTC-7",
+  "UTC-9",
+  "UTC-5",
+  "UTC-5",
+  "UTC-7",
+  "UTC-5",
+  "UTC-5",
+  "UTC-5",
+  "UTC-6",
+  "UTC-5",
+  "UTC-8",
+  "UTC-5",
+  "UTC-6",
+  "UTC-6",
+  "UTC-6",
+  "UTC-6",
+  "UTC-7",
+  "UTC-7",
+  "UTC-7",
+  "UTC-8",
+  "UTC-5",
+  "UTC-6",
+  "UTC-5",
+  "UTC-8",
+  "UTC-6",
+  "UTC-6",
+  "UTC-5",
+  "UTC-7",
+  "UTC-8",
+  "UTC-8",
+  "UTC-8"
 ];
 
 // Listen for changes to the search input.
@@ -97,6 +74,16 @@ searchInput.addEventListener("input", () => {
 
   // Check if the code is a valid IATA code.
   if (code.length === 3 && codes.includes(code)) {
-    // Display the airport name and time zone for the code.
-    const tzStr = codes.find(code => code === code)[1];
-    document.querySelector(".output").innerHTML = `<span class="math-inline">\{code\} \(</span>{tzStr})`;
+    // Get the time zone for the code.
+    const tzStr = timeZones.find(code => code === code);
+
+    // Display the time zone for the code.
+    document.querySelector(".output").innerHTML = tzStr;
+  } else {
+    // Clear the output.
+    document.querySelector(".output").innerHTML = "";
+  }
+});
+</script>
+</body>
+</html>
