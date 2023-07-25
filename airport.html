@@ -48,7 +48,7 @@
   <script>
     // Airport data with IATA code, name, and time zone (for demonstration purposes)
     const airports = [
-      { "iataCode": "ABE", "name": "Lehigh Valley International Airport", "timeZone": "America/New_York" },
+  { "iataCode": "ABE", "name": "Lehigh Valley International Airport", "timeZone": "America/New_York" },
 { "iataCode": "ABQ", "name": "Albuquerque International Sunport", "timeZone": "America/Denver" },
 { "iataCode": "ACY", "name": "Atlantic City International Airport", "timeZone": "America/New_York" },
 { "iataCode": "ANC", "name": "Ted Stevens Anchorage International Airport", "timeZone": "America/Anchorage" },
@@ -208,6 +208,11 @@
 { "iataCode": "XNA", "name": "Northwest Arkansas Regional Airport", "timeZone": "America/Chicago" }
     ];
 
+    function updateAirportTime(foundAirport) {
+      const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+      document.getElementById("current-time").textContent = currentTime;
+    }
+
     function searchAirport() {
       const searchInput = document.getElementById("search-input").value.toUpperCase();
       const searchResultsDiv = document.getElementById("search-results");
@@ -218,13 +223,18 @@
         const airportInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p><p><strong>Time Zone:</strong> <span id="current-time"></span></p>`;
         searchResultsDiv.innerHTML = airportInfo;
 
+        // Clear any previous interval
+        clearInterval(window.interval);
+
         // Update time every second
-        setInterval(() => {
-          const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-          document.getElementById("current-time").textContent = currentTime;
+        window.interval = setInterval(() => {
+          updateAirportTime(foundAirport);
         }, 1000);
       } else {
         searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
+
+        // Clear the interval if no airport is found
+        clearInterval(window.interval);
       }
     }
 
