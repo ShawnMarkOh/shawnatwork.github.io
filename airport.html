@@ -28,12 +28,12 @@ body {
 function lookupAirport() {
   var iataCode = document.getElementById("iata-code").value;
   var xhr = new XMLHttpRequest();
-  xhr.open("GET", "https://openflights.org/api/airports/" + iataCode);
+  xhr.open("GET", "https://www.google.com/search?q=" + iataCode + "+timezone");
   xhr.onload = function() {
     if (xhr.status === 200) {
-      var data = JSON.parse(xhr.responseText);
-      var timezone = data["timezone"];
-      var localTime = new Date(data["local_time"]);
+      var data = xhr.responseText;
+      var timezone = data.match(/(UTC[+-]\d+)/)[0];
+      var localTime = new Date(Date.now() + (timezone * 60 * 60 * 1000));
       document.querySelector(".results").innerHTML =
         "Timezone: " + timezone + "<br>" +
         "Local time: " + localTime.toLocaleString();
