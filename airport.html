@@ -3,10 +3,11 @@
 <head>
 <title>IATA Airport Code Timezone Converter</title>
 </head>
-<body>
-<h1>IATA Airport Code Timezone Converter</h1>
-<input type="text" id="airportCode" placeholder="Enter an airport code">
-<div id="timezone"></div>
+<body style="background-color:gray;">
+<h1 style="text-align:center;">IATA Airport Code Timezone Converter</h1>
+<input type="text" id="airportCode" placeholder="Enter an airport code" style="text-align:center;">
+<div id="timezone" style="text-align:center;"></div>
+<p id="output" style="text-align:center;"></p>
 <script>
 // Create a list of IATA codes and time zones
 var codes = [
@@ -70,6 +71,9 @@ document.getElementById("airportCode").addEventListener("change", function() {
 
   // Display the timezone in the output div
   document.getElementById("timezone").innerHTML = timezone;
+
+  // Display the output
+  document.getElementById("output").innerHTML = `The timezone for ${airportCode} is ${timezone}`;
 });
 </script>
 </body>
