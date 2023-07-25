@@ -1,28 +1,30 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Timezone Search</title>
+<title>IATA Airport Code Time Zone Search</title>
 </head>
 <body>
-<h1>Timezone Search</h1>
-<form action="index.php" method="get">
-<input type="text" name="airport_code" placeholder="Enter an airport code">
-<input type="submit" value="Search">
-</form>
-<?php
-if (isset($_GET['airport_code'])) {
-$airport_code = $_GET['airport_code'];
-$timezone = get_timezone($airport_code);
-echo "<p>The timezone for airport code $airport_code is $timezone</p>";
-}
+<h1>IATA Airport Code Time Zone Search</h1>
+<input type="text" id="iata-code" placeholder="Enter IATA airport code">
+<output id="timezone"></output>
+<script>
+// Create an array of IATA airport codes and their time zones
+var iataCodes = [
+  { code: "CVG", timezone: "EST" },
+  { code: "JFK", timezone: "EST" },
+  { code: "LAX", timezone: "PST" },
+  { code: "MIA", timezone: "EST" },
+  { code: "ORD", timezone: "CST" },
+];
 
-function get_timezone($airport_code) {
-$url = "https://api.timezonedb.com/v3/timezone/search?q=$airport_code&key=1X9HSNYOVJYP";
-$response = file_get_contents($url);
-$data = json_decode($response, true);
-$timezone = $data['results'][0]['timezone'];
-return $timezone;
-}
-?>
+// Get the value of the IATA code input field
+var iataCode = document.getElementById("iata-code").value;
+
+// Find the corresponding time zone in the array
+var timezone = iataCodes.find(code => code.code === iataCode).timezone;
+
+// Set the value of the output field
+document.getElementById("timezone").innerHTML = timezone;
+</script>
 </body>
 </html>
