@@ -10,9 +10,10 @@
     body {
       background-color: #f0f0f0;
       display: flex;
+      flex-direction: column; /* Added this to make elements stack vertically */
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh; /* Changed height to min-height to allow content to push the footer down */
       margin: 0;
     }
     
@@ -30,6 +31,12 @@
       margin-top: 20px;
       text-align: left;
     }
+
+    /* Added new CSS for the footer */
+    #footer {
+      margin-top: auto; /* Pushes the footer to the bottom of the page */
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -42,7 +49,7 @@
   <script>
     // Airport data with IATA code, name, and time zone (for demonstration purposes)
     const airports = [
-      { "iataCode": "ABE", "name": "Lehigh Valley International Airport", "timeZone": "America/New_York" },
+     { "iataCode": "ABE", "name": "Lehigh Valley International Airport", "timeZone": "America/New_York" },
 { "iataCode": "ABQ", "name": "Albuquerque International Sunport", "timeZone": "America/Denver" },
 { "iataCode": "ACY", "name": "Atlantic City International Airport", "timeZone": "America/New_York" },
 { "iataCode": "ANC", "name": "Ted Stevens Anchorage International Airport", "timeZone": "America/Anchorage" },
@@ -209,9 +216,14 @@
 
       const foundAirport = airports.find((airport) => airport.iataCode === searchInput);
       if (foundAirport) {
-        const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-        const airportInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p><p><strong>Time Zone:</strong> ${currentTime}</p>`;
+        const airportInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p><p><strong>Time Zone:</strong> <span id="current-time"></span></p>`;
         searchResultsDiv.innerHTML = airportInfo;
+
+        // Update time every second
+        setInterval(() => {
+          const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+          document.getElementById("current-time").textContent = currentTime;
+        }, 1000);
       } else {
         searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
       }
@@ -219,7 +231,10 @@
 
     document.getElementById("search-input").addEventListener("keyup", searchAirport);
   </script>
-  
-  <br><h2>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please teams me!</h2></br>
+
+  <!-- Moved the footer div to the bottom of the page -->
+  <div id="footer">
+    <b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please teams me!</b>
+  </div>
 </body>
 </html>
