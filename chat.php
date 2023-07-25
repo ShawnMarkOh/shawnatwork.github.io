@@ -25,4 +25,6 @@ file_put_contents('chat_history.txt', $chat_history);
 header('Location: chat.php');
 exit;
 
+// Set the Content-Type header to text/html.
+header('Content-Type: text/html');
 ?>
