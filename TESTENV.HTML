@@ -6,6 +6,7 @@
 <body>
   <h1>Shawn's Work Status</h1>
   <p id="status"></p>
+  <p id="clock"></p>
   <script>
     function isShawnAtWork() {
       const now = new Date();
@@ -15,17 +16,25 @@
       const timeZoneOffset = -5;
 
       const estHour = hour + timeZoneOffset + 8;
+      const estMinute = minute;
 
       return (dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3) &&
-        estHour >= 1 && estHour <= 8;
+        estHour >= 13 && estHour <= 23 && estMinute >= 45;
     }
 
     const status = isShawnAtWork() ? "Shawn is Currently At Work" : "Shawn is Not Currently At Work";
     document.querySelector("#status").innerHTML = status;
 
+    const clock = document.querySelector("#clock");
+    const estTime = `${estHour}:${estMinute}`;
+    clock.innerHTML = estTime;
+
     setInterval(() => {
       const newStatus = isShawnAtWork() ? "Shawn is Currently At Work" : "Shawn is Not Currently At Work";
       document.querySelector("#status").innerHTML = newStatus;
+
+      const newClock = `${estHour}:${estMinute}`;
+      clock.innerHTML = newClock;
     }, 1000);
   </script>
 </body>
