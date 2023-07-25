@@ -15,9 +15,7 @@ $(document).ready(function() {
     // Create a new div to hold the message.
     var messageDiv = $('<div class="message"></div>');
     // Add the message to the div.
-    messageDiv.text(message);
-    // Add the username to the div.
-    messageDiv.append('<span class="username">' + username + '</span>');
+    messageDiv.text(username + ': ' + message);
     // Add the div to the chat div.
     chat.append(messageDiv);
   }
@@ -57,6 +55,9 @@ $(document).ready(function() {
         if (data.success) {
           $('#login').hide();
           $('#chat').show();
+
+          // Get the latest chat messages from the server.
+          getMessages();
         }
       }
     });
@@ -75,7 +76,7 @@ $(document).ready(function() {
 
     // Send the message to the server.
     $.ajax({
-      url: '/message',
+      url: '/messages',
       data: {
         message: message,
         username: username
