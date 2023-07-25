@@ -16,6 +16,10 @@
       min-height: 100vh;
       margin: 0;
     }
+
+    h1, p {
+      font-size: 24px;
+    }
     
     #search-container {
       text-align: center;
@@ -36,6 +40,12 @@
       margin-top: auto;
       text-align: center;
     }
+
+    /* Additional styles for Airport and Time Zone */
+    #search-results p {
+      font-size: 24px; /* Set the font size to match the title */
+      margin: 8px 0; /* Add some margin to separate the elements */
+    }
   </style>
 </head>
 <body>
@@ -45,10 +55,10 @@
     <div id="search-results"></div>
   </div>
 
-  <script>
+ <script>
     // Airport data with IATA code, name, and time zone (for demonstration purposes)
     const airports = [
-      { "iataCode": "ABE", "name": "Lehigh Valley International Airport", "timeZone": "America/New_York" },
+     { "iataCode": "ABE", "name": "Lehigh Valley International Airport", "timeZone": "America/New_York" },
 { "iataCode": "ABQ", "name": "Albuquerque International Sunport", "timeZone": "America/Denver" },
 { "iataCode": "ACY", "name": "Atlantic City International Airport", "timeZone": "America/New_York" },
 { "iataCode": "ANC", "name": "Ted Stevens Anchorage International Airport", "timeZone": "America/Anchorage" },
