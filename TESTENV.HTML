@@ -17,7 +17,7 @@
       const estHour = hour + timeZoneOffset + 8;
 
       return (dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3) &&
-        estHour >= 13 && estHour <= 23;
+        estHour >= 1 && estHour <= 8;
     }
 
     const status = isShawnAtWork() ? "Shawn is Currently At Work" : "Shawn is Not Currently At Work";
