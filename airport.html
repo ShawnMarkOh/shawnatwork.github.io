@@ -221,28 +221,29 @@
       searchResultsDiv.innerHTML = "";
 
       const foundAirport = airports.find((airport) => airport.iataCode === searchInput);
-      if (foundAirport) {
-        const airportInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p><p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}"></span></p>`;
-        searchResultsDiv.innerHTML = airportInfo;
+if (foundAirport) {
+      const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+      const airportInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p><p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
+      searchResultsDiv.innerHTML = airportInfo;
 
-        clearInterval(airportIntervals[foundAirport.iataCode]);
+      clearInterval(airportIntervals[foundAirport.iataCode]);
 
-        airportIntervals[foundAirport.iataCode] = setInterval(() => {
-          updateAirportTime(foundAirport);
-        }, 500);
-      } else {
-        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
+      airportIntervals[foundAirport.iataCode] = setInterval(() => {
+        updateAirportTime(foundAirport);
+      }, 1000); // Set the interval to 1 second (1000 milliseconds)
+    } else {
+      searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
 
-        if (Object.keys(airportIntervals).length > 0) {
-          // Clear all intervals when no airport is found
-          Object.values(airportIntervals).forEach(interval => clearInterval(interval));
-          airportIntervals = {};
-        }
+      if (Object.keys(airportIntervals).length > 0) {
+        // Clear all intervals when no airport is found
+        Object.values(airportIntervals).forEach(interval => clearInterval(interval));
+        airportIntervals = {};
       }
     }
+  }
 
-    document.getElementById("search-input").addEventListener("keyup", searchAirport);
-  </script>
+  document.getElementById("search-input").addEventListener("keyup", searchAirport);
+</script>
 
   <div id="footer">
     <b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please teams me!</b>
