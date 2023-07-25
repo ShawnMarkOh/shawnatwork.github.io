@@ -1,5 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Current Time and Day</title>
+</head>
+<body>
+<h1>Current Time and Day</h1>
+<div id="currentTime"></div>
+<div id="Day"></div>
+<div id="greeting"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
-const currentTime = document.querySelector('#span');
+const currentTime = document.querySelector('#currentTime');
 
 function getCurrentTime() {
   const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
@@ -39,3 +52,5 @@ function getGreeting() {
 
 setInterval(getGreeting, 1000);
 </script>
+</body>
+</html>
