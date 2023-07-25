@@ -1,1 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Airport Time Zone</title>
+</head>
+<body>
+  <h1>Airport Time Zone</h1>
+  <input type="text" id="iataCode" placeholder="Enter an IATA airport code">
+  <p id="timezone"></p>
+  <script>
+    function getAirportTimeZone() {
+      const iataCode = document.querySelector("#iataCode").value;
+      const url = `https://api.openflights.org/data/airports/?iataCode=${iataCode}`;
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const timezone = data.timezone;
+          const time = new Date(data.localTime);
+          const hour = time.getHours();
+          const minute = time.getMinutes();
+          const formattedTime = `${hour}:${minute}`;
+          document.querySelector("#timezone").innerHTML = `${timezone} (${formattedTime})`;
+        });
+    }
+
+    document.querySelector("#iataCode").addEventListener("input", getAirportTimeZone);
+  </script>
+</body>
+</html>
 
