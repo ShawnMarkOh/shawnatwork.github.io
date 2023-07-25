@@ -2,11 +2,24 @@
 <html>
 <head>
   <title>Airport Time Zone</title>
+  <style>
+    body {
+      background-color: #eeeeee;
+      text-align: center;
+    }
+    input {
+      width: 200px;
+      margin: 10px auto;
+    }
+    p {
+      margin: 10px auto;
+    }
+  </style>
 </head>
 <body>
   <h1>Airport Time Zone</h1>
-  <input type="text" id="iataCode" placeholder="Enter an IATA airport code">
-  <p id="timezone"></p>
+  <input type="text" id="iataCode" placeholder="Enter an IATA airport code" style="background-color: white;">
+  <p id="timezone" style="background-color: white;"></p>
   <script>
     function getAirportTimeZone() {
       const iataCode = document.querySelector("#iataCode").value;
@@ -27,4 +40,3 @@
   </script>
 </body>
 </html>
-
