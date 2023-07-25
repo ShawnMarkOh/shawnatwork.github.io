@@ -14,9 +14,10 @@
       const minute = now.getMinutes();
       const timeZoneOffset = -5;
 
-      const estHour = hour + timeZoneOffset;
+      const estHour = hour + timeZoneOffset + 8;
 
-      return dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3 && estHour >= 13 && estHour <= 24;
+      return (dayOfWeek === 0 || dayOfWeek === 1 || dayOfWeek === 2 || dayOfWeek === 3) &&
+        estHour >= 13 && estHour <= 23;
     }
 
     const status = isShawnAtWork() ? "Shawn is Currently At Work" : "Shawn is Not Currently At Work";
