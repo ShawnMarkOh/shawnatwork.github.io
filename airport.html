@@ -1,88 +1,75 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>IATA Airport Codes in the United States</title>
-<style>
-body {
-  background-color: gray;
-  text-align: center;
-}
-
-input {
-  width: 200px;
-}
-
-.output {
-  margin-top: 20px;
-}
-</style>
+<title>IATA Airport Code Timezone Converter</title>
 </head>
 <body>
-<h1>IATA Airport Codes in the United States</h1>
-<input type="text" id="search" placeholder="Enter an IATA code">
-<div class="output"></div>
+<h1>IATA Airport Code Timezone Converter</h1>
+<input type="text" id="airportCode" placeholder="Enter an airport code">
+<div id="timezone"></div>
 <script>
-// Get the list of time zones associated with IATA codes.
-const timeZones = [
-  "UTC-5",
-  "UTC-8",
-  "UTC-6",
-  "UTC-5",
-  "UTC-7",
-  "UTC-8",
-  "UTC-6",
-  "UTC-5",
-  "UTC-8",
-  "UTC-7",
-  "UTC-9",
-  "UTC-5",
-  "UTC-5",
-  "UTC-7",
-  "UTC-5",
-  "UTC-5",
-  "UTC-5",
-  "UTC-6",
-  "UTC-5",
-  "UTC-8",
-  "UTC-5",
-  "UTC-6",
-  "UTC-6",
-  "UTC-6",
-  "UTC-6",
-  "UTC-7",
-  "UTC-7",
-  "UTC-7",
-  "UTC-8",
-  "UTC-5",
-  "UTC-6",
-  "UTC-5",
-  "UTC-8",
-  "UTC-6",
-  "UTC-6",
-  "UTC-5",
-  "UTC-7",
-  "UTC-8",
-  "UTC-8",
-  "UTC-8"
+// Create a list of IATA codes and time zones
+var codes = [
+  { code: "ABQ", timezone: "MST" },
+  { code: "ALB", timezone: "EST" },
+  { code: "ANC", timezone: "AKST" },
+  { code: "ATL", timezone: "EST" },
+  { code: "AUS", timezone: "CST" },
+  { code: "BDL", timezone: "EST" },
+  { code: "BHM", timezone: "CST" },
+  { code: "BNA", timezone: "CST" },
+  { code: "BOI", timezone: "MST" },
+  { code: "BOS", timezone: "EST" },
+  { code: "BTR", timezone: "CST" },
+  { code: "BUF", timezone: "EST" },
+  { code: "BUR", timezone: "PST" },
+  { code: "BWI", timezone: "EST" },
+  { code: "CLE", timezone: "EST" },
+  { code: "CLT", timezone: "EST" },
+  { code: "COD", timezone: "CST" },
+  { code: "COS", timezone: "MST" },
+  { code: "DAL", timezone: "CST" },
+  { code: "DEN", timezone: "MST" },
+  { code: "DFW", timezone: "CST" },
+  { code: "DSM", timezone: "CST" },
+  { code: "EWR", timezone: "EST" },
+  { code: "FLL", timezone: "EST" },
+  { code: "FNT", timezone: "EST" },
+  { code: "FSD", timezone: "CST" },
+  { code: "FWA", timezone: "CST" },
+  { code: "GEG", timezone: "PST" },
+  { code: "HOU", timezone: "CST" },
+  { code: "IAD", timezone: "EST" },
+  { code: "IND", timezone: "EST" },
+  { code: "JFK", timezone: "EST" },
+  { code: "LAS", timezone: "PST" },
+  { code: "LAX", timezone: "PST" },
+  { code: "LEX", timezone: "EST" },
+  { code: "LGA", timezone: "EST" },
+  { code: "LGB", timezone: "PST" },
+  { code: "MCI", timezone: "CST" },
+  ...
 ];
 
-// Listen for changes to the search input.
-const searchInput = document.getElementById("search");
-searchInput.addEventListener("input", () => {
-  // Get the value of the search input.
-  const code = searchInput.value;
+// Get the airport code from the input field
+var airportCode = document.getElementById("airportCode").value;
 
-  // Check if the code is a valid IATA code.
-  if (code.length === 3 && codes.includes(code)) {
-    // Get the time zone for the code.
-    const tzStr = timeZones.find(code => code === code);
+// Find the corresponding timezone
+var timezone = codes.find(code => code.code === airportCode).timezone;
 
-    // Display the time zone for the code.
-    document.querySelector(".output").innerHTML = tzStr;
-  } else {
-    // Clear the output.
-    document.querySelector(".output").innerHTML = "";
-  }
+// Display the timezone in the output div
+document.getElementById("timezone").innerHTML = timezone;
+
+// Handle the input field change event
+document.getElementById("airportCode").addEventListener("change", function() {
+  // Get the airport code from the input field
+  airportCode = document.getElementById("airportCode").value;
+
+  // Find the corresponding timezone
+  timezone = codes.find(code => code.code === airportCode).timezone;
+
+  // Display the timezone in the output div
+  document.getElementById("timezone").innerHTML = timezone;
 });
 </script>
 </body>
