@@ -1,66 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Airport Time Zone</title>
-  <style>
-    body {
-      background-color: #eeeeee;
-      text-align: center;
-    }
-    input {
-      width: 200px;
-      margin: 10px auto;
-    }
-    p {
-      margin: 10px auto;
-    }
-    .output {
-      width: 400px;
-      margin: 10px auto;
-      background-color: white;
-    }
-  </style>
+<title>Airport Time Lookup</title>
+<style>
+body {
+  background-color: gray;
+  text-align: center;
+}
+
+.search-bar {
+  width: 200px;
+}
+
+.results {
+  margin-top: 10px;
+}
+</style>
 </head>
 <body>
-  <h1>Airport Time Zone</h1>
-  <input type="text" id="iataCode" placeholder="Enter an IATA airport code" style="background-color: white;">
-  <p id="timezone" style="background-color: white;"></p>
-  <div class="output"></div>
-  <script>
-    function getAirportTimeZone() {
-      const iataCodes = [
-        "ATL",
-        "LAX",
-        "JFK",
-        "ORD",
-        "SFO",
-        "BWI",
-        "DFW",
-        "DEN",
-        "MCO",
-        "EWR",
-        "SEA",
-        "PHX",
-        "MSP",
-        "IAH",
-        "LAS",
-        "CLT",
-        "TPA",
-        "SLC",
-        "LGA",
-        "SAN",
-      ];
-      const output = document.querySelector(".output");
-      for (const iataCode of iataCodes) {
-        const timezone = iataCode.substring(0, 3);
-        output.innerHTML += `
-          <p>Airport Code: ${iataCode}</p>
-          <p>Timezone: ${timezone}</p>
-        `;
-      }
+<h1>Airport Time Lookup</h1>
+<div class="search-bar">
+  <input type="text" id="iata-code" placeholder="Enter an airport IATA code">
+  <button onclick="lookupAirport()">Lookup</button>
+</div>
+<div class="results"></div>
+<script>
+function lookupAirport() {
+  var iataCode = document.getElementById("iata-code").value;
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", "https://openflights.org/api/airports/" + iataCode);
+  xhr.onload = function() {
+    if (xhr.status === 200) {
+      var data = JSON.parse(xhr.responseText);
+      var timezone = data["timezone"];
+      var localTime = new Date(data["local_time"]);
+      document.querySelector(".results").innerHTML =
+        "Timezone: " + timezone + "<br>" +
+        "Local time: " + localTime.toLocaleString();
+    } else {
+      document.querySelector(".results").innerHTML = "Error: " + xhr.statusText;
     }
-
-    document.querySelector("#iataCode").addEventListener("input", getAirportTimeZone);
-  </script>
+  };
+  xhr.send();
+}
+</script>
 </body>
 </html>
