@@ -533,9 +533,18 @@
 
     const foundAirport = airports.find((airport) => airport.iataCode === searchInput);
     if (foundAirport) {
-      const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-      const airportInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p><p><strong>City:</strong> ${foundAirport.city}</p><p><strong>State:</strong> ${foundAirport.state}</p><p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
-      searchResultsDiv.innerHTML = airportInfo;
+      let locationInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
+      if (foundAirport.city) {
+        locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
+      }
+      if (foundAirport.state) {
+        locationInfo += `<p><strong>State/Province:</strong> ${foundAirport.state}</p>`;
+      }
+      if (foundAirport.island) {
+        locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
+      }
+      locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}"></span></p>`;
+      searchResultsDiv.innerHTML = locationInfo;
 
       clearInterval(airportIntervals[foundAirport.iataCode]);
 
@@ -555,7 +564,6 @@
 
   document.getElementById("search-input").addEventListener("keyup", searchAirport);
 </script>
-
 
   <div id="footer">
     <b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please teams me!</b>
