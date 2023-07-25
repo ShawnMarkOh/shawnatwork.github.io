@@ -39,6 +39,29 @@ $(document).ready(function() {
   // SetInterval to get the latest chat messages every second.
   setInterval(getMessages, 1000);
 
+  // Add a click event listener to the login button.
+  $('#login').click(function() {
+    // Get the username from the input field.
+    var username = $('#username').val();
+    // Get the password from the input field.
+    var password = $('#password').val();
+    // Make an AJAX request to the server to login.
+    $.ajax({
+      url: '/login',
+      data: {
+        username: username,
+        password: password
+      },
+      success: function(data) {
+        // If the login is successful, show the chat messages.
+        if (data.success) {
+          $('#login').hide();
+          $('#chat').show();
+        }
+      }
+    });
+  });
+
   // Add a click event listener to the send button.
   $('#send').click(function() {
     // Get the message from the input field.
@@ -49,15 +72,16 @@ $(document).ready(function() {
     addMessage(message, username);
     // Clear the input field.
     $('#message').val('');
-    $('#username').val('');
   });
 });
 </script>
 </head>
 <body>
 <h1>Chat</h1>
-<input type="text" id="message" placeholder="Enter your message here">
 <input type="text" id="username" placeholder="Enter your username here">
-<input type="submit" id="send" value="Send">
+<input type="password" id="password" placeholder="Enter your password here">
+<input type="submit" id="login" value="Login">
+<div id="chat" style="display: none;">
+</div>
 </body>
 </html>
