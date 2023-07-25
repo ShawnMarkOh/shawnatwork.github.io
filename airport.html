@@ -2,12 +2,17 @@
 <html>
 <head>
 <title>IATA Airport Code Timezone Converter</title>
+<style>
+  .center {
+    text-align: center;
+  }
+</style>
 </head>
 <body style="background-color:gray;">
 <h1 style="text-align:center;">IATA Airport Code Timezone Converter</h1>
-<input type="text" id="airportCode" placeholder="Enter an airport code" style="text-align:center;">
-<div id="timezone" style="text-align:center;"></div>
-<p id="output" style="text-align:center;">The timezone for <code id="code"></code> is <code id="timezone"></code>.</p>
+<input type="text" id="airportCode" placeholder="Enter an airport code" class="center" style="text-align:center;">
+<div id="timezone" class="center" style="text-align:center;"></div>
+<p id="output" class="center" style="text-align:center;">The timezone for <code id="code"></code> is <code id="timezone"></code>.</p>
 <script>
 // Create a list of IATA codes and time zones
 const airportCodes = [
