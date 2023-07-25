@@ -550,7 +550,7 @@
 
       airportIntervals[foundAirport.iataCode] = setInterval(() => {
         updateAirportTime(foundAirport);
-      }, 500); // Set the interval to .5 second (500 milliseconds)
+      }, 100); // Set the interval to .5 second (500 milliseconds)
     } else {
       searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
 
