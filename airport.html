@@ -28,25 +28,36 @@
   <div class="output"></div>
   <script>
     function getAirportTimeZone() {
-      const iataCode = document.querySelector("#iataCode").value;
-      const url = `https://api.openflights.org/data/airports/?iataCode=${iataCode}`;
-      fetch(url)
-        .then(response => response.json())
-        .then(data => {
-          const timezone = data.timezone;
-          const time = new Date(data.localTime);
-          const hour = time.getHours();
-          const minute = time.getMinutes();
-          const formattedTime = `${hour}:${minute}`;
-          document.querySelector("#timezone").innerHTML = `${timezone} (${formattedTime})`;
-
-          const output = document.querySelector(".output");
-          output.innerHTML = `
-            <p>Airport Code: ${iataCode}</p>
-            <p>Timezone: ${timezone}</p>
-            <p>Local Time: ${formattedTime}</p>
-          `;
-        });
+      const iataCodes = [
+        "ATL",
+        "LAX",
+        "JFK",
+        "ORD",
+        "SFO",
+        "BWI",
+        "DFW",
+        "DEN",
+        "MCO",
+        "EWR",
+        "SEA",
+        "PHX",
+        "MSP",
+        "IAH",
+        "LAS",
+        "CLT",
+        "TPA",
+        "SLC",
+        "LGA",
+        "SAN",
+      ];
+      const output = document.querySelector(".output");
+      for (const iataCode of iataCodes) {
+        const timezone = iataCode.substring(0, 3);
+        output.innerHTML += `
+          <p>Airport Code: ${iataCode}</p>
+          <p>Timezone: ${timezone}</p>
+        `;
+      }
     }
 
     document.querySelector("#iataCode").addEventListener("input", getAirportTimeZone);
