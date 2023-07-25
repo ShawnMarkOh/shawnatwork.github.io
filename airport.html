@@ -40,14 +40,51 @@
   <script>
     // Airport data with IATA code, name, and time zone (for demonstration purposes)
     const airports = [
-      { iataCode: "JFK", name: "John F. Kennedy International Airport", timeZone: "America/New_York" },
-      { iataCode: "LAX", name: "Los Angeles International Airport", timeZone: "America/Los_Angeles" },
-      { iataCode: "YYZ", name: "Toronto Pearson International Airport", timeZone: "America/Toronto" },
-      // Add more airports here...
-      // Complete list of American IATA codes with time zones in EST format
-      { iataCode: "ATL", name: "Hartsfield-Jackson Atlanta International Airport", timeZone: "EST" },
-      { iataCode: "ORD", name: "Chicago O'Hare International Airport", timeZone: "EST" },
-      // Add all other American IATA codes and corresponding data here...
+  { "iataCode": "ATL", "name": "Hartsfield-Jackson Atlanta International Airport", "timeZone": "EST" },
+  { "iataCode": "ORD", "name": "Chicago O'Hare International Airport", "timeZone": "CST" },
+  { "iataCode": "LAX", "name": "Los Angeles International Airport", "timeZone": "PST" },
+  { "iataCode": "DFW", "name": "Dallas/Fort Worth International Airport", "timeZone": "CST" },
+  { "iataCode": "DEN", "name": "Denver International Airport", "timeZone": "MST" },
+  { "iataCode": "JFK", "name": "John F. Kennedy International Airport", "timeZone": "EST" },
+  { "iataCode": "SFO", "name": "San Francisco International Airport", "timeZone": "PST" },
+  { "iataCode": "SEA", "name": "Seattle-Tacoma International Airport", "timeZone": "PST" },
+  { "iataCode": "LAS", "name": "McCarran International Airport", "timeZone": "PST" },
+  { "iataCode": "MCO", "name": "Orlando International Airport", "timeZone": "EST" },
+  { "iataCode": "MIA", "name": "Miami International Airport", "timeZone": "EST" },
+  { "iataCode": "CLT", "name": "Charlotte Douglas International Airport", "timeZone": "EST" },
+  { "iataCode": "PHX", "name": "Phoenix Sky Harbor International Airport", "timeZone": "MST" },
+  { "iataCode": "IAH", "name": "George Bush Intercontinental Airport", "timeZone": "CST" },
+  { "iataCode": "FLL", "name": "Fort Lauderdale-Hollywood International Airport", "timeZone": "EST" },
+  { "iataCode": "EWR", "name": "Newark Liberty International Airport", "timeZone": "EST" },
+  { "iataCode": "MSP", "name": "Minneapolis-Saint Paul International Airport", "timeZone": "CST" },
+  { "iataCode": "BOS", "name": "Boston Logan International Airport", "timeZone": "EST" },
+  { "iataCode": "DTW", "name": "Detroit Metropolitan Wayne County Airport", "timeZone": "EST" },
+  { "iataCode": "PHL", "name": "Philadelphia International Airport", "timeZone": "EST" },
+  { "iataCode": "LGA", "name": "LaGuardia Airport", "timeZone": "EST" },
+  { "iataCode": "BWI", "name": "Baltimore/Washington International Thurgood Marshall Airport", "timeZone": "EST" },
+  { "iataCode": "SLC", "name": "Salt Lake City International Airport", "timeZone": "MST" },
+  { "iataCode": "SAN", "name": "San Diego International Airport", "timeZone": "PST" },
+  { "iataCode": "MDW", "name": "Chicago Midway International Airport", "timeZone": "CST" },
+  { "iataCode": "TPA", "name": "Tampa International Airport", "timeZone": "EST" },
+  { "iataCode": "HOU", "name": "William P. Hobby Airport", "timeZone": "CST" },
+  { "iataCode": "PDX", "name": "Portland International Airport", "timeZone": "PST" },
+  { "iataCode": "DCA", "name": "Ronald Reagan Washington National Airport", "timeZone": "EST" },
+  { "iataCode": "DAL", "name": "Dallas Love Field Airport", "timeZone": "CST" },
+  { "iataCode": "MSY", "name": "Louis Armstrong New Orleans International Airport", "timeZone": "CST" },
+  { "iataCode": "STL", "name": "St. Louis Lambert International Airport", "timeZone": "CST" },
+  { "iataCode": "BNA", "name": "Nashville International Airport", "timeZone": "CST" },
+  { "iataCode": "SJC", "name": "Norman Y. Mineta San Jose International Airport", "timeZone": "PST" },
+  { "iataCode": "OAK", "name": "Oakland International Airport", "timeZone": "PST" },
+  { "iataCode": "AUS", "name": "Austin-Bergstrom International Airport", "timeZone": "CST" },
+  { "iataCode": "MCI", "name": "Kansas City International Airport", "timeZone": "CST" },
+  { "iataCode": "CLE", "name": "Cleveland Hopkins International Airport", "timeZone": "EST" },
+  { "iataCode": "SMF", "name": "Sacramento International Airport", "timeZone": "PST" },
+  { "iataCode": "SNA", "name": "John Wayne Airport", "timeZone": "PST" },
+  { "iataCode": "RDU", "name": "Raleigh-Durham International Airport", "timeZone": "EST" },
+  { "iataCode": "SJU", "name": "Luis Muñoz Marín International Airport", "timeZone": "AST" },
+  // Continue with more airport codes...
+]
+
     ];
 
     function searchAirport() {
