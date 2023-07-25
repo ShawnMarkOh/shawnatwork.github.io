@@ -11,11 +11,13 @@ $(document).ready(function() {
   $('body').append(chat);
 
   // Create a function to add a new chat message.
-  function addMessage(message) {
+  function addMessage(message, username) {
     // Create a new div to hold the message.
     var messageDiv = $('<div class="message"></div>');
     // Add the message to the div.
     messageDiv.text(message);
+    // Add the username to the div.
+    messageDiv.append('<span class="username">' + username + '</span>');
     // Add the div to the chat div.
     chat.append(messageDiv);
   }
@@ -28,7 +30,7 @@ $(document).ready(function() {
       success: function(data) {
         // Add the messages to the chat div.
         for (var i = 0; i < data.length; i++) {
-          addMessage(data[i]);
+          addMessage(data[i].message, data[i].username);
         }
       }
     });
@@ -41,10 +43,13 @@ $(document).ready(function() {
   $('#send').click(function() {
     // Get the message from the input field.
     var message = $('#message').val();
+    // Get the username from the input field.
+    var username = $('#username').val();
     // Add the message to the chat div.
-    addMessage(message);
+    addMessage(message, username);
     // Clear the input field.
     $('#message').val('');
+    $('#username').val('');
   });
 });
 </script>
@@ -52,6 +57,7 @@ $(document).ready(function() {
 <body>
 <h1>Chat</h1>
 <input type="text" id="message" placeholder="Enter your message here">
+<input type="text" id="username" placeholder="Enter your username here">
 <input type="submit" id="send" value="Send">
 </body>
 </html>
