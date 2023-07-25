@@ -1,51 +1,28 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>IATA Airport Code Timezone Converter</title>
-<style>
-  .center {
-    text-align: center;
-  }
-</style>
+<title>Timezone Search</title>
 </head>
-<body style="background-color:gray;">
-<h1 style="text-align:center;">IATA Airport Code Timezone Converter</h1>
-<input type="text" id="airportCode" placeholder="Enter an airport code" class="center" style="text-align:center;">
-<div id="timezone" class="center" style="text-align:center;"></div>
-<p id="output" class="center" style="text-align:center;">The timezone for <code id="code"></code> is <code id="timezone"></code>.</p>
-<script>
-// Create a list of IATA codes and time zones
-const airportCodes = [
-  { code: "ABQ", timezone: "MST" },
-  { code: "ALB", timezone: "EST" },
-  { code: "ANC", timezone: "AKST" },
-  { code: "ATL", timezone: "EST" },
-  { code: "AUS", timezone: "CST" },
-];
+<body>
+<h1>Timezone Search</h1>
+<form action="index.php" method="get">
+<input type="text" name="airport_code" placeholder="Enter an airport code">
+<input type="submit" value="Search">
+</form>
+<?php
+if (isset($_GET['airport_code'])) {
+$airport_code = $_GET['airport_code'];
+$timezone = get_timezone($airport_code);
+echo "<p>The timezone for airport code $airport_code is $timezone</p>";
+}
 
-// Get the airport code from the input field
-const airportCode = document.getElementById("airportCode").value;
-
-// Find the corresponding timezone
-const timezone = airportCodes.find(code => code.code === airportCode).timezone;
-
-// Display the timezone in the output div
-document.getElementById("timezone").innerHTML = timezone;
-
-// Handle the input field change event
-document.getElementById("airportCode").addEventListener("change", function() {
-  // Get the airport code from the input field
-  airportCode = document.getElementById("airportCode").value;
-
-  // Find the corresponding timezone
-  timezone = airportCodes.find(code => code.code === airportCode).timezone;
-
-  // Display the timezone in the output div
-  document.getElementById("timezone").innerHTML = timezone;
-
-  // Display the output
-  document.getElementById("output").innerHTML = `The timezone for ${airportCode} is ${timezone}`;
-});
-</script>
+function get_timezone($airport_code) {
+$url = "https://api.timezonedb.com/v3/timezone/search?q=$airport_code&key=1X9HSNYOVJYP";
+$response = file_get_contents($url);
+$data = json_decode($response, true);
+$timezone = $data['results'][0]['timezone'];
+return $timezone;
+}
+?>
 </body>
 </html>
