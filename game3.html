@@ -1,111 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Barbie Movie Website</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  background-color: #ffffcc;
-  color: #000000;
-}
-
-h1 {
-  font-size: 22px;
-  margin-top: 0;
-  color: #ff0000;
-}
-
-p {
-  margin-bottom: 15px;
-  color: #0000ff;
-}
-
-a {
-  color: #00ffff;
-  font-weight: bold;
-}
-
-/* 90's colors */
-
-body {
-  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Web_1990s_background.svg/1200px-Web_1990s_background.svg.png);
-}
-
-h1 {
-  color: #ff0000;
-}
-
-p {
-  color: #0000ff;
-}
-
-a {
-  color: #00ffff;
-}
-
-/* 90's style */
-
-body {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-h1 {
-  font-size: 22px;
-  font-weight: bold;
-}
-
-p {
-  margin-bottom: 15px;
-  font-style: italic;
-}
-
-a {
-  font-weight: bold;
-}
-
-/* 90's design elements */
-
-.container {
-  width: 600px;
-  margin: 0 auto;
-  border: 2px solid #cccccc;
-}
-
-img {
-  max-width: 100%;
-  border: 1px solid #cccccc;
-}
-
-/* 90's clipart */
-
-img.clipart {
-  float: right;
-  margin: 0 0 10px 10px;
-}
-
-/* 90's specific elements */
-
-.bg-barbie {
-  background-image: url(https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Barbie_logo.svg/1200px-Barbie_logo.svg.png);
-}
-
-.text-barbie {
-  color: #ff0000;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Castle Defender Game</title>
+  <style>
+    body {
+      text-align: center;
+    }
+    #castle {
+      width: 200px;
+      height: 100px;
+      background-color: gray;
+      margin: 30px auto;
+    }
+    .enemy {
+      width: 50px;
+      height: 50px;
+      background-color: red;
+      position: absolute;
+    }
+    #bow {
+      top: 150px;
+      left: 150px;
+    }
+    #sword {
+      top: 200px;
+      left: 250px;
+    }
+    #spell {
+      top: 250px;
+      left: 150px;
+    }
+  </style>
 </head>
 <body>
-<div class="container bg-barbie">
-<h1 class="text-barbie">Barbie Movie Website</h1>
-<img class="clipart" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Barbie_2023_movie.png/600px-Barbie_2023_movie.png" alt="A screenshot of the Barbie 2023 movie poster">
-<p>The new Barbie movie is coming soon!</p>
-<p>This website is dedicated to celebrating the movie and all things Barbie.</p>
-<p>Here you will find news, trailers, images, and more about the movie.</p>
-<p>We hope you enjoy!</p>
-</div>
+  <h1>Castle Defender Game</h1>
+  <div id="castle"></div>
+  <div class="enemy" id="bow"></div>
+  <div class="enemy" id="sword"></div>
+  <div class="enemy" id="spell"></div>
+  <p>Choose your weapon:</p>
+  <button onclick="attack('bow')">Bow</button>
+  <button onclick="attack('sword')">Sword</button>
+  <button onclick="attack('spell')">Magic Spell</button>
+
+  <script>
+    function attack(weapon) {
+      let enemy;
+      switch (weapon) {
+        case 'bow':
+          enemy = document.getElementById('bow');
+          break;
+        case 'sword':
+          enemy = document.getElementById('sword');
+          break;
+        case 'spell':
+          enemy = document.getElementById('spell');
+          break;
+        default:
+          return;
+      }
+
+      // Calculate damage and remove enemy when clicked
+      const damage = Math.floor(Math.random() * 20) + 1;
+      enemy.style.opacity = 0;
+      setTimeout(() => {
+        enemy.style.display = 'none';
+      }, 500);
+
+      // Update castle health (just an example, not fully implemented)
+      // You can keep track of a health variable and update it accordingly
+      // For simplicity, we'll just log the damage for now
+      console.log(`You attacked with ${weapon} and dealt ${damage} damage.`);
+    }
+  </script>
 </body>
 </html>
