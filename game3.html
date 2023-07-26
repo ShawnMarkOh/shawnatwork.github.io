@@ -40,7 +40,6 @@
       opacity: 1;
       border-radius: 50%;
       cursor: pointer;
-      animation: enemyMove 5s linear infinite;
     }
     .enemy.invisible {
       display: none;
@@ -53,14 +52,6 @@
       bottom: 0;
       left: 0;
       border-radius: 5px;
-    }
-    @keyframes enemyMove {
-      0% {
-        transform: translate(0, 0);
-      }
-      100% {
-        transform: translate(calc(100% - 50px), calc(100% - 50px));
-      }
     }
     button {
       margin: 5px;
@@ -128,16 +119,22 @@
       }
 
       // Function to smoothly animate enemy movement
-      function animateEnemy(enemy) {
-        enemy.style.animation = "enemyMove 5s linear infinite";
-        enemy.classList.remove("invisible");
+      function animateEnemy() {
+        const enemy = Array.from(enemies).find((e) => e.classList.contains("invisible"));
+        if (enemy) {
+          enemy.style.animation = "enemyMove 5s linear";
+          enemy.classList.remove("invisible");
+
+          // Reset the enemy animation and invisibility after it completes
+          setTimeout(() => {
+            enemy.style.animation = "";
+            enemy.classList.add("invisible");
+          }, 5000);
+        }
       }
 
       // Start enemy animations
-      for (const enemy of enemies) {
-        enemy.classList.add("invisible");
-        animateEnemy(enemy);
-      }
+      setInterval(animateEnemy, 6000);
     });
   </script>
 </body>
