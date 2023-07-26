@@ -1,158 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Castle Defender Game</title>
-  <style>
-    body {
-      text-align: center;
-      font-family: Arial, sans-serif;
-    }
-    h1 {
-      margin-bottom: 20px;
-    }
-    .castle {
-      width: 200px;
-      height: 100px;
-      background-color: gray;
-      margin: 30px auto;
-      position: relative;
-    }
-    .castle-health {
-      width: 100%;
-      height: 10px;
-      background-color: green;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      border-radius: 5px;
-    }
-    .enemy-container {
-      position: relative;
-      margin: 20px 0;
-    }
-    .enemy {
-      width: 50px;
-      height: 50px;
-      background-color: red;
-      position: absolute;
-      opacity: 1;
-      border-radius: 50%;
-      cursor: pointer;
-      animation: enemyMove 5s linear infinite;
-      display: none;
-    }
-    .enemy.visible {
-      display: block;
-    }
-    .enemy-health {
-      width: 100%;
-      height: 10px;
-      background-color: green;
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      border-radius: 5px;
-    }
-    @keyframes enemyMove {
-      0% {
-        transform: translate(0, 0);
-      }
-      100% {
-        transform: translate(calc(100% - 50px), calc(100% - 50px));
-      }
-    }
-    button {
-      margin: 5px;
-      padding: 10px 20px;
-      background-color: #3498db;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #2980b9;
-    }
-    button:active {
-      background-color: #1f618d;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tower Defense Game</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #game-container {
+            position: relative;
+        }
+
+        #grid-container {
+            display: grid;
+            grid-template-columns: repeat(8, 50px);
+            grid-template-rows: repeat(6, 50px);
+            gap: 2px;
+            border: 1px solid #000;
+            background-color: #f1f1f1;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 16px;
+        }
+
+        #base {
+            width: 50px;
+            height: 50px;
+            background-color: #f00;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+        }
+    </style>
 </head>
 <body>
-  <h1>Castle Defender Game</h1>
-  <div id="castle" class="castle">
-    <div class="castle-health" id="castle-health"></div>
-  </div>
-  <div id="enemy-container" class="enemy-container">
-    <div class="enemy" id="enemy1">
-      <div class="enemy-health" data-health="100"></div>
+    <div id="game-container">
+        <div id="grid-container"></div>
+        <div id="base"></div>
+        <button onclick="startGame()">Start Game</button>
+        <button onclick="resetGame()">Reset Game</button>
     </div>
-    <div class="enemy" id="enemy2">
-      <div class="enemy-health" data-health="120"></div>
-    </div>
-    <div class="enemy" id="enemy3">
-      <div class="enemy-health" data-health="80"></div>
-    </div>
-  </div>
-  <p>Choose your weapon:</p>
-  <button onclick="attack('bow')">Bow</button>
-  <button onclick="attack('sword')">Sword</button>
-  <button onclick="attack('spell')">Magic Spell</button>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const enemyContainer = document.getElementById("enemy-container");
-      const enemies = enemyContainer.getElementsByClassName("enemy");
-      const castle = document.getElementById("castle");
-      const castleHealthBar = document.getElementById("castle-health");
+    <script>
+        const grid = document.getElementById('grid-container');
+        const base = document.getElementById('base');
 
-      // Function to handle enemy attacks
-      function attack(weapon) {
-        const enemy = Array.from(enemies).find((e) => e.classList.contains("visible"));
-        if (!enemy) return;
+        let isGameRunning = false;
+        let isGameOver = false;
+        let baseHealth = 100;
 
-        const damage = Math.floor(Math.random() * 20) + 1;
-        const enemyHealthBar = enemy.querySelector(".enemy-health");
-        let health = parseInt(enemyHealthBar.getAttribute("data-health"));
-        health -= damage;
-
-        if (health <= 0) {
-          enemy.classList.remove("visible");
+        function createGrid() {
+            for (let row = 0; row < 6; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    grid.appendChild(cell);
+                }
+            }
         }
 
-        enemyHealthBar.style.width = `${(health > 0 ? health : 0)}%`;
-        enemyHealthBar.setAttribute("data-health", health);
+        function placeTower(row, col) {
+            if (!isGameRunning || isGameOver) return;
 
-        console.log(`You attacked with ${weapon} and dealt ${damage} damage.`);
-      }
-
-      // Function to smoothly animate enemy movement
-      function animateEnemy() {
-        const enemy = Array.from(enemies).find((e) => !e.classList.contains("visible"));
-        if (enemy) {
-          enemy.classList.add("visible");
-
-          // Reset the enemy visibility after 5 seconds
-          setTimeout(() => {
-            enemy.classList.remove("visible");
-          }, 5000);
+            const towerCell = document.querySelector(`[data-row="${row}"][data-col="${col}"]`);
+            if (!towerCell.classList.contains('tower')) {
+                towerCell.classList.add('tower');
+            }
         }
 
-        // Simulate enemy attack on the castle
-        const castleHealthBar = document.getElementById("castle-health");
-        let castleHealth = parseInt(castleHealthBar.getAttribute("data-health"));
-        const damage = Math.floor(Math.random() * 10) + 1;
-        castleHealth -= damage;
-        castleHealthBar.style.width = `${(castleHealth > 0 ? castleHealth : 0)}%`;
-        castleHealthBar.setAttribute("data-health", castleHealth);
-        console.log(`The castle was attacked, and it took ${damage} damage.`);
-      }
+        function startGame() {
+            if (isGameRunning) return;
+            isGameRunning = true;
 
-      // Start enemy animations
-      setInterval(animateEnemy, 6000);
-    });
-  </script>
+            grid.addEventListener('click', handleGridClick);
+            attackEnemies();
+        }
+
+        function handleGridClick(event) {
+            const cell = event.target;
+            const row = parseInt(cell.dataset.row);
+            const col = parseInt(cell.dataset.col);
+
+            placeTower(row, col);
+        }
+
+        function resetGame() {
+            isGameRunning = false;
+            isGameOver = false;
+            baseHealth = 100;
+
+            const towerCells = document.querySelectorAll('.tower');
+            towerCells.forEach((cell) => cell.classList.remove('tower'));
+
+            base.style.backgroundColor = '#f00';
+
+            grid.removeEventListener('click', handleGridClick);
+        }
+
+        function gameOver() {
+            isGameRunning = false;
+            isGameOver = true;
+
+            alert("Game Over! Your base has been destroyed.");
+        }
+
+        function attackEnemies() {
+            // This is a placeholder function for simulating enemy attacks.
+            // In a real game, you'd need to implement enemy waves, towers firing, etc.
+            if (!isGameRunning || isGameOver) return;
+
+            baseHealth -= 10;
+            if (baseHealth <= 0) {
+                baseHealth = 0;
+                base.style.backgroundColor = '#ccc';
+                gameOver();
+            } else if (baseHealth <= 30) {
+                base.style.backgroundColor = '#ff6600';
+            }
+
+            setTimeout(attackEnemies, 2000); // Simulating enemy attack every 2 seconds
+        }
+
+        createGrid();
+    </script>
 </body>
 </html>
