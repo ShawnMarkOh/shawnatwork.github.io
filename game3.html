@@ -86,13 +86,13 @@
     <div class="castle-health" id="castle-health"></div>
   </div>
   <div id="enemy-container" class="enemy-container">
-    <div class="enemy" id="bow">
+    <div class="enemy" id="enemy1">
       <div class="enemy-health" data-health="100"></div>
     </div>
-    <div class="enemy" id="sword">
+    <div class="enemy" id="enemy2">
       <div class="enemy-health" data-health="120"></div>
     </div>
-    <div class="enemy" id="spell">
+    <div class="enemy" id="enemy3">
       <div class="enemy-health" data-health="80"></div>
     </div>
   </div>
@@ -139,6 +139,15 @@
             enemy.classList.remove("visible");
           }, 5000);
         }
+
+        // Simulate enemy attack on the castle
+        const castleHealthBar = document.getElementById("castle-health");
+        let castleHealth = parseInt(castleHealthBar.getAttribute("data-health"));
+        const damage = Math.floor(Math.random() * 10) + 1;
+        castleHealth -= damage;
+        castleHealthBar.style.width = `${(castleHealth > 0 ? castleHealth : 0)}%`;
+        castleHealthBar.setAttribute("data-health", castleHealth);
+        console.log(`The castle was attacked, and it took ${damage} damage.`);
       }
 
       // Start enemy animations
