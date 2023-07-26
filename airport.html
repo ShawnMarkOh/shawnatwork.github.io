@@ -56,7 +56,12 @@
     <input type="text" id="search-input" placeholder="Enter IATA code (e.g., JFK)">
     <div id="search-results"></div>
   </div>
-
+ <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modal-close" style="float: right; cursor: pointer;">&times;</span>
+      <p><b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please teams me!</b></p>
+    </div>
+  </div>
 <script>
   // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
   const airports = [
@@ -570,7 +575,25 @@
     }
 
     document.getElementById("search-input").addEventListener("keyup", searchAirport);
+
+  window.onload = () => {
+      const modal = document.getElementById("modal");
+      modal.style.display = "block";
+
+      const modalClose = document.getElementById("modal-close");
+      modalClose.onclick = () => {
+        modal.style.display = "none";
+      };
+
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    };
   </script>
+</body>
+</html>
   
   <div id="footer">
     <b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please teams me!</b>
