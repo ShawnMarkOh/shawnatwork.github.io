@@ -40,9 +40,11 @@
       opacity: 1;
       border-radius: 50%;
       cursor: pointer;
-    }
-    .enemy.invisible {
+      animation: enemyMove 5s linear infinite;
       display: none;
+    }
+    .enemy.visible {
+      display: block;
     }
     .enemy-health {
       width: 100%;
@@ -52,6 +54,14 @@
       bottom: 0;
       left: 0;
       border-radius: 5px;
+    }
+    @keyframes enemyMove {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(calc(100% - 50px), calc(100% - 50px));
+      }
     }
     button {
       margin: 5px;
@@ -100,7 +110,7 @@
 
       // Function to handle enemy attacks
       function attack(weapon) {
-        const enemy = Array.from(enemies).find((e) => !e.classList.contains("invisible"));
+        const enemy = Array.from(enemies).find((e) => e.classList.contains("visible"));
         if (!enemy) return;
 
         const damage = Math.floor(Math.random() * 20) + 1;
@@ -109,7 +119,7 @@
         health -= damage;
 
         if (health <= 0) {
-          enemy.classList.add("invisible");
+          enemy.classList.remove("visible");
         }
 
         enemyHealthBar.style.width = `${(health > 0 ? health : 0)}%`;
@@ -120,15 +130,13 @@
 
       // Function to smoothly animate enemy movement
       function animateEnemy() {
-        const enemy = Array.from(enemies).find((e) => e.classList.contains("invisible"));
+        const enemy = Array.from(enemies).find((e) => !e.classList.contains("visible"));
         if (enemy) {
-          enemy.style.animation = "enemyMove 5s linear";
-          enemy.classList.remove("invisible");
+          enemy.classList.add("visible");
 
-          // Reset the enemy animation and invisibility after it completes
+          // Reset the enemy visibility after 5 seconds
           setTimeout(() => {
-            enemy.style.animation = "";
-            enemy.classList.add("invisible");
+            enemy.classList.remove("visible");
           }, 5000);
         }
       }
