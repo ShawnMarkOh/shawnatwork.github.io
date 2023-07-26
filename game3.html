@@ -65,6 +65,7 @@
         let isGameRunning = false;
         let isGameOver = false;
         let baseHealth = 100;
+        let enemyInterval;
 
         function createGrid() {
             for (let row = 0; row < 6; row++) {
@@ -114,6 +115,7 @@
             base.style.backgroundColor = '#f00';
 
             grid.removeEventListener('click', handleGridClick);
+            clearInterval(enemyInterval);
         }
 
         function gameOver() {
@@ -124,20 +126,20 @@
         }
 
         function attackEnemies() {
-            // This is a placeholder function for simulating enemy attacks.
-            // In a real game, you'd need to implement enemy waves, towers firing, etc.
             if (!isGameRunning || isGameOver) return;
 
-            baseHealth -= 10;
-            if (baseHealth <= 0) {
-                baseHealth = 0;
-                base.style.backgroundColor = '#ccc';
-                gameOver();
-            } else if (baseHealth <= 30) {
-                base.style.backgroundColor = '#ff6600';
-            }
-
-            setTimeout(attackEnemies, 2000); // Simulating enemy attack every 2 seconds
+            enemyInterval = setInterval(() => {
+                // Simulate enemy attack - reduce base health
+                baseHealth -= 10;
+                if (baseHealth <= 0) {
+                    baseHealth = 0;
+                    base.style.backgroundColor = '#ccc';
+                    clearInterval(enemyInterval);
+                    gameOver();
+                } else if (baseHealth <= 30) {
+                    base.style.backgroundColor = '#ff6600';
+                }
+            }, 2000); // Simulate enemy attack every 2 seconds
         }
 
         createGrid();
