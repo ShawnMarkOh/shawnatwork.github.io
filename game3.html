@@ -19,6 +19,15 @@
       margin: 30px auto;
       position: relative;
     }
+    .castle-health {
+      width: 100%;
+      height: 10px;
+      background-color: green;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-radius: 5px;
+    }
     .enemy-container {
       position: relative;
       margin: 20px 0;
@@ -32,6 +41,24 @@
       border-radius: 50%;
       cursor: pointer;
       display: none;
+      animation: enemyMove 5s linear infinite;
+    }
+    .enemy-health {
+      width: 100%;
+      height: 10px;
+      background-color: green;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      border-radius: 5px;
+    }
+    @keyframes enemyMove {
+      0% {
+        transform: translate(0, 0);
+      }
+      100% {
+        transform: translate(calc(100% - 50px), calc(100% - 50px));
+      }
     }
     button {
       margin: 5px;
@@ -52,11 +79,19 @@
 </head>
 <body>
   <h1>Castle Defender Game</h1>
-  <div id="castle" class="castle"></div>
+  <div id="castle" class="castle">
+    <div class="castle-health" id="castle-health"></div>
+  </div>
   <div id="enemy-container" class="enemy-container">
-    <div class="enemy" id="bow"></div>
-    <div class="enemy" id="sword"></div>
-    <div class="enemy" id="spell"></div>
+    <div class="enemy" id="bow">
+      <div class="enemy-health" data-health="100"></div>
+    </div>
+    <div class="enemy" id="sword">
+      <div class="enemy-health" data-health="120"></div>
+    </div>
+    <div class="enemy" id="spell">
+      <div class="enemy-health" data-health="80"></div>
+    </div>
   </div>
   <p>Choose your weapon:</p>
   <button onclick="attack('bow')">Bow</button>
@@ -68,6 +103,7 @@
       const enemyContainer = document.getElementById("enemy-container");
       const enemies = enemyContainer.getElementsByClassName("enemy");
       const castle = document.getElementById("castle");
+      const castleHealthBar = document.getElementById("castle-health");
 
       // Function to handle enemy attacks
       function attack(weapon) {
@@ -75,40 +111,29 @@
         if (!enemy) return;
 
         const damage = Math.floor(Math.random() * 20) + 1;
-        enemy.style.opacity = 0;
-        setTimeout(() => {
-          enemy.style.display = "none";
-          enemy.style.opacity = 1;
-        }, 500);
+        const enemyHealthBar = enemy.querySelector(".enemy-health");
+        let health = parseInt(enemyHealthBar.getAttribute("data-health"));
+        health -= damage;
 
-        // Reduce castle health (just an example, not fully implemented)
-        // For simplicity, we'll just log the damage for now
+        if (health <= 0) {
+          enemy.style.display = "none";
+        }
+
+        enemyHealthBar.style.width = `${(health > 0 ? health : 0)}%`;
+        enemyHealthBar.setAttribute("data-health", health);
+
         console.log(`You attacked with ${weapon} and dealt ${damage} damage.`);
       }
 
-      // Function to spawn random enemies
-      function spawnEnemies() {
-        const enemyTypes = ["bow", "sword", "spell"];
-        const enemyIndex = Math.floor(Math.random() * enemyTypes.length);
-        const randomEnemy = document.getElementById(enemyTypes[enemyIndex]);
-        randomEnemy.style.display = "block";
-
-        // Random position for the enemy
-        const maxWidth = enemyContainer.clientWidth - randomEnemy.clientWidth;
-        const maxHeight = enemyContainer.clientHeight - randomEnemy.clientHeight;
-        const posX = Math.floor(Math.random() * maxWidth);
-        const posY = Math.floor(Math.random() * maxHeight);
-        randomEnemy.style.top = `${posY}px`;
-        randomEnemy.style.left = `${posX}px`;
+      // Function to smoothly animate enemy movement
+      function animateEnemy(enemy) {
+        enemy.style.animation = "enemyMove 5s linear infinite";
       }
 
-      // Start spawning enemies every 2 seconds
-      setInterval(spawnEnemies, 2000);
-
-      // Event listeners for weapon buttons
-      document.getElementById("bow").addEventListener("click", () => attack("bow"));
-      document.getElementById("sword").addEventListener("click", () => attack("sword"));
-      document.getElementById("spell").addEventListener("click", () => attack("spell"));
+      // Start enemy animations
+      for (const enemy of enemies) {
+        animateEnemy(enemy);
+      }
     });
   </script>
 </body>
