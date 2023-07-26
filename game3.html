@@ -7,73 +7,109 @@
   <style>
     body {
       text-align: center;
+      font-family: Arial, sans-serif;
     }
-    #castle {
+    h1 {
+      margin-bottom: 20px;
+    }
+    .castle {
       width: 200px;
       height: 100px;
       background-color: gray;
       margin: 30px auto;
+      position: relative;
+    }
+    .enemy-container {
+      position: relative;
+      margin: 20px 0;
     }
     .enemy {
       width: 50px;
       height: 50px;
       background-color: red;
       position: absolute;
+      opacity: 1;
+      border-radius: 50%;
+      cursor: pointer;
+      display: none;
     }
-    #bow {
-      top: 150px;
-      left: 150px;
+    button {
+      margin: 5px;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
     }
-    #sword {
-      top: 200px;
-      left: 250px;
+    button:hover {
+      background-color: #2980b9;
     }
-    #spell {
-      top: 250px;
-      left: 150px;
+    button:active {
+      background-color: #1f618d;
     }
   </style>
 </head>
 <body>
   <h1>Castle Defender Game</h1>
-  <div id="castle"></div>
-  <div class="enemy" id="bow"></div>
-  <div class="enemy" id="sword"></div>
-  <div class="enemy" id="spell"></div>
+  <div id="castle" class="castle"></div>
+  <div id="enemy-container" class="enemy-container">
+    <div class="enemy" id="bow"></div>
+    <div class="enemy" id="sword"></div>
+    <div class="enemy" id="spell"></div>
+  </div>
   <p>Choose your weapon:</p>
   <button onclick="attack('bow')">Bow</button>
   <button onclick="attack('sword')">Sword</button>
   <button onclick="attack('spell')">Magic Spell</button>
 
   <script>
-    function attack(weapon) {
-      let enemy;
-      switch (weapon) {
-        case 'bow':
-          enemy = document.getElementById('bow');
-          break;
-        case 'sword':
-          enemy = document.getElementById('sword');
-          break;
-        case 'spell':
-          enemy = document.getElementById('spell');
-          break;
-        default:
-          return;
+    document.addEventListener("DOMContentLoaded", () => {
+      const enemyContainer = document.getElementById("enemy-container");
+      const enemies = enemyContainer.getElementsByClassName("enemy");
+      const castle = document.getElementById("castle");
+
+      // Function to handle enemy attacks
+      function attack(weapon) {
+        const enemy = Array.from(enemies).find((e) => getComputedStyle(e).display !== "none");
+        if (!enemy) return;
+
+        const damage = Math.floor(Math.random() * 20) + 1;
+        enemy.style.opacity = 0;
+        setTimeout(() => {
+          enemy.style.display = "none";
+          enemy.style.opacity = 1;
+        }, 500);
+
+        // Reduce castle health (just an example, not fully implemented)
+        // For simplicity, we'll just log the damage for now
+        console.log(`You attacked with ${weapon} and dealt ${damage} damage.`);
       }
 
-      // Calculate damage and remove enemy when clicked
-      const damage = Math.floor(Math.random() * 20) + 1;
-      enemy.style.opacity = 0;
-      setTimeout(() => {
-        enemy.style.display = 'none';
-      }, 500);
+      // Function to spawn random enemies
+      function spawnEnemies() {
+        const enemyTypes = ["bow", "sword", "spell"];
+        const enemyIndex = Math.floor(Math.random() * enemyTypes.length);
+        const randomEnemy = document.getElementById(enemyTypes[enemyIndex]);
+        randomEnemy.style.display = "block";
 
-      // Update castle health (just an example, not fully implemented)
-      // You can keep track of a health variable and update it accordingly
-      // For simplicity, we'll just log the damage for now
-      console.log(`You attacked with ${weapon} and dealt ${damage} damage.`);
-    }
+        // Random position for the enemy
+        const maxWidth = enemyContainer.clientWidth - randomEnemy.clientWidth;
+        const maxHeight = enemyContainer.clientHeight - randomEnemy.clientHeight;
+        const posX = Math.floor(Math.random() * maxWidth);
+        const posY = Math.floor(Math.random() * maxHeight);
+        randomEnemy.style.top = `${posY}px`;
+        randomEnemy.style.left = `${posX}px`;
+      }
+
+      // Start spawning enemies every 2 seconds
+      setInterval(spawnEnemies, 2000);
+
+      // Event listeners for weapon buttons
+      document.getElementById("bow").addEventListener("click", () => attack("bow"));
+      document.getElementById("sword").addEventListener("click", () => attack("sword"));
+      document.getElementById("spell").addEventListener("click", () => attack("spell"));
+    });
   </script>
 </body>
 </html>
