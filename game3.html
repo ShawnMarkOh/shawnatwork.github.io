@@ -40,8 +40,10 @@
       opacity: 1;
       border-radius: 50%;
       cursor: pointer;
-      display: none;
       animation: enemyMove 5s linear infinite;
+    }
+    .enemy.invisible {
+      display: none;
     }
     .enemy-health {
       width: 100%;
@@ -107,7 +109,7 @@
 
       // Function to handle enemy attacks
       function attack(weapon) {
-        const enemy = Array.from(enemies).find((e) => getComputedStyle(e).display !== "none");
+        const enemy = Array.from(enemies).find((e) => !e.classList.contains("invisible"));
         if (!enemy) return;
 
         const damage = Math.floor(Math.random() * 20) + 1;
@@ -116,7 +118,7 @@
         health -= damage;
 
         if (health <= 0) {
-          enemy.style.display = "none";
+          enemy.classList.add("invisible");
         }
 
         enemyHealthBar.style.width = `${(health > 0 ? health : 0)}%`;
@@ -128,10 +130,12 @@
       // Function to smoothly animate enemy movement
       function animateEnemy(enemy) {
         enemy.style.animation = "enemyMove 5s linear infinite";
+        enemy.classList.remove("invisible");
       }
 
       // Start enemy animations
       for (const enemy of enemies) {
+        enemy.classList.add("invisible");
         animateEnemy(enemy);
       }
     });
