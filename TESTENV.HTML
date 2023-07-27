@@ -574,48 +574,59 @@
         return;
       }
 
-      const matchingAirports = airports.filter((airport) => {
-        return (
-          airport.iataCode.includes(searchInput) ||
-          airport.name.toUpperCase().includes(searchInput) ||
-          airport.city.toUpperCase().includes(searchInput)
-        );
-      });
+      let foundAirport;
 
-      if (matchingAirports.length > 0) {
-        const currentTime = moment.tz(matchingAirports[0].timeZone).format("YYYY-MM-DD HH:mm:ss z");
-        let locationInfo = `<p><strong>IATA Code:</strong> ${matchingAirports[0].iataCode}</p>`;
-        locationInfo += `<p><strong>Airport:</strong> ${matchingAirports[0].name}</p>`;
-        if (matchingAirports[0].city) {
-          locationInfo += `<p><strong>City:</strong> ${matchingAirports[0].city}</p>`;
+      // Check if there's an exact match for the IATA code
+      foundAirport = airports.find((airport) => airport.iataCode === searchInput);
+
+      if (!foundAirport) {
+        // Check for airports whose names start with the search input
+        foundAirport = airports.find(
+          (airport) => airport.name.toUpperCase().startsWith(searchInput)
+        );
+
+        if (!foundAirport) {
+          // If no match in airport names, check for airports whose cities start with the search input
+          foundAirport = airports.find(
+            (airport) => airport.city.toUpperCase().startsWith(searchInput)
+          );
         }
-        if (matchingAirports[0].state) {
-          locationInfo += `<p><strong>State:</strong> ${matchingAirports[0].state}</p>`;
+      }
+
+      if (foundAirport) {
+        const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+        let locationInfo = `<p><strong>IATA Code:</strong> ${foundAirport.iataCode}</p>`;
+        locationInfo += `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
+        if (foundAirport.city) {
+          locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
         }
-        if (matchingAirports[0].province) {
-          locationInfo += `<p><strong>Province:</strong> ${matchingAirports[0].province}</p>`;
+        if (foundAirport.state) {
+          locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
         }
-        if (matchingAirports[0].island) {
-          locationInfo += `<p><strong>Island:</strong> ${matchingAirports[0].island}</p>`;
+        if (foundAirport.province) {
+          locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
         }
-        locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${matchingAirports[0].iataCode}">${currentTime}</span></p>`;
+        if (foundAirport.island) {
+          locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
+        }
+        locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
         const resultContainer = document.createElement("div");
         resultContainer.innerHTML = locationInfo;
         searchResultsDiv.appendChild(resultContainer);
 
-        clearInterval(airportIntervals[matchingAirports[0].iataCode]);
+        clearInterval(airportIntervals[foundAirport.iataCode]);
 
         // Display the initial time immediately
-        updateAirportTime(matchingAirports[0]);
+        updateAirportTime(foundAirport);
 
         // Update the time every 1 second (1000 milliseconds)
-        airportIntervals[matchingAirports[0].iataCode] = setInterval(() => {
-          updateAirportTime(matchingAirports[0]);
+        airportIntervals[foundAirport.iataCode] = setInterval(() => {
+          updateAirportTime(foundAirport);
         }, 1000);
 
         // Store the current airport code in the search results div
-        document.getElementById("search-results").dataset.airportCode = matchingAirports[0].iataCode;
+        document.getElementById("search-results").dataset.airportCode = foundAirport.iataCode;
       } else {
         searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code, airport name, or city.</p>";
         document.getElementById("search-results").dataset.airportCode = "";
