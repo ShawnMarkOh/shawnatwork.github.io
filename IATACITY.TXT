@@ -457,6 +457,4 @@
   {"iataCode": "TBI", "name": "New Bight Airport", "city": "New Bight",  "island": "Cat Island", "timeZone": "America/Nassau"},
   {"iataCode": "TCB", "name": "Treasure Cay Airport", "city": "Treasure Cay",  "island": "Abaco", "timeZone": "America/Nassau"},
   {"iataCode": "TZN", "name": "South Andros Airport", "city": "Congo Town",  "island": "Andros", "timeZone": "America/Nassau"},
-
-
 ]
