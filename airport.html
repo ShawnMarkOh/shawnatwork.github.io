@@ -26,6 +26,7 @@
     }
     
     #search-input {
+      width: 300px; /* Set the desired width here */
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -78,18 +79,18 @@
 <body>
   <div id="search-container">
     <h1>Airport Time Zone Search</h1>
-    <input type="text" id="search-input" placeholder="Enter IATA code (e.g., JFK)">
+    <input type="text" id="search-input" placeholder="Enter IATA code, airport name, or city">
     <div id="search-results"></div>
   </div>
- <div id="modal" class="modal">
+  <div id="modal" class="modal">
     <div class="modal-content">
       <span id="modal-close" style="float: right; cursor: pointer;">&times;</span>
       <p><b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please Teams me! - Shawn</b></p>
     </div>
   </div>
-<script>
-  // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
-  const airports = [
+  <script>
+    // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
+    const airports = [
     {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown",  "state": "Pennsylvania", "timeZone": "America/New_York"},
     {"iataCode": "ABI", "name": "Abilene Regional Airport", "city": "Abilene",  "state": "Texas", "timeZone": "America/Chicago"},
     {"iataCode": "ABQ", "name": "Albuquerque International Sunport", "city": "Albuquerque",  "state": "New Mexico", "timeZone": "America/Denver"},
@@ -548,24 +549,54 @@
   {"iataCode": "TBI", "name": "New Bight Airport", "city": "New Bight",  "island": "Cat Island", "timeZone": "America/Nassau"},
   {"iataCode": "TCB", "name": "Treasure Cay Airport", "city": "Treasure Cay",  "island": "Abaco", "timeZone": "America/Nassau"},
   {"iataCode": "TZN", "name": "South Andros Airport", "city": "Congo Town",  "island": "Andros", "timeZone": "America/Nassau"},
-  ];
 
- const airportIntervals = {};
+    ];
 
-  function updateAirportTime(foundAirport) {
-    const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-    document.getElementById(`current-time-${foundAirport.iataCode}`).textContent = currentTime;
-  }
+    const airportIntervals = {};
 
-  function searchAirport() {
-    const searchInput = document.getElementById("search-input").value.toUpperCase();
-    const searchResultsDiv = document.getElementById("search-results");
-    searchResultsDiv.innerHTML = "";
+    function updateAirportTime(foundAirport) {
+      const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+      document.getElementById(`current-time-${foundAirport.iataCode}`).textContent = currentTime;
+    }
 
-    const foundAirport = airports.find((airport) => airport.iataCode === searchInput);
-     if (foundAirport) {
+    function searchAirport() {
+      const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
+      const searchResultsDiv = document.getElementById("search-results");
+      searchResultsDiv.innerHTML = "";
+
+      // Clear the interval for the previous airport (if any)
+      const previousAirportCode = document.getElementById("search-results").dataset.airportCode;
+      if (airportIntervals[previousAirportCode]) {
+        clearInterval(airportIntervals[previousAirportCode]);
+      }
+
+      if (searchInput === "") {
+        // If the search input is empty, reset the display and return early
+        document.getElementById("search-results").dataset.airportCode = "";
+        return;
+      }
+
+      // Search for an exact match in IATA codes
+      let foundAirport = airports.find((airport) => airport.iataCode === searchInput);
+
+      if (!foundAirport) {
+        // If no exact match in IATA codes, check for airports whose names contain the search input
+        foundAirport = airports.find(
+          (airport) => airport.name.toUpperCase().includes(searchInput)
+        );
+
+        if (!foundAirport) {
+          // If no match in airport names, check for airports whose cities start with the search input
+          foundAirport = airports.find(
+            (airport) => airport.city.toUpperCase().startsWith(searchInput)
+          );
+        }
+      }
+
+      if (foundAirport) {
         const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-        let locationInfo = `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
+        let locationInfo = `<p><strong>IATA Code:</strong> ${foundAirport.iataCode}</p>`;
+        locationInfo += `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
         if (foundAirport.city) {
           locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
         }
@@ -579,7 +610,10 @@
           locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
         }
         locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
-        searchResultsDiv.innerHTML = locationInfo;
+
+        const resultContainer = document.createElement("div");
+        resultContainer.innerHTML = locationInfo;
+        searchResultsDiv.appendChild(resultContainer);
 
         clearInterval(airportIntervals[foundAirport.iataCode]);
 
@@ -590,19 +624,18 @@
         airportIntervals[foundAirport.iataCode] = setInterval(() => {
           updateAirportTime(foundAirport);
         }, 1000);
-      } else {
-        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code.</p>";
 
-        // Clear the interval for the current airport
-        if (airportIntervals[foundAirport.iataCode]) {
-          clearInterval(airportIntervals[foundAirport.iataCode]);
-        }
+        // Store the current airport code in the search results div
+        document.getElementById("search-results").dataset.airportCode = foundAirport.iataCode;
+      } else {
+        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code, airport name, or city.</p>";
+        document.getElementById("search-results").dataset.airportCode = "";
       }
     }
 
     document.getElementById("search-input").addEventListener("keyup", searchAirport);
 
-  window.onload = () => {
+    window.onload = () => {
       const modal = document.getElementById("modal");
       modal.style.display = "block";
 
@@ -620,4 +653,3 @@
   </script>
 </body>
 </html>
-
