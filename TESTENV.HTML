@@ -616,4 +616,28 @@
         // Store the current airport code in the search results div
         document.getElementById("search-results").dataset.airportCode = foundAirport.iataCode;
       } else {
-        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA
+        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code, airport name, or city.</p>";
+        document.getElementById("search-results").dataset.airportCode = "";
+      }
+    }
+
+    document.getElementById("search-input").addEventListener("keyup", searchAirport);
+
+    window.onload = () => {
+      const modal = document.getElementById("modal");
+      modal.style.display = "block";
+
+      const modalClose = document.getElementById("modal-close");
+      modalClose.onclick = () => {
+        modal.style.display = "none";
+      };
+
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    };
+  </script>
+</body>
+</html>
