@@ -574,12 +574,24 @@
         return;
       }
 
-      const foundAirport = airports.find(
-        (airport) =>
-          airport.iataCode === searchInput ||
-          airport.name.toUpperCase().includes(searchInput) ||
-          airport.city.toUpperCase().includes(searchInput)
-      );
+      let foundAirport;
+
+      // Check if there's an exact match for the IATA code
+      foundAirport = airports.find((airport) => airport.iataCode === searchInput);
+
+      if (!foundAirport) {
+        // Check for airports whose names start with the search input
+        foundAirport = airports.find(
+          (airport) => airport.name.toUpperCase().startsWith(searchInput)
+        );
+
+        if (!foundAirport) {
+          // If no match in airport names, check for airports whose cities start with the search input
+          foundAirport = airports.find(
+            (airport) => airport.city.toUpperCase().startsWith(searchInput)
+          );
+        }
+      }
 
       if (foundAirport) {
         const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
