@@ -578,9 +578,9 @@
       let foundAirport = airports.find((airport) => airport.iataCode === searchInput);
 
       if (!foundAirport) {
-        // If no exact match in IATA codes, check for airports whose names start with the search input
+        // If no exact match in IATA codes, check for airports whose names contain the search input
         foundAirport = airports.find(
-          (airport) => airport.name.toUpperCase().startsWith(searchInput)
+          (airport) => airport.name.toUpperCase().includes(searchInput)
         );
 
         if (!foundAirport) {
