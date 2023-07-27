@@ -574,13 +574,11 @@
         return;
       }
 
-      let foundAirport;
-
-      // Check if there's an exact match for the IATA code
-      foundAirport = airports.find((airport) => airport.iataCode === searchInput);
+      // Search for an exact match in IATA codes
+      let foundAirport = airports.find((airport) => airport.iataCode === searchInput);
 
       if (!foundAirport) {
-        // Check for airports whose names start with the search input
+        // If no exact match in IATA codes, check for airports whose names start with the search input
         foundAirport = airports.find(
           (airport) => airport.name.toUpperCase().startsWith(searchInput)
         );
