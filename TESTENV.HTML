@@ -1,102 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <title>Is Shawn At Work?</title>
-    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-    <!-- Font Awesome icons (free version)-->
-    <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
-    <!-- Google fonts-->
-    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
-    <!-- Core theme CSS (includes Bootstrap)-->
-    <link href="css/styles.css" rel="stylesheet" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Airport Time Zone Search</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
+  <style>
+    body {
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    h1, p {
+      font-size: 24px;
+    }
+    
+    #search-container {
+      text-align: center;
+    }
+    
+    #search-input {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    #search-results {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    #footer {
+      margin-top: auto;
+      text-align: center;
+      font-size: 36px; /* Twice as big as the original font size */
+    }
+
+
+    /* Additional styles for Airport and Time Zone */
+    #search-results p {
+      font-size: 24px; /* Set the font size to match the title */
+      margin: 8px 0; /* Add some margin to separate the elements */
+    }
+     .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      border: 2px solid #000;
+      margin: 15% auto;
+      padding: 20px;
+      width: 80%;
+    }
+
+    /* Close button style */
+    #modal-close {
+      float: right;
+      cursor: pointer;
+    }
+  </style>
 </head>
-<body id="page-top">
-<!-- Navigation-->
-<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
-    <!-- ... Rest of the navigation section ... -->
-</nav>
-<!-- Masthead-->
-<header class="masthead">
-    <!-- ... Rest of the masthead section ... -->
-</header>
-<!-- About-->
-<section class="about-section text-center" id="findout">
-    <div class="container px-4 px-lg-5">
-        <div class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-lg-8">
-                <h1>
-                    <div class="greeting"></div>
-                    <h1 class="text-white mb-4">Shawn Currently Works 2ND SHIFT
-                        <br>His hours are 1345 EST through 2345 EST. 
-                        <br>He works on Saturday, Sunday, Monday, and Tuesday
-                    </h1>
-                    <h2 class="text-white mb-4">Shawn's Local Time Is Currently <span id="span"></span> EST </h2>
-                    <h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
-                    <h2 class="text-white mb-4" id="shawnStatus">Is Shawn at work?</h2>
-                    <h3p class="text-white mb-4">
-                        This means he is asleep for most of the night and working most of the day.
-                        <br>He will usually be asleep between the hours of 0400 EST and 1200 EST.
-                        <br>He sleeps during these hours on his days off, as well.
-                        <br>This will be his schedule for the months of May, June, and July. 
-                    </h3>
-                </div>
-            </div>
-        </div>
+<body>
+  <div id="search-container">
+    <h1>Airport Time Zone Search</h1>
+    <input type="text" id="search-input" placeholder="Enter IATA code or airport name/city">
+    <div id="search-results"></div>
+  </div>
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <span id="modal-close" style="float: right; cursor: pointer;">&times;</span>
+      <p><b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please Teams me! - Shawn</b></p>
     </div>
-</section>
-<!-- Footer-->
-<footer class="footer bg-black small text-center text-white-50">
-    <div class="container px-4 px-lg-5">Copyright &copy; Shawn <script>document.write(new Date().getFullYear())</script></div>
-</footer>
-<!-- Bootstrap core JS-->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<!-- Core theme JS-->
-<script src="js/scripts.js"></script>
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-<!-- * *                               SB Forms JS                               * *-->
-<!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-<script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
+  </div>
+  <script>
+    // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
+    const airports = [
+      {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown",  "state": "Pennsylvania", "timeZone": "America/New_York"},
+      // ... (Add other airport data here) ...
+      {"iataCode": "AKN", "name": "King Salmon Airport", "city": "King Salmon",  "state": "Alaska", "timeZone": "America/Anchorage"},
+    ];
 
-<script>
-    function time() {
-        var d = new Date(new Date().toLocaleString('en', { timeZone: 'America/New_York' }));
-        var s = d.getSeconds();
-        var m = d.getMinutes();
-        var h = d.getHours();
+    const airportIntervals = {};
 
-        document.getElementById('span').textContent =
-            ("0" + h).substr(-2) + ":" + ("0" + m).substr(-2) + ":" + ("0" + s).substr(-2);
+    function updateAirportTime(foundAirport) {
+      const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+      document.getElementById(`current-time-${foundAirport.iataCode}`).textContent = currentTime;
     }
 
-    // Update the time every second
-    setInterval(time, 1000);
+    function searchAirport() {
+      const searchInput = document.getElementById("search-input").value.toUpperCase();
+      const searchResultsDiv = document.getElementById("search-results");
+      searchResultsDiv.innerHTML = "";
 
-    // Function to check if Shawn is currently at work
-    function isShawnAtWork() {
-        const d = new Date(new Date().toLocaleString('en', { timeZone: 'America/New_York' }));
-        const currentHour = d.getHours();
-        const currentDay = d.getDay(); // Sunday: 0, Monday: 1, ..., Saturday: 6
+      const foundAirports = airports.filter(
+        (airport) =>
+          airport.iataCode === searchInput ||
+          airport.name.toUpperCase().includes(searchInput) ||
+          airport.city.toUpperCase().includes(searchInput)
+      );
 
-        // Check if it's a working day (Saturday, Sunday, Monday, or Tuesday)
-        const isWorkingDay = currentDay >= 1 && currentDay <= 4;
+      if (foundAirports.length > 0) {
+        foundAirports.forEach((foundAirport) => {
+          const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+          let locationInfo = `<p><strong>IATA Code:</strong> ${foundAirport.iataCode}</p>`;
+          locationInfo += `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
+          if (foundAirport.city) {
+            locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
+          }
+          if (foundAirport.state) {
+            locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
+          }
+          if (foundAirport.province) {
+            locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
+          }
+          if (foundAirport.island) {
+            locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
+          }
+          locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
-        // Check if it's within Shawn's work hours (1345 to 2345 EST)
-        const isWorkingHour = currentHour >= 13 && currentHour <= 23;
+          const resultContainer = document.createElement("div");
+          resultContainer.innerHTML = locationInfo;
+          searchResultsDiv.appendChild(resultContainer);
 
-        // Display the result
-        const shawnStatus = isWorkingDay && isWorkingHour ? "Yes, Shawn is at work." : "No, Shawn is not at work.";
-        document.getElementById("shawnStatus").textContent = shawnStatus;
+          clearInterval(airportIntervals[foundAirport.iataCode]);
+
+          // Display the initial time immediately
+          updateAirportTime(foundAirport);
+
+          // Update the time every 1 second (1000 milliseconds)
+          airportIntervals[foundAirport.iataCode] = setInterval(() => {
+            updateAirportTime(foundAirport);
+          }, 1000);
+        });
+      } else {
+        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code, airport name, or city.</p>";
+
+        // Clear the interval for the current airport
+        if (airportIntervals[foundAirport.iataCode]) {
+          clearInterval(airportIntervals[foundAirport.iataCode]);
+        }
+      }
     }
 
-    // Update Shawn's work status every second
-    setInterval(isShawnAtWork, 1000);
-</script>
+    document.getElementById("search-input").addEventListener("keyup", searchAirport);
 
+    window.onload = () => {
+      const modal = document.getElementById("modal");
+      modal.style.display = "block";
+
+      const modalClose = document.getElementById("modal-close");
+      modalClose.onclick = () => {
+        modal.style.display = "none";
+      };
+
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
+    };
+  </script>
 </body>
 </html>
