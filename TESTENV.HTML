@@ -558,9 +558,21 @@
     }
 
     function searchAirport() {
-      const searchInput = document.getElementById("search-input").value.toUpperCase();
+      const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
       const searchResultsDiv = document.getElementById("search-results");
       searchResultsDiv.innerHTML = "";
+
+      // Clear the interval for the previous airport (if any)
+      const previousAirportCode = document.getElementById("search-results").dataset.airportCode;
+      if (airportIntervals[previousAirportCode]) {
+        clearInterval(airportIntervals[previousAirportCode]);
+      }
+
+      if (searchInput === "") {
+        // If the search input is empty, reset the display and return early
+        document.getElementById("search-results").dataset.airportCode = "";
+        return;
+      }
 
       const foundAirport = airports.find(
         (airport) =>
@@ -600,34 +612,8 @@
         airportIntervals[foundAirport.iataCode] = setInterval(() => {
           updateAirportTime(foundAirport);
         }, 1000);
+
+        // Store the current airport code in the search results div
+        document.getElementById("search-results").dataset.airportCode = foundAirport.iataCode;
       } else {
-        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code, airport name, or city.</p>";
-
-        // Clear the interval for the previous airport (if any)
-        const previousAirportCode = document.getElementById("search-results").dataset.airportCode;
-        if (airportIntervals[previousAirportCode]) {
-          clearInterval(airportIntervals[previousAirportCode]);
-        }
-      }
-    }
-
-    document.getElementById("search-input").addEventListener("keyup", searchAirport);
-
-    window.onload = () => {
-      const modal = document.getElementById("modal");
-      modal.style.display = "block";
-
-      const modalClose = document.getElementById("modal-close");
-      modalClose.onclick = () => {
-        modal.style.display = "none";
-      };
-
-      window.onclick = (event) => {
-        if (event.target === modal) {
-          modal.style.display = "none";
-        }
-      };
-    };
-  </script>
-</body>
-</html>
+        searchResultsDiv.innerHTML = "<p>No results found for the provided IATA
