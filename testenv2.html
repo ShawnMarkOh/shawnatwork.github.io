@@ -1,90 +1,36 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<title>Flappy Bird</title>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body {
-  font-family: sans-serif;
-  font-size: 16px;
-  background-color: #f5f5f5;
-}
+<!-- ... (Existing code) ... -->
 
-.container {
-  width: 600px;
-  margin: 0 auto;
-}
+<h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
 
-.bird {
-  width: 50px;
-  height: 50px;
-  background-color: #000;
-  border-radius: 50%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  animation: flap 2s infinite;
-}
-
-@keyframes flap {
-  0% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-20px);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-.pipe {
-  width: 100px;
-  height: 100px;
-  background-color: #fff;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
-
-.score {
-  position: absolute;
-  top: 0;
-  right: 0;
-}
-</style>
-</head>
-<body>
-<div class="container">
-  <div class="bird"></div>
-  <div class="pipe"></div>
-  <div class="pipe"></div>
-  <div class="score">0</div>
-</div>
 <script>
-var bird = document.querySelector(".bird");
-var pipes = document.querySelectorAll(".pipe");
-var score = 0;
+const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
-function update() {
-  bird.style.top = bird.style.top + 10;
+const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
+let day = weekday[d.getDay()];
+document.getElementById("Day").innerHTML = day;
 
-  for (var i = 0; i < pipes.length; i++) {
-    var pipe = pipes[i];
-    pipe.style.left = pipe.style.left - 10;
+// Function to check if Shawn is at work based on the current day and time
+function isShawnAtWork() {
+  const currentHour = d.getHours();
+  const currentMinute = d.getMinutes();
 
-    if (pipe.style.left < -100) {
-      pipe.style.left = 600;
-    }
-  }
+  // Check if it's a work day (Saturday, Sunday, Monday, or Tuesday)
+  const isWorkDay = (day === "Saturday" || day === "Sunday" || day === "Monday" || day === "Tuesday");
 
-  if (bird.getBoundingClientRect().top > 600) {
-    alert("Game over!");
-  }
+  // Check if it's within Shawn's work hours (1345 EST through 2345 EST)
+  const isWorkHour = (currentHour >= 13 && (currentHour < 23 || (currentHour === 23 && currentMinute <= 45)));
+
+  // Determine if Shawn is currently at work
+  const isAtWork = isWorkDay && isWorkHour;
+
+  // Display the result
+  const workStatus = document.createElement("p");
+  workStatus.innerHTML = isAtWork ? "<strong>Shawn is currently at work.</strong>" : "<strong>Shawn is currently off work.</strong>";
+  document.querySelector(".about-section").appendChild(workStatus);
 }
 
-setInterval(update, 100);
+// Call the function to display Shawn's work status
+isShawnAtWork();
 </script>
-</body>
-</html>
+
+<!-- ... (Remaining code) ... -->
