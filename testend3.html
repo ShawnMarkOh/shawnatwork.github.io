@@ -128,9 +128,9 @@
     }
 
     async function fetchWeatherData(airport) {
-      const userKey = "your_user_key_here";
+      const userKey = "https://isshawnat.work/testend3.html";
       const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}/forecast/hourly`;
-      const response = await fetch(endpoint, { headers: { "User-Agent": "(myweatherapp.com, contact@myweatherapp.com)" } });
+      const response = await fetch(endpoint, { headers: { "User-Agent": "(https://isshawnat.work/testend3.html)" } });
       const data = await response.json();
       if (data.properties && data.properties.periods && data.properties.periods.length > 0) {
         const weatherData = data.properties.periods[0].shortForecast;
