@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Airport Time Zone Search</title>
+  <title>Airport Time Zone and Weather Search</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
   <style>
@@ -42,7 +42,6 @@
       text-align: center;
       font-size: 36px; /* Twice as big as the original font size */
     }
-
 
     /* Additional styles for Airport and Time Zone */
     #search-results p {
@@ -94,7 +93,7 @@
 
   <!-- Search Container -->
   <div id="search-container">
-    <h1>Airport Time Zone Search</h1>
+    <h1>Airport Time Zone and Weather Search</h1>
     <input type="text" id="search-input" placeholder="Enter IATA code, airport name, or city">
     <div id="search-results"></div>
   </div>
@@ -116,7 +115,7 @@
   <script>
     // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
     const airports = [
-      {"iataCode": "HPN", "name": "Westchester County Airport", "city": "White Plains", "state": "New York", "timeZone": "America/New_York", "latitude": 41.0709802, "longitude": -73.7072369}
+      {"iataCode": "HPN", "name": "Westchester County Airport", "city": "White Plains", "state": "New York", "timeZone": "America/New_York", "latitude": 41.0709802, "longitude": -73.7072369},
       // Add more airports here...
     ];
 
