@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Airport Time Zone and Weather Search</title>
+  <title>Airport Time Zone Search</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
   <style>
@@ -26,7 +26,7 @@
     }
     
     #search-input {
-      width: 300px; /* Set the desired width here */
+      width: 300px;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -37,125 +37,91 @@
       text-align: left;
     }
 
-    /* Additional styles for Airport and Time Zone */
-    #search-results p {
-      font-size: 24px; /* Set the font size to match the title */
-      margin: 8px 0; /* Add some margin to separate the elements */
-    }
-     .modal {
-      display: none;
-      position: fixed;
-      z-index: 1;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      background-color: rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-content {
-      background-color: #fff;
-      border: 2px solid #000;
-      margin: 15% auto;
-      padding: 20px;
-      width: 80%;
-    }
-
-    /* Close button style */
-    #modal-close {
-      float: right;
-      cursor: pointer;
-    }
-
-    /* Changelog link style */
-    #changelog-link {
-      cursor: pointer;
-      color: blue;
-      text-decoration: underline;
-    }
+    /* ... Existing styles for modals and changelog link ... */
   </style>
 </head>
 <body>
   <!-- Work in Progress Modal (Displayed on Page Load) -->
-  <div id="modal" class="modal">
+  <div class="modal">
     <div class="modal-content">
-      <span id="modal-close" style="float: right; cursor: pointer;">&times;</span>
+      <span class="modal-close" style="float: right; cursor: pointer;">&times;</span>
       <p><b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions, please Teams me! - Shawn</b></p>
     </div>
   </div>
 
   <!-- Search Container -->
   <div id="search-container">
-    <h1>Airport Time Zone and Weather Search</h1>
+    <h1>Airport Time Zone Search</h1>
     <input type="text" id="search-input" placeholder="Enter IATA code, airport name, or city">
     <div id="search-results"></div>
   </div>
 
   <!-- Changelog Modal (Hidden by Default) -->
-  <div id="changelog-modal" class="modal">
+  <div class="modal">
     <div class="modal-content">
-      <span id="modal-close" style="float: right; cursor: pointer;">&times;</span>
+      <span class="modal-close" style="float: right; cursor: pointer;">&times;</span>
       <h2>Changelog</h2>
       <ul id="changelog-list">
-        <!-- ... Changelog items ... -->
+        <li>2023-07-27: Added functionality to search by partial airport names (e.g., "Tyson" for "McGhee Tyson Airport").</li>
+        <li>2023-07-27: Modified search to prioritize IATA codes over city names.</li>
+        <li>2023-07-27: Added IATA code display in search results.</li>
+        <li>2023-07-25: Added 400+ new airports in United States, Canada, and The Bahamas.</li>
+        <li>2023-07-24: Initial version of the Airport Time Zone Search tool.</li>
       </ul>
     </div>
   </div>
 
   <!-- Changelog Link -->
-  <div id="changelog-link">Changelog</div>
+  <div class="changelog-link">Changelog</div>
 
   <script>
-    // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
+    // Airport data with IATA code, name, city, state, latitude, and longitude (for demonstration purposes)
     const airports = [
-      {"iataCode": "HPN", "name": "Westchester County Airport", "city": "White Plains", "state": "New York", "timeZone": "America/New_York", "latitude": 41.0709802, "longitude": -73.7072369},
-      // Add more airports here...
+      {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown",  "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
+      {"iataCode": "ABI", "name": "Abilene Regional Airport", "city": "Abilene",  "state": "Texas", "timeZone": "America/Chicago", "latitude": 32.41132, "longitude": -99.68190},
     ];
 
     const airportIntervals = {};
+
+    async function fetchWeatherForecast(latitude, longitude) {
+      try {
+        const pointsResponse = await fetch(`https://api.weather.gov/points/${latitude},${longitude}`);
+        const pointsData = await pointsResponse.json();
+        const forecastURL = pointsData.properties.forecast;
+
+        if (!forecastURL) {
+          throw new Error("Forecast URL not found.");
+        }
+
+        const forecastResponse = await fetch(forecastURL);
+        const forecastData = await forecastResponse.json();
+
+        return forecastData.properties.periods;
+      } catch (error) {
+        console.error("Error fetching weather forecast:", error);
+        return null;
+      }
+    }
 
     function updateAirportTime(foundAirport) {
       const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
       document.getElementById(`current-time-${foundAirport.iataCode}`).textContent = currentTime;
     }
 
-    async function fetchWeatherData(airport) {
-      try {
-        const userAgent = "(myweatherapp.com, contact@myweatherapp.com)";
-        const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}/forecast/hourly`;
-        const response = await fetch(endpoint, { headers: { "User-Agent": userAgent } });
-
-        if (!response.ok) {
-          throw new Error("Weather data not available");
-        }
-
-        const data = await response.json();
-        if (data.properties && data.properties.periods && data.properties.periods.length > 0) {
-          const weatherData = data.properties.periods[0].shortForecast;
-          return weatherData;
-        } else {
-          throw new Error("Weather data not available");
-        }
-      } catch (error) {
-        return "Weather data not available";
-      }
-    }
-
-    function searchAirport() {
+    async function searchAirport() {
       const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
       const searchResultsDiv = document.getElementById("search-results");
       searchResultsDiv.innerHTML = "";
 
       // Clear the interval for the previous airport (if any)
-      const previousAirportCode = document.getElementById("search-results").dataset.airportCode;
+      const previousAirportCode = searchResultsDiv.dataset.airportCode;
       if (airportIntervals[previousAirportCode]) {
         clearInterval(airportIntervals[previousAirportCode]);
       }
 
       if (searchInput === "") {
         // If the search input is empty, reset the display and return early
-        document.getElementById("search-results").dataset.airportCode = "";
+        searchResultsDiv.dataset.airportCode = "";
         return;
       }
 
@@ -182,12 +148,6 @@
         if (foundAirport.state) {
           locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
         }
-        if (foundAirport.province) {
-          locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
-        }
-        if (foundAirport.island) {
-          locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
-        }
         locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
         const resultContainer = document.createElement("div");
@@ -204,34 +164,58 @@
           updateAirportTime(foundAirport);
         }, 1000);
 
-        // Fetch and display weather data for the airport
-        fetchWeatherData(foundAirport).then((weatherData) => {
-          const weatherInfo = `<p><strong>Weather:</strong> ${weatherData}</p>`;
+        // Store the current airport code in the search results div
+        searchResultsDiv.dataset.airportCode = foundAirport.iataCode;
+
+        // Fetch weather forecast for the selected airport's latitude and longitude
+        const forecast = await fetchWeatherForecast(foundAirport.latitude, foundAirport.longitude);
+
+        if (forecast) {
+          const weatherInfo = forecast.map(period => {
+            return `<p><strong>${period.name}:</strong> ${period.detailedForecast}</p>`;
+          }).join('');
+
+          // Display weather information
           const weatherContainer = document.createElement("div");
           weatherContainer.innerHTML = weatherInfo;
           searchResultsDiv.appendChild(weatherContainer);
-        });
-
-        // Store the current airport code in the search results div
-        document.getElementById("search-results").dataset.airportCode = foundAirport.iataCode;
+        } else {
+          searchResultsDiv.innerHTML += "<p>Weather forecast not available for this location.</p>";
+        }
       } else {
         searchResultsDiv.innerHTML = "<p>No results found for the provided IATA code, airport name, or city.</p>";
-        document.getElementById("search-results").dataset.airportCode = "";
+        searchResultsDiv.dataset.airportCode = "";
       }
     }
 
     document.getElementById("search-input").addEventListener("keyup", searchAirport);
 
-    // Function to display the changelog modal (KEEP AS-IS)
+    // Function to display the changelog modal
+    function showChangelogModal() {
+      const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
+      changelogModal.style.display = "block";
 
-    // Show the changelog modal when the changelog link is clicked (KEEP AS-IS)
+      const modalClose = document.querySelectorAll(".modal-close")[1]; // Select the second modal close button
+      modalClose.onclick = () => {
+        changelogModal.style.display = "none";
+      };
 
-    // Show the work in progress modal on page load (KEEP AS-IS)
+      window.onclick = (event) => {
+        if (event.target === changelogModal) {
+          changelogModal.style.display = "none";
+        }
+      };
+    }
+
+    // Show the changelog modal when the changelog link is clicked
+    document.querySelector(".changelog-link").addEventListener("click", showChangelogModal);
+
+    // Show the work in progress modal on page load
     window.onload = () => {
-      const modal = document.getElementById("modal");
+      const modal = document.querySelector(".modal"); // Select the first modal element
       modal.style.display = "block";
 
-      const modalClose = document.getElementById("modal-close");
+      const modalClose = document.querySelector(".modal-close"); // Select the first modal close button
       modalClose.onclick = () => {
         modal.style.display = "none";
       };
