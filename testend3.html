@@ -128,15 +128,29 @@
     }
 
     async function fetchWeatherData(airport) {
-      const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}`;
-      const response = await fetch(endpoint, { headers: { "User-Agent": "(myweatherapp.com, contact@myweatherapp.com)" } });
-      const data = await response.json();
-      if (data.properties && data.properties.periods && data.properties.periods.length > 0) {
-        const weatherData = data.properties.periods[0].shortForecast;
-        return weatherData;
-      } else {
-        return "Weather data not available";
+      const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}/forecast`;
+      const headers = { "User-Agent": "(myweatherapp.com, contact@myweatherapp.com)" };
+
+      try {
+        const response = await fetch(endpoint, { headers });
+        const data = await response.json();
+
+        if (data.properties && data.properties.periods && data.properties.periods.length > 0) {
+          return data.properties.periods;
+        } else {
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
+        return [];
       }
+    }
+
+    function displayWeatherForecast(weatherPeriods) {
+      const weatherInfo = weatherPeriods.map((period) => `<p><strong>${period.name}:</strong> ${period.shortForecast}</p>`).join("");
+      const weatherContainer = document.createElement("div");
+      weatherContainer.innerHTML = weatherInfo;
+      document.getElementById("search-results").appendChild(weatherContainer);
     }
 
     function searchAirport() {
@@ -203,10 +217,7 @@
 
         // Fetch and display weather data for the airport
         fetchWeatherData(foundAirport).then((weatherData) => {
-          const weatherInfo = `<p><strong>Weather:</strong> ${weatherData}</p>`;
-          const weatherContainer = document.createElement("div");
-          weatherContainer.innerHTML = weatherInfo;
-          searchResultsDiv.appendChild(weatherContainer);
+          displayWeatherForecast(weatherData);
         });
 
         // Store the current airport code in the search results div
