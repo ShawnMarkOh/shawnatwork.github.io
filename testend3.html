@@ -121,7 +121,8 @@
 
       if (searchInput === "") {
         // If the search input is empty, reset the display and return early
-        searchResultsDiv.dataset.airportCode = "";
+        
+                  searchResultsDiv.dataset.airportCode = "";
         return;
       }
 
@@ -164,21 +165,23 @@
           updateAirportTime(foundAirport);
         }, 1000);
 
-        // Store the current airport code in the search results div
-        searchResultsDiv.dataset.airportCode = foundAirport.iataCode;
-
         // Fetch weather forecast for the selected airport's latitude and longitude
         const forecast = await fetchWeatherForecast(foundAirport.latitude, foundAirport.longitude);
 
         if (forecast) {
-          const weatherInfo = forecast.map(period => {
-            return `<p><strong>${period.name}:</strong> ${period.detailedForecast}</p>`;
-          }).join('');
+          // Filter forecast for today
+          const today = moment().format("YYYY-MM-DD");
+          const todayForecast = forecast.find(period => period.startTime.startsWith(today));
 
-          // Display weather information
-          const weatherContainer = document.createElement("div");
-          weatherContainer.innerHTML = weatherInfo;
-          searchResultsDiv.appendChild(weatherContainer);
+          if (todayForecast) {
+            const temperature = todayForecast.temperature;
+            const weatherInfo = `<p><strong>Temperature:</strong> ${temperature} &#8457;</p>`;
+            const weatherContainer = document.createElement("div");
+            weatherContainer.innerHTML = weatherInfo;
+            searchResultsDiv.appendChild(weatherContainer);
+          } else {
+            searchResultsDiv.innerHTML += "<p>Weather forecast not available for today.</p>";
+          }
         } else {
           searchResultsDiv.innerHTML += "<p>Weather forecast not available for this location.</p>";
         }
@@ -229,3 +232,4 @@
   </script>
 </body>
 </html>
+
