@@ -43,13 +43,13 @@
       font-size: 36px; /* Twice as big as the original font size */
     }
 
-
     /* Additional styles for Airport and Time Zone */
     #search-results p {
       font-size: 24px; /* Set the font size to match the title */
       margin: 8px 0; /* Add some margin to separate the elements */
     }
-     .modal {
+
+    .modal {
       display: none;
       position: fixed;
       z-index: 1;
@@ -74,6 +74,13 @@
       float: right;
       cursor: pointer;
     }
+
+    #changelog-link {
+      margin-top: 30px;
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -85,9 +92,16 @@
   <div id="modal" class="modal">
     <div class="modal-content">
       <span id="modal-close" style="float: right; cursor: pointer;">&times;</span>
-      <p><b>This tool is a work in progress and does not include all airport IATA codes. If you have suggestions please Teams me! - Shawn</b></p>
+      <h2>Changelog</h2>
+      <ul>
+        <li><strong>2023-07-27:</strong> Added functionality to search by partial airport names (e.g., "Tyson" for "McGhee Tyson Airport").</li>
+        <li><strong>2023-07-26:</strong> Modified search to prioritize IATA codes over city names.</li>
+        <li><strong>2023-07-25:</strong> Added IATA code display in search results.</li>
+        <li><strong>2023-07-24:</strong> Initial version of the Airport Time Zone Search tool.</li>
+      </ul>
     </div>
   </div>
+  <div id="changelog-link">See Changelog</div>
   <script>
     // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
     const airports = [
@@ -409,7 +423,7 @@
   {"iataCode": "PWM", "name": "Portland International Jetport", "city": "Portland", "state": "Maine", "timeZone": "America/New_York"},
   {"iataCode": "RAP", "name": "Rapid City Regional Airport", "city": "Rapid City", "state": "South Dakota", "timeZone": "America/Denver"},
   {"iataCode": "RDD", "name": "Redding Municipal Airport", "city": "Redding", "state": "California", "timeZone": "America/Los_Angeles"},
-  {"iataCode": "ROW", "name": "Roswell International Airport", "city": "👽", "state": "👽👽", "timeZone": "America/Denver"},
+  {"iataCode": "ROW", "name": "Roswell International Airport", "city": "Roswell👽", "state": "New Mexico👽", "timeZone": "America/Denver"},
   {"iataCode": "RDM", "name": "Redmond Municipal Airport", "city": "Redmond", "state": "Oregon", "timeZone": "America/Los_Angeles"},
   {"iataCode": "RDU", "name": "Raleigh-Durham International Airport", "city": "Raleigh/Durham", "state": "North Carolina", "timeZone": "America/New_York"},
   {"iataCode": "RIC", "name": "Richmond International Airport", "city": "Richmond", "state": "Virginia", "timeZone": "America/New_York"},
@@ -637,7 +651,11 @@
 
     window.onload = () => {
       const modal = document.getElementById("modal");
-      modal.style.display = "block";
+      const changelogLink = document.getElementById("changelog-link");
+
+      changelogLink.addEventListener("click", () => {
+        modal.style.display = "block";
+      });
 
       const modalClose = document.getElementById("modal-close");
       modalClose.onclick = () => {
