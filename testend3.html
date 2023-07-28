@@ -127,13 +127,22 @@
     }
 
     async function fetchWeatherData(airport) {
-      const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}/forecast/hourly`;
-      const response = await fetch(endpoint, { headers: { "User-Agent": "(https://isshawnat.work/testend3.html)" } });
-      const data = await response.json();
-      if (data.properties && data.properties.periods && data.properties.periods.length > 0) {
-        const weatherData = data.properties.periods[0].shortForecast;
-        return weatherData;
-      } else {
+      try {
+        const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}/forecast/hourly`;
+        const response = await fetch(endpoint, { headers: { "User-Agent": "(https://isshawnat.work/testend3.html)" } });
+
+        if (!response.ok) {
+          throw new Error("Weather data not available");
+        }
+
+        const data = await response.json();
+        if (data.properties && data.properties.periods && data.properties.periods.length > 0) {
+          const weatherData = data.properties.periods[0].shortForecast;
+          return weatherData;
+        } else {
+          throw new Error("Weather data not available");
+        }
+      } catch (error) {
         return "Weather data not available";
       }
     }
