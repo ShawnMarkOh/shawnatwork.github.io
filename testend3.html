@@ -127,30 +127,17 @@
       document.getElementById(`current-time-${foundAirport.iataCode}`).textContent = currentTime;
     }
 
-    async function fetchWeatherData(airport) {
-      const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}`;
+    async function fetchCurrentWeatherData(airport) {
+      const endpoint = `https://api.weather.gov/stations/${airport.iataCode}/observations/latest`;
       const headers = { "User-Agent": "(myweatherapp.com, contact@myweatherapp.com)" };
 
       try {
         const response = await fetch(endpoint, { headers });
         const data = await response.json();
-
-        // Retrieve the forecast grid data link
-        const forecastGridLink = data.properties?.forecastGridData;
-        if (!forecastGridLink) {
-          return [];
-        }
-
-        // Fetch the gridpoint data
-        const gridResponse = await fetch(forecastGridLink, { headers });
-        const gridData = await gridResponse.json();
-
-        // Extract the temperature data for each hour
-        const temperatureData = gridData.properties?.temperature?.values || [];
-        return temperatureData;
+        return data;
       } catch (error) {
         console.error("Error fetching weather data:", error);
-        return [];
+        return null;
       }
     }
 
@@ -216,20 +203,17 @@
           updateAirportTime(foundAirport);
         }, 1000);
 
-        // Fetch and display weather data for the airport
-        fetchWeatherData(foundAirport).then((temperatureData) => {
-          if (temperatureData.length === 0) {
-            searchResultsDiv.innerHTML += "<p>Weather data not available</p>";
-          } else {
-            const weatherInfo = temperatureData.map((data) => {
-              const validTime = moment(data.validTime).format("YYYY-MM-DD HH:mm:ss");
-              const temperature = data.value;
-              return `<p><strong>${validTime}:</strong> ${temperature}°F</p>`;
-            }).join("");
+        // Fetch and display current weather data for the airport
+        fetchCurrentWeatherData(foundAirport).then((weatherData) => {
+          if (weatherData) {
+            const currentWeather = weatherData.properties.temperature.value;
+            const weatherInfo = `<p><strong>Current Temperature:</strong> ${currentWeather}°F</p>`;
 
             const weatherContainer = document.createElement("div");
             weatherContainer.innerHTML = weatherInfo;
             searchResultsDiv.appendChild(weatherContainer);
+          } else {
+            searchResultsDiv.innerHTML += "<p>Weather data not available</p>";
           }
         });
 
