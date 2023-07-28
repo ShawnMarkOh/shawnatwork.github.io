@@ -43,13 +43,13 @@
       font-size: 36px; /* Twice as big as the original font size */
     }
 
+
     /* Additional styles for Airport and Time Zone */
     #search-results p {
       font-size: 24px; /* Set the font size to match the title */
       margin: 8px 0; /* Add some margin to separate the elements */
     }
-
-    .modal {
+     .modal {
       display: none;
       position: fixed;
       z-index: 1;
@@ -122,24 +122,12 @@
 
     const airportIntervals = {};
 
-    function parseISO8601Duration(duration) {
-      const match = duration.match(/^P(?:(\d+)D)?T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
-
-      const days = parseInt(match[1]) || 0;
-      const hours = parseInt(match[2]) || 0;
-      const minutes = parseInt(match[3]) || 0;
-      const seconds = parseInt(match[4]) || 0;
-
-      return { days, hours, minutes, seconds };
-    }
-
     function updateAirportTime(foundAirport) {
       const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
       document.getElementById(`current-time-${foundAirport.iataCode}`).textContent = currentTime;
     }
 
     async function fetchWeatherData(airport) {
-      const userKey = "https://isshawnat.work/testend3.html";
       const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}/forecast/hourly`;
       const response = await fetch(endpoint, { headers: { "User-Agent": "(https://isshawnat.work/testend3.html)" } });
       const data = await response.json();
@@ -233,7 +221,17 @@
 
     // Function to display the changelog modal (KEEP AS-IS)
     function showChangelogModal() {
-      // ... (function implementation as provided before) ...
+      const modal = document.getElementById("changelog-modal");
+      modal.style.display = "block";
+      const modalClose = document.getElementById("modal-close");
+      modalClose.onclick = () => {
+        modal.style.display = "none";
+      };
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
     }
 
     // Show the changelog modal when the changelog link is clicked (KEEP AS-IS)
@@ -255,59 +253,6 @@
         }
       };
     };
-
-    // Fetch the airport data from IATACITY.TXT using AJAX
-    function fetchAirportData(callback) {
-      const xhr = new XMLHttpRequest();
-      xhr.open("GET", "IATACITY.TXT", true);
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-          const airportsData = JSON.parse(xhr.responseText);
-          callback(airportsData);
-        }
-      };
-      xhr.send();
-    }
-
-    // Call the fetchAirportData function to get the airport data
-    fetchAirportData(function(airportsData) {
-      // Convert the array of airport data into a map for easier searching
-      const airportsMap = new Map(airportsData.map(airport => [airport.iataCode, airport]));
-
-      // Search for an airport using the input IATA code
-      function searchAirportByCode(inputCode) {
-        const foundAirport = airportsMap.get(inputCode.toUpperCase());
-        return foundAirport || null;
-      }
-
-      // Search for an airport using the input city or name
-      function searchAirportByCityOrName(inputCityOrName) {
-        const normalizedInput = inputCityOrName.toUpperCase();
-        const foundAirport = airports.find(
-          airport =>
-            airport.city.toUpperCase().includes(normalizedInput) ||
-            airport.name.toUpperCase().includes(normalizedInput)
-        );
-        return foundAirport || null;
-      }
-
-      function searchAirport() {
-        // ... (function implementation as provided before) ...
-      }
-
-      // Function to display the changelog modal
-      function showChangelogModal() {
-        // ... (function implementation as provided before) ...
-      }
-
-      // Show the changelog modal when the changelog link is clicked
-      document.getElementById("changelog-link").addEventListener("click", showChangelogModal);
-
-      // Show the work in progress modal on page load
-      window.onload = () => {
-        // ... (function implementation as provided before) ...
-      };
-    });
   </script>
 </body>
 </html>
