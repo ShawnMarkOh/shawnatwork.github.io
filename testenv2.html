@@ -23,15 +23,15 @@
         }
 
         /* Set min-height to 100vh to fill the viewport */
-        body {
-            min-height: 100vh;
+        html, body {
+            height: 100%;
             margin: 0;
             padding: 0;
         }
 
         /* Set a fixed height for the header */
         header.masthead {
-            height: 100vh;
+            height: 100%;
         }
 
         /* Vertically center the content in the header */
@@ -43,7 +43,7 @@
 
         /* Set a minimum height for the .about-section */
         .about-section {
-            min-height: calc(100vh - 110px); /* Subtract the header height and footer height */
+            min-height: calc(100% - 110px); /* Subtract the header height and footer height */
         }
     </style>
 </head>
