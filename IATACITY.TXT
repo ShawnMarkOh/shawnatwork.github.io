@@ -1,4 +1,3 @@
-[
     {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown",  "state": "Pennsylvania", "timeZone": "America/New_York"},
     {"iataCode": "ABI", "name": "Abilene Regional Airport", "city": "Abilene",  "state": "Texas", "timeZone": "America/Chicago"},
     {"iataCode": "ABQ", "name": "Albuquerque International Sunport", "city": "Albuquerque",  "state": "New Mexico", "timeZone": "America/Denver"},
@@ -457,4 +456,3 @@
   {"iataCode": "TBI", "name": "New Bight Airport", "city": "New Bight",  "island": "Cat Island", "timeZone": "America/Nassau"},
   {"iataCode": "TCB", "name": "Treasure Cay Airport", "city": "Treasure Cay",  "island": "Abaco", "timeZone": "America/Nassau"},
   {"iataCode": "TZN", "name": "South Andros Airport", "city": "Congo Town",  "island": "Andros", "timeZone": "America/Nassau"},
-]
