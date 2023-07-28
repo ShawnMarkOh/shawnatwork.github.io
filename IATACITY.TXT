@@ -317,7 +317,7 @@
   {"iataCode": "PWM", "name": "Portland International Jetport", "city": "Portland", "state": "Maine", "timeZone": "America/New_York"},
   {"iataCode": "RAP", "name": "Rapid City Regional Airport", "city": "Rapid City", "state": "South Dakota", "timeZone": "America/Denver"},
   {"iataCode": "RDD", "name": "Redding Municipal Airport", "city": "Redding", "state": "California", "timeZone": "America/Los_Angeles"},
-  {"iataCode": "ROW", "name": "Roswell International Airport", "city": "👽", "state": "👽👽", "timeZone": "America/Denver"},
+  {"iataCode": "ROW", "name": "Roswell International Airport", "city": "Roswell👽", "state": "New Mexico👽", "timeZone": "America/Denver"},
   {"iataCode": "RDM", "name": "Redmond Municipal Airport", "city": "Redmond", "state": "Oregon", "timeZone": "America/Los_Angeles"},
   {"iataCode": "RDU", "name": "Raleigh-Durham International Airport", "city": "Raleigh/Durham", "state": "North Carolina", "timeZone": "America/New_York"},
   {"iataCode": "RIC", "name": "Richmond International Airport", "city": "Richmond", "state": "Virginia", "timeZone": "America/New_York"},
