@@ -74,6 +74,13 @@
       float: right;
       cursor: pointer;
     }
+
+    /* Changelog link style */
+    #changelog-link {
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -107,9 +114,13 @@
     </div>
   </div>
 
+  <!-- Changelog Link -->
+  <div id="changelog-link">Changelog</div>
+
   <script>
     // Airport data with IATA code, name, city, state, and time zone (for demonstration purposes)
     const airports = [
+    {"iataCode": "HPN", "name": "Westchester County Airport", "city": "White Plains", "state": "New York", "timeZone": "America/New_York"},
     {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown",  "state": "Pennsylvania", "timeZone": "America/New_York"},
     {"iataCode": "ABI", "name": "Abilene Regional Airport", "city": "Abilene",  "state": "Texas", "timeZone": "America/Chicago"},
     {"iataCode": "ABQ", "name": "Albuquerque International Sunport", "city": "Albuquerque",  "state": "New Mexico", "timeZone": "America/Denver"},
@@ -428,7 +439,7 @@
   {"iataCode": "PWM", "name": "Portland International Jetport", "city": "Portland", "state": "Maine", "timeZone": "America/New_York"},
   {"iataCode": "RAP", "name": "Rapid City Regional Airport", "city": "Rapid City", "state": "South Dakota", "timeZone": "America/Denver"},
   {"iataCode": "RDD", "name": "Redding Municipal Airport", "city": "Redding", "state": "California", "timeZone": "America/Los_Angeles"},
-  {"iataCode": "ROW", "name": "Roswell International Airport", "city": "👽", "state": "👽👽", "timeZone": "America/Denver"},
+  {"iataCode": "ROW", "name": "Roswell International Airport", "city": "Roswell👽", "state": "New Mexico👽👽", "timeZone": "America/Denver"},
   {"iataCode": "RDM", "name": "Redmond Municipal Airport", "city": "Redmond", "state": "Oregon", "timeZone": "America/Los_Angeles"},
   {"iataCode": "RDU", "name": "Raleigh-Durham International Airport", "city": "Raleigh/Durham", "state": "North Carolina", "timeZone": "America/New_York"},
   {"iataCode": "RIC", "name": "Richmond International Airport", "city": "Richmond", "state": "Virginia", "timeZone": "America/New_York"},
