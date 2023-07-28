@@ -14,6 +14,15 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
     <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
+
+    <style>
+        /* Custom style for the output */
+        .work-status {
+            font-size: 24px;
+            color: #ffffff; /* White color */
+            margin-top: 10px;
+        }
+    </style>
 </head>
 <body id="page-top">
     <!-- Navigation-->
@@ -98,6 +107,7 @@
 
                                 // Display the result
                                 const workStatus = document.createElement("p");
+                                workStatus.className = "work-status"; // Apply the custom style class
                                 workStatus.innerHTML = isAtWork ? "<strong>Shawn is currently at work.</strong>" : "<strong>Shawn is currently off work.</strong>";
                                 document.querySelector(".about-section").appendChild(workStatus);
                             }
