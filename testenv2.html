@@ -22,22 +22,6 @@
             color: #ffffff; /* White color */
             margin-top: 10px;
         }
-
-        /* Remove the white bar at the bottom */
-        body {
-            margin: 0;
-        }
-
-        /* Container to align the output horizontally */
-        .output-container {
-            display: flex;
-            align-items: center;
-        }
-
-        /* Add some margin to separate the elements */
-        .output-container span {
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body id="page-top">
@@ -99,11 +83,38 @@
                         </script>
 
                         <h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
-                        <!-- Container to align the output horizontally -->
-                        <div class="output-container">
-                            <span class="text-white">Work Status:</span>
-                            <p class="work-status" id="workStatus"></p>
-                        </div>
+
+                        <script>
+                            const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+                            const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
+                            let day = weekday[d.getDay()];
+                            document.getElementById("Day").innerHTML = day;
+
+                            // Function to check if Shawn is at work based on the current day and time
+                            function isShawnAtWork() {
+                                const currentHour = d.getHours();
+                                const currentMinute = d.getMinutes();
+
+                                // Check if it's a work day (Saturday, Sunday, Monday, or Tuesday)
+                                const isWorkDay = (day === "Saturday" || day === "Sunday" || day === "Monday" || day === "Tuesday");
+
+                                // Check if it's within Shawn's work hours (1345 EST through 2345 EST)
+                                const isWorkHour = (currentHour >= 13 && (currentHour < 23 || (currentHour === 23 && currentMinute <= 45)));
+
+                                // Determine if Shawn is currently at work
+                                const isAtWork = isWorkDay && isWorkHour;
+
+                                // Display the result
+                                const workStatus = document.createElement("p");
+                                workStatus.className = "work-status"; // Apply the custom style class
+                                workStatus.innerHTML = isAtWork ? "<strong>Shawn is currently at work.</strong>" : "<strong>Shawn is currently off work.</strong>";
+                                document.querySelector(".about-section").appendChild(workStatus);
+                            }
+
+                            // Call the function to display Shawn's work status
+                            isShawnAtWork();
+                        </script>
 
                         <h3 class="text-white mb-4">
                             This means he is asleep for most of the night and working most of the day.
@@ -117,13 +128,7 @@
         </div>
     </section>
     <!-- Footer-->
-    <footer class="footer bg-black small text-center text-white-50">
-        <div class="container px-4 px-lg-5">
-            Copyright &copy; Shawn 
-            <script>document.write(new Date().getFullYear())</script>
-        </div>
-    </footer>
-
+    <footer class="footer bg-black small text-center text-white-50"><div class="container px-4 px-lg-5">Copyright &copy; Shawn <script>document.write(new Date().getFullYear())</script></div></footer>
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Core theme JS-->
@@ -133,24 +138,5 @@
     <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
     <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
     <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
-
-    <script>
-        // ... (Existing script content) ...
-
-        // Function to check if Shawn is at work based on the current day and time
-        function isShawnAtWork() {
-            // ... (Existing function content) ...
-
-            // Determine if Shawn is currently at work
-            const isAtWork = isWorkDay && isWorkHour;
-
-            // Display the result
-            const workStatusElement = document.getElementById("workStatus");
-            workStatusElement.innerHTML = isAtWork ? "<strong>Shawn is currently at work.</strong>" : "<strong>Shawn is currently off work.</strong>";
-        }
-
-        // Call the function to display Shawn's work status
-        isShawnAtWork();
-    </script>
 </body>
 </html>
