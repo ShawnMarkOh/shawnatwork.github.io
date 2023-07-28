@@ -37,12 +37,6 @@
       text-align: left;
     }
 
-    #footer {
-      margin-top: auto;
-      text-align: center;
-      font-size: 36px; /* Twice as big as the original font size */
-    }
-
     /* Additional styles for Airport and Time Zone */
     #search-results p {
       font-size: 24px; /* Set the font size to match the title */
@@ -128,8 +122,9 @@
 
     async function fetchWeatherData(airport) {
       try {
+        const userAgent = "(myweatherapp.com, contact@myweatherapp.com)";
         const endpoint = `https://api.weather.gov/points/${airport.latitude},${airport.longitude}/forecast/hourly`;
-        const response = await fetch(endpoint, { headers: { "User-Agent": "(https://isshawnat.work/testend3.html)" } });
+        const response = await fetch(endpoint, { headers: { "User-Agent": userAgent } });
 
         if (!response.ok) {
           throw new Error("Weather data not available");
@@ -228,22 +223,8 @@
     document.getElementById("search-input").addEventListener("keyup", searchAirport);
 
     // Function to display the changelog modal (KEEP AS-IS)
-    function showChangelogModal() {
-      const modal = document.getElementById("changelog-modal");
-      modal.style.display = "block";
-      const modalClose = document.getElementById("modal-close");
-      modalClose.onclick = () => {
-        modal.style.display = "none";
-      };
-      window.onclick = (event) => {
-        if (event.target === modal) {
-          modal.style.display = "none";
-        }
-      };
-    }
 
     // Show the changelog modal when the changelog link is clicked (KEEP AS-IS)
-    document.getElementById("changelog-link").addEventListener("click", showChangelogModal);
 
     // Show the work in progress modal on page load (KEEP AS-IS)
     window.onload = () => {
