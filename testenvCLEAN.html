@@ -51,7 +51,6 @@
   const airports = [
 {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
 
-
   ];
 
 let currentAirportCode = null;
@@ -99,16 +98,29 @@ function updateAirportTime(foundAirport) {
 }
 
 function findAirportByPartialCode(searchInput) {
-  // Try removing the leading "K" and search again
-  const withoutKInput = searchInput.substring(1);
+  // Check if the search input starts with "K"
+  if (searchInput.startsWith("K")) {
+    // Try removing the leading "K" and search again
+    const withoutKInput = searchInput.substring(1);
+    const foundAirport = airports.find(airport =>
+      airport.iataCode === withoutKInput
+    );
+
+    if (foundAirport) {
+      return foundAirport;
+    }
+  }
+
+  // If no exact match with "K" prefix, try to find a partial match
   const foundAirport = airports.find(airport =>
-    airport.iataCode.includes(withoutKInput) ||
-    airport.name.toUpperCase().includes(withoutKInput) ||
-    airport.city.toUpperCase().startsWith(withoutKInput)
+    airport.iataCode.includes(searchInput) ||
+    airport.name.toUpperCase().includes(searchInput) ||
+    airport.city.toUpperCase().startsWith(searchInput)
   );
 
-  return foundAirport;
+  return foundAirport || null;
 }
+
 
 async function searchAirport() {
   const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
@@ -215,5 +227,4 @@ document.getElementById("search-results").dataset.airportCode = "";
 </script>
 </body>
 </html>
-
 
