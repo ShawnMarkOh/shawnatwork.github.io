@@ -81,7 +81,7 @@
       }
 
       // Show current weather above weather forecast
-      const currentWeatherResponse = await fetch(pointsData.properties.forecastGridData);
+      const currentWeatherResponse = await fetch(pointsData.properties.forecastHourly);
       const currentWeatherData = await currentWeatherResponse.json();
       const currentWeather = currentWeatherData.properties.periods[0];
 
@@ -192,6 +192,7 @@
   document.getElementById("search-input").value = "";
   document.getElementById("search-results").dataset.airportCode = "";
 </script>
+
 
 
 <script>
