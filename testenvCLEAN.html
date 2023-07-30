@@ -47,216 +47,180 @@
   <!-- Changelog Link -->
   <div class="changelog-link">Changelog</div>
 
-<script>
-  const airports = [
-    {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
-    // ... (Other airports data)
-  ];
+<div>
+    <input type="checkbox" id="temperature-toggle">
+    <label for="temperature-toggle">Display Temperature in Celsius</label>
+  </div>
 
-  let currentAirportCode = null;
-  let useCelsius = false; // Flag to track whether to display temperature in Celsius
+  <script>
+    const airports = [
+      {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
+      // ... (Other airports data)
+    ];
 
-  async function fetchWeatherData(foundAirport) {
-    try {
-      const pointsResponse = await fetch(`https://api.weather.gov/points/${foundAirport.latitude},${foundAirport.longitude}`);
-      const pointsData = await pointsResponse.json();
-      const forecastURL = pointsData.properties.forecast;
+    let currentAirportCode = null;
+    let useCelsius = false; // Flag to track whether to display temperature in Celsius
 
-      if (!forecastURL) {
-        throw new Error("Forecast URL not found.");
+    async function fetchWeatherData(foundAirport) {
+      try {
+        const pointsResponse = await fetch(`https://api.weather.gov/points/${foundAirport.latitude},${foundAirport.longitude}`);
+        const pointsData = await pointsResponse.json();
+        const forecastURL = pointsData.properties.forecast;
+
+        if (!forecastURL) {
+          throw new Error("Forecast URL not found.");
+        }
+
+        const forecastResponse = await fetch(forecastURL);
+        const forecastData = await forecastResponse.json();
+
+        const today = new Date();
+        const periodsToday = forecastData.properties.periods.filter(period => {
+          const periodStartTime = new Date(period.startTime);
+          return periodStartTime.getDate() === today.getDate() &&
+            periodStartTime.getMonth() === today.getMonth() &&
+            periodStartTime.getFullYear() === today.getFullYear();
+        });
+
+        const currentWeatherResponse = await fetch(pointsData.properties.forecastHourly);
+        const currentWeatherData = await currentWeatherResponse.json();
+        const currentWeather = currentWeatherData.properties.periods[0];
+
+        let weatherHTML = '';
+        weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${getDisplayTemperature(currentWeather.temperature)}&deg; ${getTemperatureUnit()}</p>`;
+
+        // Display weather forecast for today
+        for (const period of periodsToday) {
+          weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${getDisplayTemperature(period.temperature)}&deg; ${getTemperatureUnit()}</p>`;
+        }
+
+        // Update the weather section with the new data
+        document.getElementById('weather-output').innerHTML = weatherHTML;
+
+      } catch (error) {
+        console.error("Error fetching weather data:", error);
       }
-
-      const forecastResponse = await fetch(forecastURL);
-      const forecastData = await forecastResponse.json();
-
-      const today = new Date();
-      const periodsToday = forecastData.properties.periods.filter(period => {
-        const periodStartTime = new Date(period.startTime);
-        return periodStartTime.getDate() === today.getDate() &&
-          periodStartTime.getMonth() === today.getMonth() &&
-          periodStartTime.getFullYear() === today.getFullYear();
-      });
-
-      const currentWeatherResponse = await fetch(pointsData.properties.forecastHourly);
-      const currentWeatherData = await currentWeatherResponse.json();
-      const currentWeather = currentWeatherData.properties.periods[0];
-
-      let weatherHTML = '';
-      weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${getDisplayTemperature(currentWeather.temperature)}&deg; ${getTemperatureUnit()}</p>`;
-
-      // Display weather forecast for today
-      for (const period of periodsToday) {
-        weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${getDisplayTemperature(period.temperature)}&deg; ${getTemperatureUnit()}</p>`;
-      }
-
-      // Update the weather section with the new data
-      document.getElementById('weather-output').innerHTML = weatherHTML;
-
-    } catch (error) {
-      console.error("Error fetching weather data:", error);
     }
-  }
 
-  function getDisplayTemperature(temperature) {
-    // Convert temperature to Celsius if the checkbox is checked
-    return useCelsius ? ((temperature - 32) * 5 / 9).toFixed(2) : temperature;
-  }
+    function getDisplayTemperature(temperature) {
+      // Convert temperature to Celsius if the checkbox is checked
+      return useCelsius ? ((temperature - 32) * 5 / 9).toFixed(2) : temperature;
+    }
 
-  function getTemperatureUnit() {
-    // Return the temperature unit based on the checkbox state
-    return useCelsius ? "C" : "F";
-  }
+    function getTemperatureUnit() {
+      // Return the temperature unit based on the checkbox state
+      return useCelsius ? "C" : "F";
+    }
 
-  function updateAirportTime(foundAirport) {
-    const currentTimeElement = document.getElementById(`current-time-${foundAirport.iataCode}`);
-    setInterval(() => {
-      const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-      currentTimeElement.textContent = currentTime;
-    }, 1000); // Set the interval to 1000ms (1 second)
-  }
+    function updateAirportTime(foundAirport) {
+      const currentTimeElement = document.getElementById(`current-time-${foundAirport.iataCode}`);
+      setInterval(() => {
+        const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+        currentTimeElement.textContent = currentTime;
+      }, 1000); // Set the interval to 1000ms (1 second)
+    }
 
-  function findAirportByPartialCode(searchInput) {
-    // Check if the search input starts with "K"
-    if (searchInput.startsWith("K")) {
-      // Try removing the leading "K" and search again
-      const withoutKInput = searchInput.substring(1);
+    function findAirportByPartialCode(searchInput) {
+      // Check if the search input starts with "K"
+      if (searchInput.startsWith("K")) {
+        // Try removing the leading "K" and search again
+        const withoutKInput = searchInput.substring(1);
+        const foundAirport = airports.find(airport =>
+          airport.iataCode === withoutKInput
+        );
+
+        if (foundAirport) {
+          return foundAirport;
+        }
+      }
+
+      // If no exact match with "K" prefix, try to find a partial match
       const foundAirport = airports.find(airport =>
-        airport.iataCode === withoutKInput
-      );
-
-      if (foundAirport) {
-        return foundAirport;
-      }
-    }
-
-    // If no exact match with "K" prefix, try to find a partial match
-    const foundAirport = airports.find(airport =>
-      airport.iataCode.includes(searchInput) ||
-      airport.name.toUpperCase().includes(searchInput) ||
-      airport.city.toUpperCase().startsWith(searchInput)
-    );
-
-    return foundAirport || null;
-  }
-
-  async function searchAirport() {
-    const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
-    const searchResultsDiv = document.getElementById("search-results");
-
-    if (searchInput === "") {
-      searchResultsDiv.innerHTML = "";
-      currentAirportCode = null;
-      return;
-    }
-
-    // First, try to find an exact match in iataCode or name
-    let foundAirport = airports.find(airport => airport.iataCode === searchInput || airport.name.toUpperCase() === searchInput);
-
-    if (!foundAirport) {
-      // If no exact match found, try to find a partial match in iataCode, name, or city
-      foundAirport = airports.find(airport =>
         airport.iataCode.includes(searchInput) ||
         airport.name.toUpperCase().includes(searchInput) ||
         airport.city.toUpperCase().startsWith(searchInput)
       );
 
-      if (!foundAirport && searchInput.startsWith("K")) {
-        // If still no match, use the findAirportByPartialCode function
-        foundAirport = findAirportByPartialCode(searchInput);
+      return foundAirport || null;
+    }
+
+    async function searchAirport() {
+      const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
+      const searchResultsDiv = document.getElementById("search-results");
+
+      if (searchInput === "") {
+        searchResultsDiv.innerHTML = "";
+        currentAirportCode = null;
+        return;
+      }
+
+      // First, try to find an exact match in iataCode or name
+      let foundAirport = airports.find(airport => airport.iataCode === searchInput || airport.name.toUpperCase() === searchInput);
+
+      if (!foundAirport) {
+        // If no exact match found, try to find a partial match in iataCode, name, or city
+        foundAirport = airports.find(airport =>
+          airport.iataCode.includes(searchInput) ||
+          airport.name.toUpperCase().includes(searchInput) ||
+          airport.city.toUpperCase().startsWith(searchInput)
+        );
+
+        if (!foundAirport && searchInput.startsWith("K")) {
+          // If still no match, use the findAirportByPartialCode function
+          foundAirport = findAirportByPartialCode(searchInput);
+        }
+      }
+
+      if (foundAirport) {
+        // Check if the found airport is different from the current airport
+        if (currentAirportCode !== foundAirport.iataCode) {
+          currentAirportCode = foundAirport.iataCode;
+
+          const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+          let locationInfo = `<p><strong>IATA Code:</strong> ${foundAirport.iataCode}</p>`;
+          locationInfo += `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
+          if (foundAirport.city) {
+            locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
+          }
+          if (foundAirport.state) {
+            locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
+          }
+          locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
+
+          // Display both the airport information and weather data
+          searchResultsDiv.innerHTML = locationInfo + '<div id="weather-output"></div>';
+
+          // Fetch and display the weather data after showing the airport information
+          fetchWeatherData(foundAirport);
+
+          // Set interval to update the current time every second
+          updateAirportTime(foundAirport);
+        }
+      } else {
+        searchResultsDiv.innerHTML = `<p>No airport found for "${searchInput}".</p>`;
+        currentAirportCode = null;
       }
     }
 
-    if (foundAirport) {
-      // Check if the found airport is different from the current airport
-      if (currentAirportCode !== foundAirport.iataCode) {
-        currentAirportCode = foundAirport.iataCode;
-
-        const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-        let locationInfo = `<p><strong>IATA Code:</strong> ${foundAirport.iataCode}</p>`;
-        locationInfo += `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
-        if (foundAirport.city) {
-          locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
-        }
-        if (foundAirport.state) {
-          locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
-        }
-        locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
-
-        // Display both the airport information and weather data
-        searchResultsDiv.innerHTML = locationInfo + '<div id="weather-output"></div>';
-
-        // Fetch and display the weather data after showing the airport information
+    function toggleTemperatureUnit() {
+      // Toggle the temperature unit based on checkbox state
+      useCelsius = !useCelsius;
+      // Fetch and display weather data again to update temperature display
+      if (currentAirportCode) {
+        const foundAirport = airports.find(airport => airport.iataCode === currentAirportCode);
         fetchWeatherData(foundAirport);
-
-        // Set interval to update the current time every second
-        updateAirportTime(foundAirport);
       }
-    } else {
-      searchResultsDiv.innerHTML = `<p>No airport found for "${searchInput}".</p>`;
-      currentAirportCode = null;
     }
-  }
 
-  function toggleTemperatureUnit() {
-    // Toggle the temperature unit based on checkbox state
-    useCelsius = !useCelsius;
-    // Fetch and display weather data again to update temperature display
-    if (currentAirportCode) {
-      const foundAirport = airports.find(airport => airport.iataCode === currentAirportCode);
-      fetchWeatherData(foundAirport);
-    }
-  }
+    document.getElementById("search-input").addEventListener("input", searchAirport);
 
-  document.getElementById("search-input").addEventListener("input", searchAirport);
+    // Initialization
+    document.getElementById("search-input").value = "";
+    document.getElementById("search-results").dataset.airportCode = "";
 
-  // Initialization
-  document.getElementById("search-input").value = "";
-  document.getElementById("search-results").dataset.airportCode = "";
-
-  // Add event listener to the temperature unit toggle checkbox
-  document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
-</script>
-
-
-
-<script>
-  // Function to display the changelog modal
-  function showChangelogModal() {
-    const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
-    changelogModal.style.display = "block";
-
-    const modalClose = document.querySelectorAll(".modal-close")[1]; // Select the second modal close button
-    modalClose.onclick = () => {
-      changelogModal.style.display = "none";
-    };
-
-    window.onclick = (event) => {
-      if (event.target === changelogModal) {
-        changelogModal.style.display = "none";
-      }
-    };
-  }
-
-  // Show the changelog modal when the changelog link is clicked
-  document.querySelector(".changelog-link").addEventListener("click", showChangelogModal);
-
-  // Show the work in progress modal on page load
-  window.onload = () => {
-    const modal = document.querySelector(".modal"); // Select the first modal element
-    modal.style.display = "block";
-
-    const modalClose = document.querySelector(".modal-close"); // Select the first modal close button
-    modalClose.onclick = () => {
-      modal.style.display = "none";
-    };
-
-    window.onclick = (event) => {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    };
-  };
-</script>
+    // Add event listener to the temperature unit toggle checkbox
+    document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
+  </script>
 </body>
 </html>
 
