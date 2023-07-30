@@ -60,6 +60,7 @@
 
     let currentAirportCode = null;
     let useCelsius = false; // Flag to track whether to display temperature in Celsius
+    let weatherData = null; // Store weather data for the current airport
 
     async function fetchWeatherData(foundAirport) {
       try {
@@ -96,6 +97,9 @@
 
         // Update the weather section with the new data
         document.getElementById('weather-output').innerHTML = weatherHTML;
+
+        // Store weather data for the current airport
+        weatherData = weatherHTML;
 
       } catch (error) {
         console.error("Error fetching weather data:", error);
@@ -192,7 +196,12 @@
           searchResultsDiv.innerHTML = searchResultsHTML;
 
           // Fetch and display the weather forecast after showing the airport information
-          fetchWeatherData(foundAirport);
+          if (weatherData) {
+            // Use stored weather data if available
+            document.getElementById('weather-output').innerHTML = weatherData;
+          } else {
+            fetchWeatherData(foundAirport);
+          }
 
           // Fetch and display the airport photo
           fetchAirportPhoto(foundAirport);
@@ -208,12 +217,13 @@
 
     function toggleTemperatureUnit() {
       useCelsius = !useCelsius;
-      // Fetch and display the weather data for the current airport
-      const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
-      const foundAirport = findAirportByPartialCode(searchInput);
-      if (foundAirport) {
-        fetchWeatherData(foundAirport);
-      }
+      // Update the displayed temperatures without fetching new weather data
+      const temperatures = document.querySelectorAll("#weather-output p strong:not(:first-child)");
+      temperatures.forEach(tempElement => {
+        const temperature = parseFloat(tempElement.textContent);
+        const newTemperature = getDisplayTemperature(temperature);
+        tempElement.textContent = `${newTemperature}&deg; ${getTemperatureUnit()}`;
+      });
     }
 
     document.getElementById("search-input").addEventListener("input", searchAirport);
