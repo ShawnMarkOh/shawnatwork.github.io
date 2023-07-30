@@ -82,7 +82,7 @@
       let weatherHTML = '<h3>Weather</h3>';
       weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${currentWeather.temperature}&deg; ${currentWeather.temperatureUnit}</p>`;
 
-      weatherHTML +=;
+      weatherHTML += '<h3>Weather Forecast</h3>';
       for (const period of periodsToday) {
         weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${period.temperature}&deg; ${period.temperatureUnit}</p>`;
       }
@@ -191,6 +191,7 @@
   document.getElementById("search-input").value = "";
   document.getElementById("search-results").dataset.airportCode = "";
 </script>
+
 <script>
   // Function to display the changelog modal
   function showChangelogModal() {
