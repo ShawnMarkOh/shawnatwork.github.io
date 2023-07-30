@@ -54,7 +54,7 @@
 
   let currentAirportCode = null;
 
-  async function fetchWeatherForecast(foundAirport) {
+  async function fetchWeatherData(foundAirport) {
     try {
       const pointsResponse = await fetch(`https://api.weather.gov/points/${foundAirport.latitude},${foundAirport.longitude}`);
       const pointsData = await pointsResponse.json();
@@ -75,24 +75,23 @@
           periodStartTime.getFullYear() === today.getFullYear();
       });
 
-      let forecastHTML = '<h3>Weather Forecast</h3>';
-      for (const period of periodsToday) {
-        forecastHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${period.temperature}&deg; ${period.temperatureUnit}</p>`;
-      }
-
-      // Show current weather above weather forecast
       const currentWeatherResponse = await fetch(pointsData.properties.forecastHourly);
       const currentWeatherData = await currentWeatherResponse.json();
       const currentWeather = currentWeatherData.properties.periods[0];
 
-      let currentWeatherHTML = '<h3>Current Weather</h3>';
-      currentWeatherHTML += `<p><strong>${currentWeather.name}:</strong> ${currentWeather.shortForecast}, ${currentWeather.temperature}&deg; ${currentWeather.temperatureUnit}</p>`;
+      let weatherHTML = '<h3>Weather</h3>';
+      weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${currentWeather.temperature}&deg; ${currentWeather.temperatureUnit}</p>`;
 
-      // Update the weather forecast section with the new data
-      document.getElementById('weather-forecast').innerHTML = currentWeatherHTML + forecastHTML;
+      weatherHTML += '<h3>Weather Forecast</h3>';
+      for (const period of periodsToday) {
+        weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${period.temperature}&deg; ${period.temperatureUnit}</p>`;
+      }
+
+      // Update the weather section with the new data
+      document.getElementById('weather-output').innerHTML = weatherHTML;
 
     } catch (error) {
-      console.error("Error fetching weather forecast:", error);
+      console.error("Error fetching weather data:", error);
     }
   }
 
@@ -171,11 +170,11 @@
         }
         locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
-        // Display both the airport information and weather forecast
-        searchResultsDiv.innerHTML = locationInfo + '<div id="weather-forecast"></div>';
+        // Display both the airport information and weather data
+        searchResultsDiv.innerHTML = locationInfo + '<div id="weather-output"></div>';
 
-        // Fetch and display the weather forecast after showing the airport information
-        fetchWeatherForecast(foundAirport);
+        // Fetch and display the weather data after showing the airport information
+        fetchWeatherData(foundAirport);
 
         // Set interval to update the current time every second
         updateAirportTime(foundAirport);
@@ -192,9 +191,6 @@
   document.getElementById("search-input").value = "";
   document.getElementById("search-results").dataset.airportCode = "";
 </script>
-
-
-
 <script>
   // Function to display the changelog modal
   function showChangelogModal() {
