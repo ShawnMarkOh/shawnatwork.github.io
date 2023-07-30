@@ -82,7 +82,7 @@
       let weatherHTML = '<h3>Weather</h3>';
       weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${currentWeather.temperature}&deg; ${currentWeather.temperatureUnit}</p>`;
 
-      weatherHTML += '<h3>Weather Forecast</h3>';
+      // Display weather forecast for today
       for (const period of periodsToday) {
         weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${period.temperature}&deg; ${period.temperatureUnit}</p>`;
       }
