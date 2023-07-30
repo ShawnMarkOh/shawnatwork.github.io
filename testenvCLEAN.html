@@ -79,7 +79,7 @@
       const currentWeatherData = await currentWeatherResponse.json();
       const currentWeather = currentWeatherData.properties.periods[0];
 
-      let weatherHTML = '<h3>Weather</h3>';
+      let weatherHTML = '';
       weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${currentWeather.temperature}&deg; ${currentWeather.temperatureUnit}</p>`;
 
       // Display weather forecast for today
@@ -191,6 +191,7 @@
   document.getElementById("search-input").value = "";
   document.getElementById("search-results").dataset.airportCode = "";
 </script>
+
 
 <script>
   // Function to display the changelog modal
