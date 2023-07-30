@@ -52,7 +52,7 @@
     <label for="temperature-toggle">Display Temperature in Celsius</label>
   </div>
 
-  <script>
+ <script>
     const airports = [
       {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
       // ... (Other airports data)
@@ -121,8 +121,8 @@
     }
 
     async function fetchAirportPhoto(foundAirport) {
-      const airportTitle = `${foundAirport.city} International Airport`;
-      const commonsURL = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(airportTitle)}&prop=pageimages&format=json&pithumbsize=500&callback=handleAirportPhoto`;
+      const partialCity = foundAirport.city.split(' ')[0]; // Use the first word of the city for partial match
+      const commonsURL = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(partialCity)}%20International%20Airport&prop=pageimages&format=json&pithumbsize=500&callback=handleAirportPhoto`;
 
       // Create a script tag dynamically
       const script = document.createElement('script');
