@@ -52,7 +52,7 @@
     <label for="temperature-toggle">Display Temperature in Celsius</label>
   </div>
 
- <script>
+  <script>
     const airports = [
       {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
       // ... (Other airports data)
@@ -121,19 +121,12 @@
     }
 
     async function fetchAirportPhoto(foundAirport) {
-      const partialCity = foundAirport.city.split(' ')[0]; // Use the first word of the city for partial match
-      const commonsURL = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(partialCity)}%20International%20Airport&prop=pageimages&format=json&pithumbsize=500&callback=handleAirportPhoto`;
-
-      // Create a script tag dynamically
-      const script = document.createElement('script');
-      script.src = commonsURL;
-
-      // Add the script tag to the document to initiate the JSONP request
-      document.body.appendChild(script);
-    }
-
-    function handleAirportPhoto(data) {
       try {
+        const partialCity = foundAirport.city.split(' ')[0];
+        const commonsURL = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(partialCity)}%20International%20Airport&prop=pageimages&format=json&pithumbsize=500`;
+        
+        const response = await fetch(commonsURL);
+        const data = await response.json();
         const pageId = Object.keys(data.query.pages)[0];
         const imageUrl = data.query.pages[pageId]?.thumbnail?.source;
 
@@ -154,7 +147,7 @@
         // Append the photo to the search results
         document.getElementById('search-results').appendChild(photoElement);
       } catch (error) {
-        console.error("Error handling airport photo:", error);
+        console.error("Error fetching airport photo:", error);
       }
     }
 
