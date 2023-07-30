@@ -52,7 +52,7 @@
     <label for="temperature-toggle">Display Temperature in Celsius</label>
   </div>
 
-  <script>
+ <script>
     const airports = [
       {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
       // ... (Other airports data)
@@ -118,6 +118,27 @@
         const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
         currentTimeElement.textContent = currentTime;
       }, 1000); // Set the interval to 1000ms (1 second)
+    }
+
+    async function fetchAirportPhoto(foundAirport) {
+      const wikipediaURL = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&pithumbsize=500&titles=${foundAirport.city} Airport`;
+
+      try {
+        const response = await fetch(wikipediaURL);
+        const data = await response.json();
+        const pageId = Object.keys(data.query.pages)[0];
+        const imageUrl = data.query.pages[pageId]?.original?.source;
+
+        if (imageUrl) {
+          // Display the photo in the search results
+          const photoElement = document.createElement('img');
+          photoElement.src = imageUrl;
+          photoElement.alt = foundAirport.city + ' Airport';
+          document.getElementById('search-results').appendChild(photoElement);
+        }
+      } catch (error) {
+        console.error("Error fetching airport photo:", error);
+      }
     }
 
     function findAirportByPartialCode(searchInput) {
@@ -192,6 +213,9 @@
 
           // Fetch and display the weather data after showing the airport information
           fetchWeatherData(foundAirport);
+
+          // Fetch and display the airport photo
+          fetchAirportPhoto(foundAirport);
 
           // Set interval to update the current time every second
           updateAirportTime(foundAirport);
