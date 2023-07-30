@@ -47,17 +47,21 @@
   <!-- Changelog Link -->
   <div class="changelog-link">Changelog</div>
 
-<div>
-    <input type="checkbox" id="temperature-toggle">
-    <label for="temperature-toggle">Display Temperature in Celsius</label>
-  </div>
+ <label for="temperature-toggle">Display in Celsius:</label>
+  <input type="checkbox" id="temperature-toggle">
+  <div id="search-results" data-airport-code=""></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
   <script>
     const airports = [
       {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
       // ... (Other airports data)
     ];
-
+	  
+   let currentAirportCode = null;
+    let useCelsius = false; // Flag to track whether to display temperature in Celsius
+    let weatherData = null; // Store weather data for the current airport
     let currentAirportCode = null;
     let useCelsius = false; // Flag to track whether to display temperature in Celsius
     let weatherData = null; // Store weather data for the current airport
