@@ -104,7 +104,7 @@
 
     function getDisplayTemperature(temperature) {
       // Convert temperature to Celsius if the checkbox is checked
-      return useCelsius ? ((temperature - 32) * 5 / 9).toFixed(2) : temperature;
+      return useCelsius ? Math.round((temperature - 32) * 5 / 9) : temperature;
     }
 
     function getTemperatureUnit() {
