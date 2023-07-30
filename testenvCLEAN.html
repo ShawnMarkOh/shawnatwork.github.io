@@ -120,38 +120,36 @@
       }, 1000); // Set the interval to 1000ms (1 second)
     }
 
-async function fetchAirportPhoto(foundAirport) {
-  const airportTitle = `${foundAirport.city} International Airport`;
-  const commonsURL = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(airportTitle)}&prop=pageimages&format=json&pithumbsize=500`;
+    async function fetchAirportPhoto(foundAirport) {
+      const airportTitle = `${foundAirport.city} International Airport`;
+      const commonsURL = `https://commons.wikimedia.org/w/api.php?action=query&titles=${encodeURIComponent(airportTitle)}&prop=pageimages&format=json&pithumbsize=500`;
 
-  try {
-    const response = await fetch(commonsURL);
-    const data = await response.json();
-    const pageId = Object.keys(data.query.pages)[0];
-    const imageUrl = data.query.pages[pageId]?.thumbnail?.source;
+      try {
+        const response = await fetch(commonsURL);
+        const data = await response.json();
+        const pageId = Object.keys(data.query.pages)[0];
+        const imageUrl = data.query.pages[pageId]?.thumbnail?.source;
 
-    if (imageUrl) {
-      // Clear the photo container first
-      document.getElementById('search-results').innerHTML = "";
+        // Display the photo or a placeholder image
+        const photoElement = document.createElement('img');
+        if (imageUrl) {
+          photoElement.src = imageUrl;
+          photoElement.alt = foundAirport.city + ' International Airport';
+        } else {
+          const placeholderImageUrl = 'https://via.placeholder.com/500';
+          photoElement.src = placeholderImageUrl;
+          photoElement.alt = 'Airport Photo Not Available';
+        }
 
-      // Display the photo in the search results
-      const photoElement = document.createElement('img');
-      photoElement.src = imageUrl;
-      photoElement.alt = foundAirport.city + ' International Airport';
-      document.getElementById('search-results').appendChild(photoElement);
-    } else {
-      // If the airport photo is not available, display a placeholder image
-      const placeholderImageUrl = 'https://via.placeholder.com/500';
-      const photoElement = document.createElement('img');
-      photoElement.src = placeholderImageUrl;
-      photoElement.alt = foundAirport.city + ' International Airport';
-      document.getElementById('search-results').appendChild(photoElement);
+        // Clear the photo container first
+        document.getElementById('search-results').innerHTML = "";
+
+        // Append the photo to the search results
+        document.getElementById('search-results').appendChild(photoElement);
+      } catch (error) {
+        console.error("Error fetching airport photo:", error);
+      }
     }
-  } catch (error) {
-    console.error("Error fetching airport photo:", error);
-  }
-}
-
 
     function findAirportByPartialCode(searchInput) {
       // Check if the search input starts with "K"
@@ -220,10 +218,10 @@ async function fetchAirportPhoto(foundAirport) {
           }
           locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
-          // Display both the airport information and weather data
+          // Display both the airport information and weather forecast
           searchResultsDiv.innerHTML = locationInfo + '<div id="weather-output"></div>';
 
-          // Fetch and display the weather data after showing the airport information
+          // Fetch and display the weather forecast after showing the airport information
           fetchWeatherData(foundAirport);
 
           // Fetch and display the airport photo
@@ -239,11 +237,11 @@ async function fetchAirportPhoto(foundAirport) {
     }
 
     function toggleTemperatureUnit() {
-      // Toggle the temperature unit based on checkbox state
       useCelsius = !useCelsius;
-      // Fetch and display weather data again to update temperature display
-      if (currentAirportCode) {
-        const foundAirport = airports.find(airport => airport.iataCode === currentAirportCode);
+      // Fetch and display the weather data for the current airport
+      const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
+      const foundAirport = findAirportByPartialCode(searchInput);
+      if (foundAirport) {
         fetchWeatherData(foundAirport);
       }
     }
