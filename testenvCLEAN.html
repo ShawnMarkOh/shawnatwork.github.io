@@ -49,10 +49,12 @@
 
 <script>
   const airports = [
-    {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040}
+    {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
+    // ... (Other airports data)
   ];
 
   let currentAirportCode = null;
+  let useCelsius = false; // Flag to track whether to display temperature in Celsius
 
   async function fetchWeatherData(foundAirport) {
     try {
@@ -80,11 +82,11 @@
       const currentWeather = currentWeatherData.properties.periods[0];
 
       let weatherHTML = '';
-      weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${currentWeather.temperature}&deg; ${currentWeather.temperatureUnit}</p>`;
+      weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${getDisplayTemperature(currentWeather.temperature)}&deg; ${getTemperatureUnit()}</p>`;
 
       // Display weather forecast for today
       for (const period of periodsToday) {
-        weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${period.temperature}&deg; ${period.temperatureUnit}</p>`;
+        weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${getDisplayTemperature(period.temperature)}&deg; ${getTemperatureUnit()}</p>`;
       }
 
       // Update the weather section with the new data
@@ -93,6 +95,16 @@
     } catch (error) {
       console.error("Error fetching weather data:", error);
     }
+  }
+
+  function getDisplayTemperature(temperature) {
+    // Convert temperature to Celsius if the checkbox is checked
+    return useCelsius ? ((temperature - 32) * 5 / 9).toFixed(2) : temperature;
+  }
+
+  function getTemperatureUnit() {
+    // Return the temperature unit based on the checkbox state
+    return useCelsius ? "C" : "F";
   }
 
   function updateAirportTime(foundAirport) {
@@ -185,12 +197,26 @@
     }
   }
 
+  function toggleTemperatureUnit() {
+    // Toggle the temperature unit based on checkbox state
+    useCelsius = !useCelsius;
+    // Fetch and display weather data again to update temperature display
+    if (currentAirportCode) {
+      const foundAirport = airports.find(airport => airport.iataCode === currentAirportCode);
+      fetchWeatherData(foundAirport);
+    }
+  }
+
   document.getElementById("search-input").addEventListener("input", searchAirport);
 
   // Initialization
   document.getElementById("search-input").value = "";
   document.getElementById("search-results").dataset.airportCode = "";
+
+  // Add event listener to the temperature unit toggle checkbox
+  document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
 </script>
+
 
 
 <script>
