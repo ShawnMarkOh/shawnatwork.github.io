@@ -52,7 +52,7 @@
     <label for="temperature-toggle">Display Temperature in Celsius</label>
   </div>
 
- <script>
+  <script>
     const airports = [
       {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
       // ... (Other airports data)
@@ -121,15 +121,18 @@
     }
 
     async function fetchAirportPhoto(foundAirport) {
-      const wikipediaURL = `https://en.wikipedia.org/w/api.php?action=query&prop=pageimages&format=json&piprop=original&pithumbsize=500&titles=${foundAirport.city} Airport`;
+      const commonsURL = `https://commons.wikimedia.org/w/api.php?action=query&titles=${foundAirport.city} Airport&prop=pageimages&format=json&pithumbsize=500`;
 
       try {
-        const response = await fetch(wikipediaURL);
+        const response = await fetch(commonsURL);
         const data = await response.json();
         const pageId = Object.keys(data.query.pages)[0];
-        const imageUrl = data.query.pages[pageId]?.original?.source;
+        const imageUrl = data.query.pages[pageId]?.thumbnail?.source;
 
         if (imageUrl) {
+          // Clear the photo container first
+          document.getElementById('search-results').innerHTML = "";
+
           // Display the photo in the search results
           const photoElement = document.createElement('img');
           photoElement.src = imageUrl;
@@ -245,6 +248,7 @@
     // Add event listener to the temperature unit toggle checkbox
     document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
   </script>
+
 </body>
 </html>
 
