@@ -46,25 +46,19 @@
 
   <!-- Changelog Link -->
   <div class="changelog-link">Changelog</div>
+  <div>
+    <input type="checkbox" id="temperature-toggle">
+    <label for="temperature-toggle">Display Temperature in Celsius</label>
+  </div>
+	
+<script>
+  const airports = [
+{"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
 
- <label for="temperature-toggle">Display in Celsius:</label>
-  <input type="checkbox" id="temperature-toggle">
-  <div id="search-results" data-airport-code=""></div>
+  ];
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-
-  <script>
-    const airports = [
-      {"iataCode": "OAJ", "name": "Albert J. Ellis Airport", "city": "Jacksonville", "state": "North Carolina", "timeZone": "America/New_York", "latitude": 34.82917, "longitude": -77.61214},
-      // ... (Other airports data)
-    ];
-	  
-   let currentAirportCode = null;
-    let useCelsius = false; // Flag to track whether to display temperature in Celsius
-    let weatherData = null; // Store weather data for the current airport
     let currentAirportCode = null;
     let useCelsius = false; // Flag to track whether to display temperature in Celsius
-    let weatherData = null; // Store weather data for the current airport
 
     async function fetchWeatherData(foundAirport) {
       try {
@@ -102,9 +96,6 @@
         // Update the weather section with the new data
         document.getElementById('weather-output').innerHTML = weatherHTML;
 
-        // Store weather data for the current airport
-        weatherData = weatherHTML;
-
       } catch (error) {
         console.error("Error fetching weather data:", error);
       }
@@ -112,7 +103,7 @@
 
     function getDisplayTemperature(temperature) {
       // Convert temperature to Celsius if the checkbox is checked
-      return useCelsius ? Math.round((temperature - 32) * 5 / 9) : temperature;
+      return useCelsius ? ((temperature - 32) * 5 / 9).toFixed(2) : temperature;
     }
 
     function getTemperatureUnit() {
@@ -200,12 +191,7 @@
           searchResultsDiv.innerHTML = searchResultsHTML;
 
           // Fetch and display the weather forecast after showing the airport information
-          if (weatherData) {
-            // Use stored weather data if available
-            document.getElementById('weather-output').innerHTML = weatherData;
-          } else {
-            fetchWeatherData(foundAirport);
-          }
+          fetchWeatherData(foundAirport);
 
           // Fetch and display the airport photo
           fetchAirportPhoto(foundAirport);
@@ -221,13 +207,12 @@
 
     function toggleTemperatureUnit() {
       useCelsius = !useCelsius;
-      // Update the displayed temperatures without fetching new weather data
-      const temperatures = document.querySelectorAll("#weather-output p strong:not(:first-child)");
-      temperatures.forEach(tempElement => {
-        const temperature = parseFloat(tempElement.textContent);
-        const newTemperature = getDisplayTemperature(temperature);
-        tempElement.textContent = `${newTemperature}&deg; ${getTemperatureUnit()}`;
-      });
+      // Fetch and display the weather data for the current airport
+      const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
+      const foundAirport = findAirportByPartialCode(searchInput);
+      if (foundAirport) {
+        fetchWeatherData(foundAirport);
+      }
     }
 
     document.getElementById("search-input").addEventListener("input", searchAirport);
@@ -240,6 +225,43 @@
     document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
   </script>
 
+<script>
+  // Function to display the changelog modal
+  function showChangelogModal() {
+    const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
+    changelogModal.style.display = "block";
+
+    const modalClose = document.querySelectorAll(".modal-close")[1]; // Select the second modal close button
+    modalClose.onclick = () => {
+      changelogModal.style.display = "none";
+    };
+
+    window.onclick = (event) => {
+      if (event.target === changelogModal) {
+        changelogModal.style.display = "none";
+      }
+    };
+  }
+
+  // Show the changelog modal when the changelog link is clicked
+  document.querySelector(".changelog-link").addEventListener("click", showChangelogModal);
+
+  // Show the work in progress modal on page load
+  window.onload = () => {
+    const modal = document.querySelector(".modal"); // Select the first modal element
+    modal.style.display = "block";
+
+    const modalClose = document.querySelector(".modal-close"); // Select the first modal close button
+    modalClose.onclick = () => {
+      modal.style.display = "none";
+    };
+
+    window.onclick = (event) => {
+      if (event.target === modal) {
+        modal.style.display = "none";
+      }
+    };
+  };
+</script>
 </body>
 </html>
-
