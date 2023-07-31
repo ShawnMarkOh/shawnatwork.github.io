@@ -7,7 +7,75 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
   <style>
-    body{background-color:#f0f0f0;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;margin:0}h1,p{font-size:24px}#search-container{text-align:center}#search-input{width:300px;padding:8px;border:1px solid #ccc;border-radius:4px}#search-results{margin-top:20px;text-align:left}.modal{display:none;position:fixed;z-index:1;left:0;top:0;width:100%;height:100%;overflow:auto;background-color:rgba(0,0,0,.5)}.modal-content{background-color:#fff;border:2px solid #000;margin:15% auto;padding:20px;width:80%}.modal-close{float:right;cursor:pointer}.changelog-link{cursor:pointer;color:blue;text-decoration:underline}.weather-container{margin-top:10px}.weather-info{font-size:16px;margin-top:5px}
+    body {
+      background-color: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+
+    h1, p {
+      font-size: 24px;
+    }
+
+    #search-container {
+      text-align: center;
+    }
+
+    #search-input {
+      width: 300px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    #search-results {
+      margin-top: 20px;
+      text-align: left;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, .5);
+    }
+
+    .modal-content {
+      background-color: #fff;
+      border: 2px solid #000;
+      margin: 15% auto;
+      padding: 20px;
+      width: 80%;
+    }
+
+    .modal-close {
+      float: right;
+      cursor: pointer;
+    }
+
+    .changelog-link {
+      cursor: pointer;
+      color: blue;
+      text-decoration: underline;
+    }
+
+    .weather-container {
+      margin-top: 10px;
+    }
+
+    .weather-info {
+      font-size: 16px;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body>
@@ -32,9 +100,9 @@
       <span class="modal-close" style="float:right;cursor:pointer;">&times;</span>
       <h2>Changelog</h2>
       <ul id="changelog-list">
-		<li>2023-07-28: Modified script to allow for partial IATA codes as well as IATA codes with "K" at the beginning. E.g "KDAY". </li>
-	    <li>2023-07-28: Added weather forcasts and temperature data to all American cities. May have lost some airports adding GPS Data.</li>
-		<li>2023-07-28: Told Kevin about this tool. He liked it.
+        <li>2023-07-28: Modified script to allow for partial IATA codes as well as IATA codes with "K" at the beginning. E.g "KDAY".</li>
+        <li>2023-07-28: Added weather forecasts and temperature data to all American cities. May have lost some airports adding GPS Data.</li>
+        <li>2023-07-28: Told Kevin about this tool. He liked it.</li>
         <li>2023-07-27: Added functionality to search by partial airport names (e.g., "Tyson" for "McGhee Tyson Airport").</li>
         <li>2023-07-27: Modified search to prioritize IATA codes over city names.</li>
         <li>2023-07-27: Added IATA code display in search results.</li>
@@ -50,9 +118,9 @@
     <input type="checkbox" id="temperature-toggle">
     <label for="temperature-toggle">Display Temperature in Celsius</label>
   </div>
-	
-<script>
-  const airports = [
+  
+  <script>
+    const airports = [
 {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
 {"iataCode": "ABI", "name": "Abilene Regional Airport", "city": "Abilene", "state": "Texas", "timeZone": "America/Chicago", "latitude": 32.41132, "longitude": -99.68190},
 {"iataCode": "ABQ", "name": "Albuquerque International Sunport", "city": "Albuquerque", "state": "New Mexico", "timeZone": "America/Denver", "latitude": 35.04022, "longitude": -106.60919},
@@ -513,8 +581,8 @@
   {"iataCode": "TBI", "name": "New Bight Airport", "city": "New Bight",  "island": "Cat Island", "timeZone": "America/Nassau"},
   {"iataCode": "TCB", "name": "Treasure Cay Airport", "city": "Treasure Cay",  "island": "Abaco", "timeZone": "America/Nassau"},
   {"iataCode": "TZN", "name": "South Andros Airport", "city": "Congo Town",  "island": "Andros", "timeZone": "America/Nassau"},
-
-  ];
+      // Add more airport data here if needed
+    ];
 
     let currentAirportCode = null;
     let useCelsius = false; // Flag to track whether to display temperature in Celsius
@@ -652,9 +720,6 @@
           // Fetch and display the weather forecast after showing the airport information
           fetchWeatherData(foundAirport);
 
-          // Fetch and display the airport photo
-          fetchAirportPhoto(foundAirport);
-
           // Set interval to update the current time every second
           updateAirportTime(foundAirport);
         }
@@ -666,11 +731,17 @@
 
     function toggleTemperatureUnit() {
       useCelsius = !useCelsius;
-      // Fetch and display the weather data for the current airport
+
+      // Fetch the current search input value and convert it to uppercase
       const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
-      const foundAirport = findAirportByPartialCode(searchInput);
-      if (foundAirport) {
-        fetchWeatherData(foundAirport);
+
+      // Check if the currentAirportCode is not null and if the previous search input matches the current airport code
+      // If it does, update the weather data based on the new temperature unit
+      if (currentAirportCode && currentAirportCode === searchInput) {
+        const foundAirport = findAirportByPartialCode(searchInput);
+        if (foundAirport) {
+          fetchWeatherData(foundAirport);
+        }
       }
     }
 
@@ -724,4 +795,3 @@
 </script>
 </body>
 </html>
-
