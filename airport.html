@@ -118,7 +118,7 @@
     <input type="checkbox" id="temperature-toggle">
     <label for="temperature-toggle">Display Temperature in Celsius</label>
   </div>
-  
+
   <script>
     const airports = [
 {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
@@ -714,7 +714,7 @@
           locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
           // Display both the airport information and weather forecast
-          const searchResultsHTML = locationInfo + '<div id="weather-output"></div>';
+          const searchResultsHTML = locationInfo + '<div class="weather-container"><div id="weather-output"></div></div>';
           searchResultsDiv.innerHTML = searchResultsHTML;
 
           // Fetch and display the weather forecast after showing the airport information
@@ -743,6 +743,9 @@
           fetchWeatherData(foundAirport);
         }
       }
+
+      // Additionally, trigger the searchAirport function to update the displayed weather data
+      searchAirport();
     }
 
     document.getElementById("search-input").addEventListener("input", searchAirport);
