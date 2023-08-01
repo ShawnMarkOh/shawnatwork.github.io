@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>International Phonetic Alphabet Converter</title>
+  <!-- Add the ipa.js library -->
+  <script src="https://unpkg.com/ipa/dist/ipa.min.js"></script>
+</head>
+<body>
+  <h1>International Phonetic Alphabet Converter</h1>
+  <label for="inputText">Enter your text:</label>
+  <textarea id="inputText" rows="4" cols="50"></textarea>
+  <br>
+  <button onclick="convertToIPA()">Convert to IPA</button>
+  <br>
+  <label for="outputIPA">IPA Transcription:</label>
+  <textarea id="outputIPA" rows="4" cols="50" readonly></textarea>
+
+  <script>
+    function convertToIPA() {
+      // Get the input text from the textarea
+      const inputText = document.getElementById('inputText').value;
+
+      // Convert the input text to IPA using the ipa.js library
+      const ipaText = ipa.stripDiacritics(ipa.transcribe(inputText));
+
+      // Display the IPA transcription in the output textarea
+      document.getElementById('outputIPA').value = ipaText;
+    }
+  </script>
+</body>
+</html>
