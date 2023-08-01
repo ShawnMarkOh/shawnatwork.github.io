@@ -97,7 +97,7 @@
   </div>
 
   <script>
-    // Internal dictionary for  phonetic alphabet
+    // Internal dictionary for phonetic alphabet
     const Dictionary = {
       'a': 'Alpha',
       'b': 'Bravo',
@@ -125,13 +125,23 @@
       'x': 'X-ray',
       'y': 'Yankee',
       'z': 'Zulu',
+      '0': 'Zero',
+      '1': 'One',
+      '2': 'Two',
+      '3': 'Three',
+      '4': 'Four',
+      '5': 'Five',
+      '6': 'Six',
+      '7': 'Seven',
+      '8': 'Eight',
+      '9': 'Niner',
     };
 
     function convertTo() {
       // Get the input text from the search bar
       const inputText = document.getElementById('search-input').value.toLowerCase();
 
-      // Convert each character to  phonetic alphabet using the internal dictionary
+      // Convert each character to phonetic alphabet using the internal dictionary
       const Text = Array.from(inputText)
         .map(char => Dictionary[char] || char)
         .join(' ') // Add a space between every word
