@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NATO Phonetic Alphabet Converter</title>
   <style>
-        #top-bar {
+    /* Styles for the top bar and converter button */
+    #top-bar {
       background-color: #333;
       color: #fff;
       display: flex;
@@ -35,6 +36,8 @@
       border-radius: 4px;
       cursor: pointer;
     }
+    
+    /* Styles for the body and converter container */
     body {
       background-color: #f0f0f0;
       display: flex;
@@ -54,6 +57,16 @@
       text-align: center;
     }
 
+    /* Styles for the search bar input */
+    #search-input {
+      width: 300px;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+
+    /* Styles for the input and output textareas */
     #inputText {
       width: 300px;
       height: 120px;
@@ -75,12 +88,19 @@
   </style>
 </head>
 <body>
-    <div id="top-bar">
+  <!-- Top bar with title and converter button -->
+  <div id="top-bar">
     <div id="top-bar-title">NATO Phonetic Alphabet Converter</div>
     <a id="converter-button" href="https://isshawnat.work/airport.html" target="_blank">Airport Time Zone Search</a>
   </div>
+
+  <!-- Converter section -->
   <h1>NATO Phonetic Alphabet Converter</h1>
   <div id="converter-container">
+    <!-- Search bar -->
+    <input type="text" id="search-input" placeholder="Enter IATA code, airport name, or city">
+    <br>
+    <!-- Textareas for input and output -->
     <textarea id="inputText" placeholder="Enter your text"></textarea>
     <br>
     <textarea id="outputNATO" readonly></textarea>
