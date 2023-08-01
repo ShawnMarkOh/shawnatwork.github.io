@@ -1,37 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>International Phonetic Alphabet Converter</title>
+  <title>NATO Phonetic Alphabet Converter</title>
 </head>
 <body>
-  <h1>International Phonetic Alphabet Converter</h1>
+  <h1>NATO Phonetic Alphabet Converter</h1>
   <label for="inputText">Enter your text:</label>
   <textarea id="inputText" rows="4" cols="50"></textarea>
   <br>
-  <button onclick="convertToIPA()">Convert to IPA</button>
+  <button onclick="convertToNATO()">Convert to NATO Phonetic</button>
   <br>
-  <label for="outputIPA">IPA Transcription:</label>
-  <textarea id="outputIPA" rows="4" cols="50" readonly></textarea>
-
-  <!-- Add the ipa.js library with the "defer" attribute -->
-  <script src="https://unpkg.com/ipa/dist/ipa.min.js" defer></script>
+  <label for="outputNATO">NATO Phonetic Transcription:</label>
+  <textarea id="outputNATO" rows="4" cols="50" readonly></textarea>
 
   <script>
-    function convertToIPA() {
+    // Internal dictionary for NATO phonetic alphabet
+    const natoDictionary = {
+      'a': 'Alpha',
+      'b': 'Bravo',
+      'c': 'Charlie',
+      'd': 'Delta',
+      'e': 'Echo',
+      'f': 'Foxtrot',
+      'g': 'Golf',
+      'h': 'Hotel',
+      'i': 'India',
+      'j': 'Juliet',
+      'k': 'Kilo',
+      'l': 'Lima',
+      'm': 'Mike',
+      'n': 'November',
+      'o': 'Oscar',
+      'p': 'Papa',
+      'q': 'Quebec',
+      'r': 'Romeo',
+      's': 'Sierra',
+      't': 'Tango',
+      'u': 'Uniform',
+      'v': 'Victor',
+      'w': 'Whiskey',
+      'x': 'X-ray',
+      'y': 'Yankee',
+      'z': 'Zulu',
+    };
+
+    function convertToNATO() {
       // Get the input text from the textarea
-      const inputText = document.getElementById('inputText').value;
+      const inputText = document.getElementById('inputText').value.toLowerCase();
 
-      // Ensure that the ipa object is defined before using it
-      if (typeof ipa === 'undefined') {
-        alert('The IPA library is still loading. Please try again.');
-        return;
-      }
-
-      // Convert the input text to IPA using the ipa.js library
-      const ipaText = ipa.stripDiacritics(ipa.transcribe(inputText));
-
-      // Display the IPA transcription in the output textarea
-      document.getElementById('outputIPA').value = ipaText;
+      // Convert the input text to NATO phonetic alphabet using the internal dictionary
+      const words = inputText.split(' ');
+      const natoText = words.map(word => natoDictionary[word] || word).join(' ');
+      document.getElementById('outputNATO').value = natoText;
     }
   </script>
 </body>
