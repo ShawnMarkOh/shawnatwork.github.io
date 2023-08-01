@@ -33,20 +33,6 @@
       margin-bottom: 10px;
     }
 
-    #convertButton {
-      padding: 8px 16px;
-      font-size: 16px;
-      background-color: #007bff;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    #convertButton:hover {
-      background-color: #0056b3;
-    }
-
     #outputNATO {
       width: 300px;
       height: 120px;
@@ -62,8 +48,6 @@
   <h1>NATO Phonetic Alphabet Converter</h1>
   <div id="converter-container">
     <textarea id="inputText" placeholder="Enter your text"></textarea>
-    <br>
-    <button id="convertButton">Convert to NATO Phonetic</button>
     <br>
     <textarea id="outputNATO" readonly></textarea>
   </div>
@@ -112,8 +96,8 @@
       document.getElementById('outputNATO').value = natoText;
     }
 
-    // Assign the conversion function to the button click event
-    document.getElementById('convertButton').addEventListener('click', convertToNATO);
+    // Assign the conversion function to the input event of the textarea
+    document.getElementById('inputText').addEventListener('input', convertToNATO);
   </script>
 </body>
 </html>
