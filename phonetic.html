@@ -5,6 +5,36 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NATO Phonetic Alphabet Converter</title>
   <style>
+        #top-bar {
+      background-color: #333;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+    }
+
+    #top-bar-title {
+      font-size: 24px;
+    }
+
+    #converter-button {
+      background-color: #4CAF50;
+      border: none;
+      color: #fff;
+      padding: 8px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
     body {
       background-color: #f0f0f0;
       display: flex;
@@ -45,6 +75,10 @@
   </style>
 </head>
 <body>
+    <div id="top-bar">
+    <div id="top-bar-title">NATO Phonetic Alphabet Converter</div>
+    <a id="converter-button" href="https://isshawnat.work/airport.html" target="_blank">Airport Time Zone Search</a>
+  </div>
   <h1>NATO Phonetic Alphabet Converter</h1>
   <div id="converter-container">
     <textarea id="inputText" placeholder="Enter your text"></textarea>
