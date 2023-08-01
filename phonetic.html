@@ -57,23 +57,24 @@
       text-align: center;
     }
 
-    /* Styles for the input and output textareas */
-    #inputText {
-      width: 300px;
-      height: 120px;
+    /* Styles for the search bar input */
+    #search-input {
+      width: 200px; /* Adjust the width as needed */
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
       margin-bottom: 10px;
     }
 
+    /* Styles for the output */
     #outputNATO {
-      width: 300px;
-      height: 120px;
+      width: 200px; /* Adjust the width as needed */
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      overflow-y: auto;
+      background-color: transparent; /* Make the background transparent */
+      resize: none; /* Disable textarea resizing */
+      font-family: inherit; /* Use the same font as other elements */
       white-space: pre-line; /* Preserve line breaks and spaces */
     }
   </style>
@@ -88,10 +89,11 @@
   <!-- Converter section -->
   <h1>NATO Phonetic Alphabet Converter</h1>
   <div id="converter-container">
-    <!-- Textareas for input and output -->
-    <textarea id="inputText" placeholder="Enter your text"></textarea>
+    <!-- Search bar -->
+    <input type="text" id="search-input" placeholder="Enter IATA code, airport name, or city">
     <br>
-    <textarea id="outputNATO" readonly></textarea>
+    <!-- Output -->
+    <div id="outputNATO"></div>
   </div>
 
   <script>
@@ -126,8 +128,8 @@
     };
 
     function convertToNATO() {
-      // Get the input text from the textarea
-      const inputText = document.getElementById('inputText').value.toLowerCase();
+      // Get the input text from the search bar
+      const inputText = document.getElementById('search-input').value.toLowerCase();
 
       // Convert each character to NATO phonetic alphabet using the internal dictionary
       const natoText = Array.from(inputText)
@@ -135,11 +137,11 @@
         .join(' ') // Add a space between every word
         .replace(/\s+/g, ' '); // Replace multiple spaces with a single space
 
-      document.getElementById('outputNATO').value = natoText;
+      document.getElementById('outputNATO').innerText = natoText;
     }
 
-    // Assign the conversion function to the input event of the textarea
-    document.getElementById('inputText').addEventListener('input', convertToNATO);
+    // Assign the conversion function to the input event of the search bar
+    document.getElementById('search-input').addEventListener('input', convertToNATO);
   </script>
 </body>
 </html>
