@@ -2,8 +2,6 @@
 <html>
 <head>
   <title>International Phonetic Alphabet Converter</title>
-  <!-- Add the ipa.js library -->
-  <script src="https://unpkg.com/ipa/dist/ipa.min.js"></script>
 </head>
 <body>
   <h1>International Phonetic Alphabet Converter</h1>
@@ -15,10 +13,19 @@
   <label for="outputIPA">IPA Transcription:</label>
   <textarea id="outputIPA" rows="4" cols="50" readonly></textarea>
 
+  <!-- Add the ipa.js library with the "defer" attribute -->
+  <script src="https://unpkg.com/ipa/dist/ipa.min.js" defer></script>
+
   <script>
     function convertToIPA() {
       // Get the input text from the textarea
       const inputText = document.getElementById('inputText').value;
+
+      // Ensure that the ipa object is defined before using it
+      if (typeof ipa === 'undefined') {
+        alert('The IPA library is still loading. Please try again.');
+        return;
+      }
 
       // Convert the input text to IPA using the ipa.js library
       const ipaText = ipa.stripDiacritics(ipa.transcribe(inputText));
