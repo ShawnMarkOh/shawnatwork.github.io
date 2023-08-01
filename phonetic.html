@@ -48,9 +48,11 @@
       // Get the input text from the textarea
       const inputText = document.getElementById('inputText').value.toLowerCase();
 
-      // Convert the input text to NATO phonetic alphabet using the internal dictionary
-      const words = inputText.split(' ');
-      const natoText = words.map(word => natoDictionary[word] || word).join(' ');
+      // Convert each character to NATO phonetic alphabet using the internal dictionary
+      const natoText = Array.from(inputText)
+        .map(char => natoDictionary[char] || char)
+        .join('');
+
       document.getElementById('outputNATO').value = natoText;
     }
   </script>
