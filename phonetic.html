@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NATO Phonetic Alphabet Converter</title>
+  <title>Phonetic Alphabet Converter</title>
   <style>
     /* Styles for the top bar and converter button */
     #top-bar {
@@ -67,7 +67,7 @@
     }
 
     /* Styles for the output */
-    #outputNATO {
+    #output {
       width: 200px; /* Adjust the width as needed */
       padding: 8px;
       border: 1px solid #ccc;
@@ -82,23 +82,23 @@
 <body>
   <!-- Top bar with title and converter button -->
   <div id="top-bar">
-    <div id="top-bar-title">NATO Phonetic Alphabet Converter</div>
+    <div id="top-bar-title">Phonetic Alphabet Converter</div>
     <a id="converter-button" href="https://isshawnat.work/airport.html" target="_self">Airport Time Zone Search</a>
   </div>
 
   <!-- Converter section -->
-  <h1>NATO Phonetic Alphabet Converter</h1>
+  <h1>Phonetic Alphabet Converter</h1>
   <div id="converter-container">
     <!-- Search bar -->
     <input type="text" id="search-input" placeholder="Enter your text!">
     <br>
     <!-- Output -->
-    <div id="outputNATO"></div>
+    <div id="output"></div>
   </div>
 
   <script>
-    // Internal dictionary for NATO phonetic alphabet
-    const natoDictionary = {
+    // Internal dictionary for  phonetic alphabet
+    const Dictionary = {
       'a': 'Alpha',
       'b': 'Bravo',
       'c': 'Charlie',
@@ -127,21 +127,21 @@
       'z': 'Zulu',
     };
 
-    function convertToNATO() {
+    function convertTo() {
       // Get the input text from the search bar
       const inputText = document.getElementById('search-input').value.toLowerCase();
 
-      // Convert each character to NATO phonetic alphabet using the internal dictionary
-      const natoText = Array.from(inputText)
-        .map(char => natoDictionary[char] || char)
+      // Convert each character to  phonetic alphabet using the internal dictionary
+      const Text = Array.from(inputText)
+        .map(char => Dictionary[char] || char)
         .join(' ') // Add a space between every word
         .replace(/\s+/g, ' '); // Replace multiple spaces with a single space
 
-      document.getElementById('outputNATO').innerText = natoText;
+      document.getElementById('output').innerText = Text;
     }
 
     // Assign the conversion function to the input event of the search bar
-    document.getElementById('search-input').addEventListener('input', convertToNATO);
+    document.getElementById('search-input').addEventListener('input', convertTo);
   </script>
 </body>
 </html>
