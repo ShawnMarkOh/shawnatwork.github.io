@@ -54,6 +54,7 @@
       border: 1px solid #ccc;
       border-radius: 4px;
       overflow-y: auto;
+      white-space: pre-line; /* Preserve line breaks and spaces */
     }
   </style>
 </head>
@@ -105,7 +106,8 @@
       // Convert each character to NATO phonetic alphabet using the internal dictionary
       const natoText = Array.from(inputText)
         .map(char => natoDictionary[char] || char)
-        .join('');
+        .join(' ') // Add a space between every word
+        .replace(/\s+/g, ' '); // Replace multiple spaces with a single space
 
       document.getElementById('outputNATO').value = natoText;
     }
