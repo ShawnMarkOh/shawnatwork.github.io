@@ -7,6 +7,37 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
   <style>
+ #top-bar {
+      background-color: #333;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+    }
+
+    #top-bar-title {
+      font-size: 24px;
+    }
+
+    #converter-button {
+      background-color: #4CAF50;
+      border: none;
+      color: #fff;
+      padding: 8px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
     body {
       background-color: #f0f0f0;
       display: flex;
@@ -79,6 +110,12 @@
   </style>
 </head>
 <body>
+
+   <div id="top-bar">
+    <div id="top-bar-title">Airport Time Zone Search</div>
+    <a id="converter-button" href="https://isshawnat.work/phonetic.html" target="_self">Phonetic Alphabet Converter</a>
+  </div>
+  
   <!-- Work in Progress Modal (Displayed on Page Load) -->
   <div class="modal">
     <div class="modal-content">
@@ -114,14 +151,11 @@
 
   <!-- Changelog Link -->
   <div class="changelog-link">Changelog</div>
-  <div>
-    <input type="checkbox" id="temperature-toggle">
-    <label for="temperature-toggle">Display Temperature in Celsius</label>
-  </div>
-  
+
+
   <script>
     const airports = [
-      {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
+{"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
       // Add more airport data here if needed
     ];
 
@@ -255,7 +289,7 @@
           locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
           // Display both the airport information and weather forecast
-          const searchResultsHTML = locationInfo + '<div id="weather-output"></div>';
+          const searchResultsHTML = locationInfo + '<div class="weather-container"><div id="weather-output"></div></div>';
           searchResultsDiv.innerHTML = searchResultsHTML;
 
           // Fetch and display the weather forecast after showing the airport information
@@ -284,6 +318,9 @@
           fetchWeatherData(foundAirport);
         }
       }
+
+      // Additionally, trigger the searchAirport function to update the displayed weather data
+      searchAirport();
     }
 
     document.getElementById("search-input").addEventListener("input", searchAirport);
