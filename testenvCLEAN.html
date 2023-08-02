@@ -153,13 +153,25 @@
   <div class="changelog-link">Changelog</div>
   <script>
     const airports = [
-{"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
-      
+      {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
       // Add more airport data here if needed
     ];
 
     let currentAirportCode = null;
     let useCelsius = false; // Flag to track whether to display temperature in Celsius
+
+    function showWeatherLoadingProgress() {
+      const weatherContainer = document.querySelector('.weather-container');
+      weatherContainer.innerHTML = '<p style="font-size: 16px; margin-top: 5px;"><strong>Loading weather...</strong></p>';
+      let ellipsisCount = 0;
+      const ellipsisInterval = setInterval(() => {
+        ellipsisCount = (ellipsisCount + 1) % 4;
+        const ellipsis = '.'.repeat(ellipsisCount);
+        weatherContainer.innerHTML = `<p style="font-size: 16px; margin-top: 5px;"><strong>Loading weather${ellipsis}</strong></p>`;
+      }, 500);
+
+      return ellipsisInterval;
+    }
 
     async function fetchWeatherData(foundAirport) {
       try {
@@ -282,24 +294,21 @@
           if (foundAirport.city) {
             locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
           }
-                    
-          if (foundAirport.island) {
-            locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
-          }        
-          if (foundAirport.province) {
-            locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
-          }
-          if (foundAirport.state) {
-            locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
-          }
+          // ... (existing code for island, province, and state) ...
           locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
           // Display both the airport information and weather forecast
-          const searchResultsHTML = locationInfo + '<div class="weather-container"><div id="weather-output"></div></div>';
+          const searchResultsHTML = locationInfo + '<div class="weather-container"></div>';
           searchResultsDiv.innerHTML = searchResultsHTML;
 
+          // Show weather loading progress
+          const ellipsisInterval = showWeatherLoadingProgress();
+
           // Fetch and display the weather forecast after showing the airport information
-          fetchWeatherData(foundAirport);
+          await fetchWeatherData(foundAirport);
+
+          // Clear the weather loading progress bar
+          clearInterval(ellipsisInterval);
 
           // Set interval to update the current time every second
           updateAirportTime(foundAirport);
@@ -310,7 +319,7 @@
       }
     }
 
-    function toggleTemperatureUnit() {
+    async function toggleTemperatureUnit() {
       useCelsius = !useCelsius;
 
       // Fetch the current search input value and convert it to uppercase
@@ -321,7 +330,7 @@
       if (currentAirportCode && currentAirportCode === searchInput) {
         const foundAirport = findAirportByPartialCode(searchInput);
         if (foundAirport) {
-          fetchWeatherData(foundAirport);
+          await fetchWeatherData(foundAirport);
         }
       }
 
@@ -339,43 +348,48 @@
     document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
   </script>
 
-<script>
-  // Function to display the changelog modal
-  function showChangelogModal() {
-    const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
-    changelogModal.style.display = "block";
+  <!-- Additional Script for Modals -->
+  <script>
+    // Function to display the changelog modal
+    function showChangelogModal() {
+      const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
+      changelogModal.style.display = "block";
 
-    const modalClose = document.querySelectorAll(".modal-close")[1]; // Select the second modal close button
-    modalClose.onclick = () => {
-      changelogModal.style.display = "none";
-    };
-
-    window.onclick = (event) => {
-      if (event.target === changelogModal) {
+      const modalClose = document.querySelectorAll(".modal-close")[1]; // Select the second modal close button
+      modalClose.onclick = () => {
         changelogModal.style.display = "none";
-      }
-    };
-  }
+      };
 
-  // Show the changelog modal when the changelog link is clicked
-  document.querySelector(".changelog-link").addEventListener("click", showChangelogModal);
+      window.onclick = (event) => {
+        if (event.target === changelogModal) {
+          changelogModal.style.display = "none";
+        }
+      };
+    }
 
-  // Show the work in progress modal on page load
-  window.onload = () => {
-    const modal = document.querySelector(".modal"); // Select the first modal element
-    modal.style.display = "block";
+    // Add event listener to the changelog link
+    document.querySelector(".changelog-link").addEventListener("click", showChangelogModal);
 
-    const modalClose = document.querySelector(".modal-close"); // Select the first modal close button
-    modalClose.onclick = () => {
-      modal.style.display = "none";
-    };
+    // Function to display the work in progress modal on page load
+    function showWorkInProgressModal() {
+      const workInProgressModal = document.querySelector(".modal");
+      workInProgressModal.style.display = "block";
 
-    window.onclick = (event) => {
-      if (event.target === modal) {
-        modal.style.display = "none";
-      }
-    };
-  };
-</script>
+      const modalClose = document.querySelector(".modal-close");
+      modalClose.onclick = () => {
+        workInProgressModal.style.display = "none";
+      };
+
+      window.onclick = (event) => {
+        if (event.target === workInProgressModal) {
+          workInProgressModal.style.display = "none";
+        }
+      };
+    }
+
+    // Show the work in progress modal on page load
+    showWorkInProgressModal();
+  </script>
+
 </body>
 </html>
