@@ -7,7 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
   <style>
- #top-bar {
+    #top-bar {
       background-color: #333;
       color: #fff;
       display: flex;
@@ -37,7 +37,7 @@
       border-radius: 4px;
       cursor: pointer;
     }
-    
+
     body {
       background-color: #f0f0f0;
       display: flex;
@@ -111,11 +111,11 @@
 </head>
 <body>
 
-   <div id="top-bar">
+  <div id="top-bar">
     <div id="top-bar-title">Airport Time Zone Search</div>
     <a id="converter-button" href="https://isshawnat.work/phonetic.html" target="_self">Phonetic Alphabet Converter</a>
   </div>
-  
+
   <!-- Work in Progress Modal (Displayed on Page Load) -->
   <div class="modal">
     <div class="modal-content">
@@ -152,10 +152,9 @@
   <!-- Changelog Link -->
   <div class="changelog-link">Changelog</div>
 
-
   <script>
     const airports = [
-{"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
+      {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
       // Add more airport data here if needed
     ];
 
@@ -299,7 +298,24 @@
           updateAirportTime(foundAirport);
         }
       } else {
-        searchResultsDiv.innerHTML = `<p>No airport found for "${searchInput}".</p>`;
+        // If no exact match found, display a list of potential matches
+        const potentialMatches = airports.filter(airport =>
+          airport.iataCode.includes(searchInput) ||
+          airport.name.toUpperCase().includes(searchInput) ||
+          airport.city.toUpperCase().startsWith(searchInput)
+        );
+
+        if (potentialMatches.length > 0) {
+          let potentialMatchesHTML = "<p>Did you mean one of the following airports?</p><ul>";
+          for (const match of potentialMatches) {
+            potentialMatchesHTML += `<li>${match.iataCode} - ${match.name} (${match.city}, ${match.state})</li>`;
+          }
+          potentialMatchesHTML += "</ul>";
+          searchResultsDiv.innerHTML = potentialMatchesHTML;
+        } else {
+          searchResultsDiv.innerHTML = `<p>No airport found for "${searchInput}".</p>`;
+        }
+
         currentAirportCode = null;
       }
     }
@@ -333,43 +349,43 @@
     document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
   </script>
 
-<script>
-  // Function to display the changelog modal
-  function showChangelogModal() {
-    const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
-    changelogModal.style.display = "block";
+  <script>
+    // Function to display the changelog modal
+    function showChangelogModal() {
+      const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
+      changelogModal.style.display = "block";
 
-    const modalClose = document.querySelectorAll(".modal-close")[1]; // Select the second modal close button
-    modalClose.onclick = () => {
-      changelogModal.style.display = "none";
-    };
-
-    window.onclick = (event) => {
-      if (event.target === changelogModal) {
+      const modalClose = document.querySelectorAll(".modal-close")[1]; // Select the second modal close button
+      modalClose.onclick = () => {
         changelogModal.style.display = "none";
-      }
-    };
-  }
+      };
 
-  // Show the changelog modal when the changelog link is clicked
-  document.querySelector(".changelog-link").addEventListener("click", showChangelogModal);
+      window.onclick = (event) => {
+        if (event.target === changelogModal) {
+          changelogModal.style.display = "none";
+        }
+      };
+    }
 
-  // Show the work in progress modal on page load
-  window.onload = () => {
-    const modal = document.querySelector(".modal"); // Select the first modal element
-    modal.style.display = "block";
+    // Show the changelog modal when the changelog link is clicked
+    document.querySelector(".changelog-link").addEventListener("click", showChangelogModal);
 
-    const modalClose = document.querySelector(".modal-close"); // Select the first modal close button
-    modalClose.onclick = () => {
-      modal.style.display = "none";
-    };
+    // Show the work in progress modal on page load
+    window.onload = () => {
+      const modal = document.querySelector(".modal"); // Select the first modal element
+      modal.style.display = "block";
 
-    window.onclick = (event) => {
-      if (event.target === modal) {
+      const modalClose = document.querySelector(".modal-close"); // Select the first modal close button
+      modalClose.onclick = () => {
         modal.style.display = "none";
-      }
+      };
+
+      window.onclick = (event) => {
+        if (event.target === modal) {
+          modal.style.display = "none";
+        }
+      };
     };
-  };
-</script>
+  </script>
 </body>
 </html>
