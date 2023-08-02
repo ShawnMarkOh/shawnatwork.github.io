@@ -107,6 +107,11 @@
       font-size: 16px;
       margin-top: 5px;
     }
+
+    .progress-bar {
+      display: inline-block;
+      font-size: 16px;
+    }
   </style>
 </head>
 <body>
@@ -151,7 +156,6 @@
 
   <!-- Changelog Link -->
   <div class="changelog-link">Changelog</div>
-
   <script>
     const airports = [
       {"iataCode": "ABE", "name": "Lehigh Valley International Airport", "city": "Allentown", "state": "Pennsylvania", "timeZone": "America/New_York", "latitude": 40.65236, "longitude": -75.44040},
@@ -173,18 +177,7 @@
 
         const forecastResponse = await fetch(forecastURL);
         const forecastData = await forecastResponse.json();
-
-        const today = new Date();
-        const periodsToday = forecastData.properties.periods.filter(period => {
-          const periodStartTime = new Date(period.startTime);
-          return periodStartTime.getDate() === today.getDate() &&
-            periodStartTime.getMonth() === today.getMonth() &&
-            periodStartTime.getFullYear() === today.getFullYear();
-        });
-
-        const currentWeatherResponse = await fetch(pointsData.properties.forecastHourly);
-        const currentWeatherData = await currentWeatherResponse.json();
-        const currentWeather = currentWeatherData.properties.periods[0];
+        const { currentWeather, periodsToday } = getCurrentAndTodayWeather(forecastData);
 
         return {
           currentWeather,
@@ -195,6 +188,23 @@
         console.error("Error fetching weather data:", error);
         return null;
       }
+    }
+
+    function getCurrentAndTodayWeather(forecastData) {
+      const today = new Date();
+      const periodsToday = forecastData.properties.periods.filter(period => {
+        const periodStartTime = new Date(period.startTime);
+        return periodStartTime.getDate() === today.getDate() &&
+          periodStartTime.getMonth() === today.getMonth() &&
+          periodStartTime.getFullYear() === today.getFullYear();
+      });
+
+      const currentWeather = forecastData.properties.periods[0];
+
+      return {
+        currentWeather,
+        periodsToday
+      };
     }
 
     function getDisplayTemperature(temperature) {
@@ -277,7 +287,7 @@
           if (foundAirport.city) {
             locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
           }
-          
+
           if (foundAirport.island) {
             locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
           }        
@@ -307,6 +317,24 @@
       }
     }
 
+    function getWeatherHTML(weatherData) {
+      if (!weatherData) {
+        return '<p>Weather data unavailable.</p>';
+      }
+
+      const { currentWeather, periodsToday } = weatherData;
+
+      let weatherHTML = '';
+      weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${getDisplayTemperature(currentWeather.temperature)}&deg; ${getTemperatureUnit()}</p>`;
+
+      // Display weather forecast for today
+      for (const period of periodsToday) {
+        weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${getDisplayTemperature(period.temperature)}&deg; ${getTemperatureUnit()}</p>`;
+      }
+
+      return weatherHTML;
+    }
+
     function toggleTemperatureUnit() {
       useCelsius = !useCelsius;
 
@@ -318,7 +346,7 @@
       if (currentAirportCode && currentAirportCode === searchInput) {
         const foundAirport = findAirportByPartialCode(searchInput);
         if (foundAirport) {
-          const weatherData = await fetchWeatherData(foundAirport);
+          const weatherData = fetchWeatherData(foundAirport);
           const weatherHTML = getWeatherHTML(weatherData);
           document.getElementById("weather-output").innerHTML = weatherHTML;
         }
@@ -336,7 +364,9 @@
 
     // Add event listener to the temperature unit toggle checkbox
     document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
+  </script>
 
+  <script>
     // Function to display the changelog modal
     function showChangelogModal() {
       const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
@@ -374,6 +404,5 @@
       };
     };
   </script>
-
 </body>
 </html>
