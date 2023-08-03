@@ -625,6 +625,8 @@
 
     let currentAirportCode = null;
     let useCelsius = false; // Flag to track whether to display temperature in Celsius
+    let typingTimer; // Timer to track typing activity
+    const doneTypingInterval = 1000; // 1 second
 
     async function fetchWeatherData(foundAirport) {
       try {
@@ -709,87 +711,70 @@
       return foundAirport || null;
     }
 
-    async function searchAirport() {
-      const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
-      const searchResultsDiv = document.getElementById("search-results");
-
-      if (searchInput === "") {
-        searchResultsDiv.innerHTML = "";
-        currentAirportCode = null;
-        return;
-      }
-
-      // First, try to find an exact match in iataCode or name
-      let foundAirport = airports.find(airport => airport.iataCode === searchInput || airport.name.toUpperCase() === searchInput);
-
-      if (!foundAirport) {
-        // If no exact match found, try to find a partial match in iataCode, name, or city
-        foundAirport = airports.find(airport =>
-          airport.iataCode.includes(searchInput) ||
-          airport.name.toUpperCase().includes(searchInput) ||
-          airport.city.toUpperCase().startsWith(searchInput)
-        );
-
-        if (!foundAirport && searchInput.startsWith("K")) {
-          // If still no match, use the findAirportByPartialCode function
-          foundAirport = findAirportByPartialCode(searchInput);
+    function verifyWeatherAndDisplay() {
+      clearTimeout(typingTimer);
+      typingTimer = setTimeout(() => {
+        const searchInput = document.getElementById("search-input").value.trim().toUpperCase();
+        const foundAirport = findAirportByPartialCode(searchInput);
+        if (foundAirport) {
+          const searchResultsDiv = document.getElementById("search-results");
+          searchResultsDiv.innerHTML = ''; // Clear previous content
+          showWeatherLoading(searchResultsDiv); // Show weather loading progress bar
+          fetchWeatherData(foundAirport).then(() => {
+            hideWeatherLoading(searchResultsDiv); // Hide weather loading progress bar
+            displayAirportAndWeatherInfo(foundAirport); // Display airport and weather information
+            updateAirportTime(foundAirport); // Start updating airport time
+          });
+        } else {
+          document.getElementById("search-results").innerHTML = `<p>No airport found for "${searchInput}".</p>`;
+          currentAirportCode = null;
         }
-      }
+      }, doneTypingInterval);
+    }
 
-      if (foundAirport) {
-        // Check if the found airport is different from the current airport
-        if (currentAirportCode !== foundAirport.iataCode) {
-          currentAirportCode = foundAirport.iataCode;
+    function showWeatherLoading(container) {
+      const progressBarElement = document.createElement('p');
+      progressBarElement.textContent = "Weather loading";
+      container.appendChild(progressBarElement);
 
-          const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
-          let locationInfo = `<p><strong>IATA Code:</strong> ${foundAirport.iataCode}</p>`;
-          locationInfo += `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
-          if (foundAirport.city) {
-            locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
-          }
-          if (foundAirport.island) {
-            locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
-          }
-          if (foundAirport.province) {
-            locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
-          }
-          if (foundAirport.state) {
-            locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
-          }
-          locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
-
-          // Display both the airport information and weather forecast
-          const searchResultsHTML = locationInfo + '<div class="weather-container"><div id="weather-output"></div></div>';
-          searchResultsDiv.innerHTML = searchResultsHTML;
-
-          // Show a progress bar for weather loading
-          const progressBarElement = document.createElement('p');
+      let ellipsisInterval = setInterval(() => {
+        if (progressBarElement.textContent.endsWith("...")) {
           progressBarElement.textContent = "Weather loading";
-          searchResultsDiv.appendChild(progressBarElement);
-
-          // Simulate weather loading with a progressing ellipsis
-          let ellipsisInterval = setInterval(() => {
-            if (progressBarElement.textContent.endsWith("...")) {
-              progressBarElement.textContent = "Weather loading";
-            } else {
-              progressBarElement.textContent += ".";
-            }
-          }, 500);
-
-          // Fetch and display the weather forecast after showing the airport information
-          await fetchWeatherData(foundAirport);
-
-          // Clear the progress bar and interval
-          clearInterval(ellipsisInterval);
-          progressBarElement.remove();
-
-          // Set interval to update the current time every second
-          updateAirportTime(foundAirport);
+        } else {
+          progressBarElement.textContent += ".";
         }
-      } else {
-        searchResultsDiv.innerHTML = `<p>No airport found for "${searchInput}".</p>`;
-        currentAirportCode = null;
+      }, 500);
+
+      container.dataset.ellipsisInterval = ellipsisInterval;
+    }
+
+    function hideWeatherLoading(container) {
+      const progressBarElement = container.querySelector('p');
+      clearInterval(container.dataset.ellipsisInterval);
+      progressBarElement.remove();
+    }
+
+    function displayAirportAndWeatherInfo(foundAirport) {
+      const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
+      let locationInfo = `<p><strong>IATA Code:</strong> ${foundAirport.iataCode}</p>`;
+      locationInfo += `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
+      if (foundAirport.city) {
+        locationInfo += `<p><strong>City:</strong> ${foundAirport.city}</p>`;
       }
+      if (foundAirport.island) {
+        locationInfo += `<p><strong>Island:</strong> ${foundAirport.island}</p>`;
+      }
+      if (foundAirport.province) {
+        locationInfo += `<p><strong>Province:</strong> ${foundAirport.province}</p>`;
+      }
+      if (foundAirport.state) {
+        locationInfo += `<p><strong>State:</strong> ${foundAirport.state}</p>`;
+      }
+      locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
+
+      // Display both the airport information and weather forecast
+      const searchResultsHTML = locationInfo + '<div class="weather-container"><div id="weather-output"></div></div>';
+      document.getElementById("search-results").innerHTML = searchResultsHTML;
     }
 
     function toggleTemperatureUnit() {
@@ -808,10 +793,10 @@
       }
 
       // Additionally, trigger the searchAirport function to update the displayed weather data
-      searchAirport();
+      verifyWeatherAndDisplay();
     }
 
-    document.getElementById("search-input").addEventListener("input", searchAirport);
+    document.getElementById("search-input").addEventListener("input", verifyWeatherAndDisplay);
 
     // Initialization
     document.getElementById("search-input").value = "";
