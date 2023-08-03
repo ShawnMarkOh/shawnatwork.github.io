@@ -719,10 +719,11 @@
         if (foundAirport) {
           const searchResultsDiv = document.getElementById("search-results");
           searchResultsDiv.innerHTML = ''; // Clear previous content
+          displayAirportInfo(foundAirport); // Display airport information instantly
           showWeatherLoading(searchResultsDiv); // Show weather loading progress bar
           fetchWeatherData(foundAirport).then(() => {
             hideWeatherLoading(searchResultsDiv); // Hide weather loading progress bar
-            displayAirportAndWeatherInfo(foundAirport); // Display airport and weather information
+            displayWeatherInfo(); // Display weather information after verification
             updateAirportTime(foundAirport); // Start updating airport time
           });
         } else {
@@ -754,7 +755,7 @@
       progressBarElement.remove();
     }
 
-    function displayAirportAndWeatherInfo(foundAirport) {
+    function displayAirportInfo(foundAirport) {
       const currentTime = moment.tz(foundAirport.timeZone).format("YYYY-MM-DD HH:mm:ss z");
       let locationInfo = `<p><strong>IATA Code:</strong> ${foundAirport.iataCode}</p>`;
       locationInfo += `<p><strong>Airport:</strong> ${foundAirport.name}</p>`;
@@ -772,9 +773,14 @@
       }
       locationInfo += `<p><strong>Time Zone:</strong> <span id="current-time-${foundAirport.iataCode}">${currentTime}</span></p>`;
 
-      // Display both the airport information and weather forecast
+      // Display the airport information
       const searchResultsHTML = locationInfo + '<div class="weather-container"><div id="weather-output"></div></div>';
       document.getElementById("search-results").innerHTML = searchResultsHTML;
+    }
+
+    function displayWeatherInfo() {
+      // Display the weather information after verification
+      document.getElementById('weather-output').style.display = 'block';
     }
 
     function toggleTemperatureUnit() {
@@ -792,7 +798,7 @@
         }
       }
 
-      // Additionally, trigger the searchAirport function to update the displayed weather data
+      // Additionally, trigger the verifyWeatherAndDisplay function to update the displayed weather data
       verifyWeatherAndDisplay();
     }
 
@@ -804,45 +810,6 @@
 
     // Add event listener to the temperature unit toggle checkbox
     document.getElementById("temperature-toggle").addEventListener("change", toggleTemperatureUnit);
-  </script>
-
-  <script>
-    // Function to display the changelog modal
-    function showChangelogModal() {
-      const changelogModal = document.querySelectorAll(".modal")[1]; // Select the second modal element
-      changelogModal.style.display = "block";
-
-      const modalClose = document.querySelectorAll(".modal-close")[1]; // Select the second modal close button
-      modalClose.onclick = () => {
-        changelogModal.style.display = "none";
-      };
-
-      window.onclick = (event) => {
-        if (event.target === changelogModal) {
-          changelogModal.style.display = "none";
-        }
-      };
-    }
-
-    // Show the changelog modal when the changelog link is clicked
-    document.querySelector(".changelog-link").addEventListener("click", showChangelogModal);
-
-    // Show the work in progress modal on page load
-    window.onload = () => {
-      const modal = document.querySelector(".modal"); // Select the first modal element
-      modal.style.display = "block";
-
-      const modalClose = document.querySelector(".modal-close"); // Select the first modal close button
-      modalClose.onclick = () => {
-        modal.style.display = "none";
-      };
-
-      window.onclick = (event) => {
-        if (event.target === modal) {
-          modal.style.display = "none";
-        }
-      };
-    };
   </script>
 </body>
 </html>
