@@ -782,20 +782,10 @@ weatherHTML += `<p class="last-synced">Last synced: <span id="last-synced-time">
   document.getElementById("search-results").dataset.airportCode = "";
 
 function resyncWeatherData() {
-  // Initial refresh after 5 seconds
-  setTimeout(() => {
+  setInterval(() => {
     if (currentAirportCode) {
       const foundAirport = airports.find(airport => airport.iataCode === currentAirportCode);
       if (foundAirport) {
-        fetchWeatherData(foundAirport);
-      }
-    }
-    
-    // Periodic refresh every 60 seconds after the initial refresh
-    setInterval(() => {
-      if (currentAirportCode) {
-        const foundAirport = airports.find(airport => airport.iataCode === currentAirportCode);
-        if (foundAirport) {
           fetchWeatherData(foundAirport);
         }
       }
