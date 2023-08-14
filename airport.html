@@ -655,7 +655,7 @@
         weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${getDisplayTemperature(period.temperature)}&deg; ${getTemperatureUnit()}</p>`;
       }
 
-     const lastSyncedTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+     const lastSyncedTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 weatherHTML += `<p class="last-synced">Last synced: <span id="last-synced-time">${lastSyncedTimestamp}</span></p>`;
 
 
