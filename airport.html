@@ -781,29 +781,16 @@ weatherHTML += `<p class="last-synced">Last synced: <span id="last-synced-time">
   document.getElementById("search-input").value = "";
   document.getElementById("search-results").dataset.airportCode = "";
 
-let resyncInterval = null;
-
 function resyncWeatherData() {
-  if (resyncInterval) {
-    clearInterval(resyncInterval);
-  }
-
-  const refreshFunction = () => {
+  setInterval(() => {
     if (currentAirportCode) {
       const foundAirport = airports.find(airport => airport.iataCode === currentAirportCode);
       if (foundAirport) {
         fetchWeatherData(foundAirport);
       }
     }
-  };
-
-  // Initial refresh after 5 seconds
-  refreshFunction();
-
-  // Refresh every 60 seconds
-  resyncInterval = setInterval(refreshFunction, 60000); // Resync every 60 seconds (60000ms)
+  }, 5000); // Resync every 5 seconds (5000ms)
 }
-
 resyncWeatherData(); // Start the resync interval
 
 </script>
