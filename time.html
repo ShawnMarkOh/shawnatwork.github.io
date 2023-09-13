@@ -53,15 +53,15 @@
 <body>
     <div class="clock" id="easternClock">
         Eastern Time:
-        <span class="timezone-label">(UTC-5)</span>
+        <span class="timezone-label">(CDT)</span>
     </div>
     <div class="clock" id="centralClock">
         Central Time:
-        <span class="timezone-label">(UTC-6)</span>
+        <span class="timezone-label">(CDT)</span>
     </div>
     <div class="clock" id="mountainClock">
         Mountain Time:
-        <span class="timezone-label">(UTC-7)</span>
+        <span class="timezone-label">(MDT)</span>
     </div>
     <div class="clock" id="zuluClock">
         Zulu Time:
@@ -69,21 +69,21 @@
     </div>
 
     <script>
-        function updateClock(clockId, offset) {
+        function updateClock(clockId, offset, timeZoneAbbreviation) {
             const now = new Date();
             const utc = now.getTime() + now.getTimezoneOffset() * 60000;
             const time = new Date(utc + (3600000 * offset));
             const hours = time.getHours().toString().padStart(2, '0');
             const minutes = time.getMinutes().toString().padStart(2, '0');
             const seconds = time.getSeconds().toString().padStart(2, '0');
-            document.getElementById(clockId).innerText = `${hours}:${minutes}:${seconds}`;
+            document.getElementById(clockId).innerText = `${timeZoneAbbreviation}: ${hours}:${minutes}:${seconds}`;
         }
 
         function updateClocks() {
-            updateClock("easternClock", -5); // Eastern Time (UTC-5)
-            updateClock("centralClock", -6); // Central Time (UTC-6)
-            updateClock("mountainClock", -7); // Mountain Time (UTC-7)
-            updateClock("zuluClock", 0);     // Zulu Time (UTC)
+            updateClock("easternClock", -5, "CDT"); // Eastern Time (UTC-5)
+            updateClock("centralClock", -6, "CDT"); // Central Time (UTC-6)
+            updateClock("mountainClock", -7, "MDT"); // Mountain Time (UTC-7)
+            updateClock("zuluClock", 0, "UTC");     // Zulu Time (UTC)
         }
 
         setInterval(updateClocks, 1000);
