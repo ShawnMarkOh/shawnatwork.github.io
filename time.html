@@ -45,27 +45,23 @@
         }
 
         .timezone-label {
-            font-size: 2vw;
-            margin-top: 10px;
+            display: none; /* Hide the time zone abbreviation */
         }
     </style>
 </head>
 <body>
     <div class="clock" id="easternClock">
-        Eastern Time:
-        <span class="timezone-label"></span>
+        <span class="time"></span>
     </div>
     <div class="clock" id="centralClock">
-        Central Time:
-        <span class="timezone-label"></span>
+        <span class="time"></span>
     </div>
     <div class="clock" id="mountainClock">
-        Mountain Time:
-        <span class="timezone-label"></span>
+        <span class="time"></span>
     </div>
     <div class="clock" id="zuluClock">
         Zulu Time:
-        <span class="timezone-label">(UTC)</span>
+        <span class="time"></span>
     </div>
 
     <script>
@@ -76,8 +72,6 @@
             const minutes = time.getMinutes().toString().padStart(2, '0');
             const seconds = time.getSeconds().toString().padStart(2, '0');
 
-            const timeZoneAbbreviation = Intl.DateTimeFormat('en-US', { timeZoneName: 'short' }).format(time);
-            document.getElementById(clockId).querySelector('.timezone-label').innerText = timeZoneAbbreviation;
             document.getElementById(clockId).querySelector('.time').innerText = `${hours}:${minutes}:${seconds}`;
         }
 
