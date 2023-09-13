@@ -10,38 +10,46 @@
             padding: 0;
             display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
-            align-content: space-between;
+            justify-content: space-evenly;
+            align-content: space-evenly;
             height: 100vh;
         }
 
         .clock {
-            width: 45%;
-            height: 45%;
+            flex: 1;
             background-color: #333;
             color: #fff;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 4vw; /* Adjust the font size as a percentage of viewport width (vw) */
             border: 2px solid #fff;
             border-radius: 10px;
+        }
+
+        .timezone-label {
+            font-size: 2vw; /* Adjust the font size of labels as a percentage of viewport width (vw) */
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
     <div class="clock" id="easternClock">
         Eastern Time:
+        <span class="timezone-label">(UTC-5)</span>
     </div>
     <div class="clock" id="centralClock">
         Central Time:
+        <span class="timezone-label">(UTC-6)</span>
     </div>
     <div class="clock" id="mountainClock">
         Mountain Time:
+        <span class="timezone-label">(UTC-7)</span>
     </div>
     <div class="clock" id="zuluClock">
         Zulu Time:
+        <span class="timezone-label">(UTC)</span>
     </div>
 
     <script>
