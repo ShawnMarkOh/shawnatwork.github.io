@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quad Clocks</title>
+    <title>World Clocks</title>
     <style>
         body {
             margin: 0;
@@ -21,7 +21,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-size: 4vw;
+            font-size: 6vw; /* 50% larger font size */
             border: 2px solid #fff;
             border-radius: 10px;
             grid-column: span 1;
@@ -51,38 +51,32 @@
 </head>
 <body>
     <div class="clock" id="easternClock">
-        Eastern Time:
         <span class="time"></span>
     </div>
     <div class="clock" id="centralClock">
-        Central Time:
         <span class="time"></span>
     </div>
     <div class="clock" id="mountainClock">
-        Mountain Time:
         <span class="time"></span>
     </div>
     <div class="clock" id="zuluClock">
-        Zulu Time:
         <span class="time"></span>
     </div>
 
     <script>
-        function updateClock(clockId, offset) {
+        function updateClock(clockId, timeZone) {
             const now = new Date();
-            const time = new Date(now.getTime() + offset * 3600000);
-            const hours = time.getHours().toString().padStart(2, '0');
-            const minutes = time.getMinutes().toString().padStart(2, '0');
-            const seconds = time.getSeconds().toString().padStart(2, '0');
+            const timeOptions = { timeZone: timeZone, hour12: false };
+            const timeString = now.toLocaleTimeString('en-US', timeOptions);
 
-            document.getElementById(clockId).querySelector('.time').innerText = `${hours}:${minutes}:${seconds}`;
+            document.getElementById(clockId).querySelector('.time').innerText = timeString;
         }
 
         function updateClocks() {
-            updateClock("easternClock", -5); // Eastern Time (UTC-5)
-            updateClock("centralClock", -6); // Central Time (UTC-6)
-            updateClock("mountainClock", -7); // Mountain Time (UTC-7)
-            updateClock("zuluClock", 0);     // Zulu Time (UTC)
+            updateClock("easternClock", 'America/New_York'); // Eastern Time
+            updateClock("centralClock", 'America/Chicago'); // Central Time
+            updateClock("mountainClock", 'America/Denver'); // Mountain Time
+            updateClock("zuluClock", 'Etc/UTC');           // Zulu Time
         }
 
         setInterval(updateClocks, 1000);
