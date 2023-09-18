@@ -104,51 +104,35 @@
             updateClock("zuluClock", 'Etc/UTC');
         }
 
-        // Function to update the weather
-        function updateWeather(locationId, latitude, longitude) {
-            fetch(`https://api.weather.gov/points/${latitude},${longitude}`)
+        // Function to update the current weather with detailedForecast
+        function updateWeather(locationId, gridId, gridX, gridY) {
+            fetch(`https://api.weather.gov/gridpoints/${gridId}/${gridX},${gridY}/forecast`)
                 .then(response => response.json())
                 .then(data => {
-                    const forecastUrl = data.properties.forecastHourly; // Use hourly forecast URL
+                    const currentWeather = data.properties.periods[0];
+                    const detailedForecast = currentWeather.detailedForecast;
 
-                    fetch(forecastUrl)
-                        .then(response => response.json())
-                        .then(forecastData => {
-                            const hour = new Date().getHours(); // Get the current hour
-
-                            // Extract temperature and weather description for the current hour
-                            const currentHour = forecastData.properties.periods.find(period => {
-                                const periodHour = new Date(period.startTime).getHours();
-                                return periodHour === hour;
-                            });
-
-                            const currentTemperature = currentHour ? currentHour.temperature : 'N/A';
-                            const currentWeatherDescription = currentHour ? currentHour.shortForecast : 'N/A';
-
-                            const weatherElement = document.getElementById(locationId);
-                            weatherElement.querySelector('.weather-data').innerText = `${currentTemperature}°F, ${currentWeatherDescription}`;
-                        })
-                        .catch(error => {
-                            console.error(`Error fetching weather data for ${locationId}: ${error}`);
-                        });
+                    const weatherElement = document.getElementById(locationId);
+                    weatherElement.querySelector('.weather-data').innerText = detailedForecast;
                 })
                 .catch(error => {
-                    console.error(`Error fetching coordinates data for ${locationId}: ${error}`);
+                    console.error(`Error fetching weather data for ${locationId}: ${error}`);
                 });
         }
 
         // GPS coordinates for each location
-        const cltCoordinates = { latitude: 35.214, longitude: -80.943 };
-        const dcaCoordinates = { latitude: 38.854, longitude: -77.03 };
-        const phlCoordinates = { latitude: 39.874, longitude: -75.23 };
-        const dfwCoordinates = { latitude: 32.899, longitude: -97.040 };
+        const locations = [
+            { id: "cltWeather", gridId: "GSP", gridX: 32, gridY: 81 }, // CLT Weather
+            { id: "dcaWeather", gridId: "LWX", gridX: 34, gridY: 73 }, // DCA Weather
+            { id: "phlWeather", gridId: "PHI", gridX: 34, gridY: 71 }, // PHL Weather
+            { id: "dfwWeather", gridId: "FWD", gridX: 36, gridY: 73 }, // DFW Weather
+        ];
 
         // Function to update weather for all locations
         function updateWeathers() {
-            updateWeather("cltWeather", cltCoordinates.latitude, cltCoordinates.longitude);
-            updateWeather("dcaWeather", dcaCoordinates.latitude, dcaCoordinates.longitude);
-            updateWeather("phlWeather", phlCoordinates.latitude, phlCoordinates.longitude);
-            updateWeather("dfwWeather", dfwCoordinates.latitude, dfwCoordinates.longitude);
+            locations.forEach(location => {
+                updateWeather(location.id, location.gridId, location.gridX, location.gridY);
+            });
         }
 
         // Initial call to update weather data
