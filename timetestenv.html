@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quad Clocks and Weather</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 10px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            font-size: 6vw; /* 50% larger font size */
+            grid-row: span 1;
+            grid-column: span 1;
+        }
+
+        .time-container {
+            width: auto; /* Keep the time containers at the original width */
+        }
+
+        .weather-container {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            font-size: 3vw; /* Half the font size of time containers */
+            grid-row: span 1;
+            grid-column: span 2; /* Make the weather containers half the width of time containers */
+        }
+
+        #easternClock {
+            grid-area: 1 / 1 / 2 / 2;
+        }
+
+        #centralClock {
+            grid-area: 1 / 2 / 2 / 3;
+        }
+
+        #mountainClock {
+            grid-area: 1 / 3 / 2 / 4;
+        }
+
+        #zuluClock {
+            grid-area: 1 / 4 / 2 / 5;
+        }
+
+        #cltWeather {
+            grid-area: 2 / 1 / 3 / 3; /* Adjust grid area to be half the width of time containers */
+        }
+
+        #dfwWeather {
+            grid-area: 2 / 3 / 3 / 5; /* Adjust grid area to be half the width of time containers */
+        }
+
+        #dcaWeather {
+            grid-area: 2 / 5 / 3 / 7; /* Adjust grid area to be half the width of time containers */
+        }
+
+        #phlWeather {
+            grid-area: 2 / 7 / 3 / 9; /* Adjust grid area to be half the width of time containers */
+        }
+
+        .timezone-label {
+            display: none; /* Hide the time zone abbreviation */
+        }
+    </style>
+</head>
+<body>
+    <div class="container time-container" id="easternClock">
+        Eastern Time:
+        <span class="time"></span>
+    </div>
+    <div class="container time-container" id="centralClock">
+        Central Time:
+        <span class="time"></span>
+    </div>
+    <div class="container time-container" id="mountainClock">
+        Mountain Time:
+        <span class="time"></span>
+    </div>
+    <div class="container time-container" id="zuluClock">
+        Zulu Time:
+        <span class="time"></span>
+    </div>
+
+    <div class="weather-container" id="cltWeather">
+        <h2>CLT Weather</h2>
+        <div id="clt-weather-output"></div>
+    </div>
+    <div class="weather-container" id="dfwWeather">
+        <h2>DFW Weather</h2>
+        <div id="dfw-weather-output"></div>
+    </div>
+    <div class="weather-container" id="dcaWeather">
+        <h2>DCA Weather</h2>
+        <div id="dca-weather-output"></div>
+    </div>
+    <div class="weather-container" id="phlWeather">
+        <h2>PHL Weather</h2>
+        <div id="phl-weather-output"></div>
+    </div>
+
+    <script>
+        function updateClock(clockId, timeZone) {
+            const now = new Date();
+            const timeOptions = { timeZone: timeZone, hour12: false };
+            const timeString = now.toLocaleTimeString('en-US', timeOptions);
+
+            document.getElementById(clockId).querySelector('.time').innerText = timeString;
+        }
+
+        function updateClocks() {
+            updateClock("easternClock", 'America/New_York'); // Eastern Time
+            updateClock("centralClock", 'America/Chicago'); // Central Time
+            updateClock("mountainClock", 'America/Denver'); // Mountain Time
+            updateClock("zuluClock", 'Etc/UTC');           // Zulu Time
+        }
+
+        async function fetchWeatherData(coordinates, outputId) {
+            try {
+                const pointsResponse = await fetch(`https://api.weather.gov/points/${coordinates.latitude},${coordinates.longitude}`);
+                const pointsData = await pointsResponse.json();
+                const forecastURL = pointsData.properties.forecast;
+
+                if (!forecastURL) {
+                    throw new Error("Forecast URL not found.");
+                }
+
+                const forecastResponse = await fetch(forecastURL);
+                const forecastData = await forecastResponse.json();
+
+                const today = new Date();
+                const periodsToday = forecastData.properties.periods.filter(period => {
+                    const periodStartTime = new Date(period.startTime);
+                    return periodStartTime.getDate() === today.getDate() &&
+                        periodStartTime.getMonth() === today.getMonth() &&
+                        periodStartTime.getFullYear() === today.getFullYear();
+                });
+
+                const currentWeatherResponse = await fetch(pointsData.properties.forecastHourly);
+                const currentWeatherData = await currentWeatherResponse.json();
+                const currentWeather = currentWeatherData.properties.periods[0];
+
+                let weatherHTML = '';
+                weatherHTML += `<p><strong>Current Weather:</strong> ${currentWeather.shortForecast}, ${getDisplayTemperature(currentWeather.temperature)}&deg; ${getTemperatureUnit()}</p>`;
+
+                for (const period of periodsToday) {
+                    weatherHTML += `<p><strong>${period.name}:</strong> ${period.shortForecast}, ${getDisplayTemperature(period.temperature)}&deg; ${getTemperatureUnit()}</p>`;
+                }
+
+                const lastSyncedTimestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+                weatherHTML += `<p class="last-synced">Last synced: <span id="last-synced-time">${lastSyncedTimestamp}</span></p>`;
+
+                document.getElementById(outputId).innerHTML = weatherHTML;
+
+            } catch (error) {
+                console.error("Error fetching weather data:", error);
+            }
+        }
+
+        function getDisplayTemperature(temperature) {
+            return Math.round(temperature);
+        }
+
+        function getTemperatureUnit() {
+            return 'F'; // You can modify this to display Celsius (C) if needed
+        }
+
+        setInterval(updateClocks, 1000);
+        updateClocks(); // Initial update
+
+        // Fetch weather data for CLT
+        fetchWeatherData({ latitude: 35.2144, longitude: -80.9473 }, 'clt-weather-output');
+
+        // Fetch weather data for DFW
+        fetchWeatherData({ latitude: 32.8965, longitude: -97.0371 }, 'dfw-weather-output');
+
+        // Fetch weather data for DCA
+        fetchWeatherData({ latitude: 38.8521, longitude: -77.0375 }, 'dca-weather-output');
+
+        // Fetch weather data for PHL
+        fetchWeatherData({ latitude: 39.8719, longitude: -75.2411 }, 'phl-weather-output');
+    </script>
+</body>
+</html>
