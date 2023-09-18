@@ -104,34 +104,36 @@
             updateClock("zuluClock", 'Etc/UTC');
         }
 
-        // Function to update the current weather with detailedForecast
-        function updateWeather(locationId, gridId, gridX, gridY) {
-            fetch(`https://api.weather.gov/gridpoints/${gridId}/${gridX},${gridY}/forecast`)
+        // Function to update the current weather
+        function updateWeather(locationId, stationId) {
+            fetch(`https://api.weather.gov/stations/${stationId}/observations/latest`)
                 .then(response => response.json())
                 .then(data => {
-                    const currentWeather = data.properties.periods[0];
-                    const detailedForecast = currentWeather.detailedForecast;
+                    const currentWeather = data.properties;
+                    const temperatureCelsius = currentWeather.temperature.value;
+                    const temperatureFahrenheit = (temperatureCelsius * 9/5) + 32; // Convert Celsius to Fahrenheit
+                    const weatherDescription = currentWeather.textDescription;
 
                     const weatherElement = document.getElementById(locationId);
-                    weatherElement.querySelector('.weather-data').innerText = detailedForecast;
+                    weatherElement.querySelector('.weather-data').innerText = `${temperatureFahrenheit.toFixed(1)}°F, ${weatherDescription}`;
                 })
                 .catch(error => {
                     console.error(`Error fetching weather data for ${locationId}: ${error}`);
                 });
         }
 
-        // GPS coordinates for each location
+        // Station IDs for each location
         const locations = [
-            { id: "cltWeather", gridId: "GSP", gridX: 32, gridY: 81 }, // CLT Weather
-            { id: "dcaWeather", gridId: "LWX", gridX: 34, gridY: 73 }, // DCA Weather
-            { id: "phlWeather", gridId: "PHI", gridX: 34, gridY: 71 }, // PHL Weather
-            { id: "dfwWeather", gridId: "FWD", gridX: 36, gridY: 73 }, // DFW Weather
+            { id: "cltWeather", stationId: "KCLT" }, // CLT Weather
+            { id: "dcaWeather", stationId: "KDCA" }, // DCA Weather
+            { id: "phlWeather", stationId: "KPHL" }, // PHL Weather
+            { id: "dfwWeather", stationId: "KDFW" }, // DFW Weather
         ];
 
         // Function to update weather for all locations
         function updateWeathers() {
             locations.forEach(location => {
-                updateWeather(location.id, location.gridId, location.gridX, location.gridY);
+                updateWeather(location.id, location.stationId);
             });
         }
 
