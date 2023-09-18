@@ -70,19 +70,19 @@
 
     <!-- Quad Weather -->
     <div class="weather" id="cltWeather">
-        CLT Weather: 
+	CLT Weather: 
         <span class="weather-data"></span>
     </div>
     <div class="weather" id="dcaWeather">
-        DCA Weather:
+	DCA Weather:
         <span class="weather-data"></span>
     </div>
     <div class="weather" id="phlWeather">
-        PHL Weather:
+	PHL Weather:
         <span class="weather-data"></span>
     </div>
     <div class="weather" id="dfwWeather">
-        DFW Weather:
+	DFW Weather:
         <span class="weather-data"></span>
     </div>
 
@@ -104,7 +104,7 @@
             updateClock("zuluClock", 'Etc/UTC');
         }
 
-        // Function to update the weather for the current and next hours with fade-in/out effect
+        // Function to update the weather
         function updateWeather(locationId, latitude, longitude) {
             fetch(`https://api.weather.gov/points/${latitude},${longitude}`)
                 .then(response => response.json())
@@ -114,43 +114,19 @@
                     fetch(forecastUrl)
                         .then(response => response.json())
                         .then(forecastData => {
-                            const now = new Date();
-                            const hour = now.getHours(); // Get the current hour
-                            const nextHour = (hour + 1) % 24; // Calculate the next hour
+                            const hour = new Date().getHours(); // Get the current hour
 
-                            // Find the forecast for the current hour
+                            // Extract temperature and weather description for the current hour
                             const currentHour = forecastData.properties.periods.find(period => {
                                 const periodHour = new Date(period.startTime).getHours();
                                 return periodHour === hour;
                             });
 
-                            // Find the forecast for the next hour
-                            const nextHourForecast = forecastData.properties.periods.find(period => {
-                                const periodHour = new Date(period.startTime).getHours();
-                                return periodHour === nextHour;
-                            });
-
-                            // Extract temperature and weather description for the current and next hours
                             const currentTemperature = currentHour ? currentHour.temperature : 'N/A';
                             const currentWeatherDescription = currentHour ? currentHour.shortForecast : 'N/A';
-                            const nextHourTemperature = nextHourForecast ? nextHourForecast.temperature : 'N/A';
-                            const nextHourWeatherDescription = nextHourForecast ? nextHourForecast.shortForecast : 'N/A';
 
                             const weatherElement = document.getElementById(locationId);
-                            const weatherDataElement = weatherElement.querySelector('.weather-data');
-                            
-                            // Alternate between this hour's weather and next hour's weather every 30 seconds
-                            setInterval(function() {
-                                weatherDataElement.style.opacity = 0; // Fade out
-                                setTimeout(function() {
-                                    // Update the weather data and fade in
-                                    weatherDataElement.innerText = `${currentTemperature}°F, ${currentWeatherDescription}`;
-                                    weatherDataElement.style.opacity = 1; // Fade in
-                                }, 500); // Delay before fading in
-                            }, 30000); // 30-second interval
-                            
-                            // Initial display
-                            weatherDataElement.innerText = `${currentTemperature}°F, ${currentWeatherDescription}`;
+                            weatherElement.querySelector('.weather-data').innerText = `${currentTemperature}°F, ${currentWeatherDescription}`;
                         })
                         .catch(error => {
                             console.error(`Error fetching weather data for ${locationId}: ${error}`);
