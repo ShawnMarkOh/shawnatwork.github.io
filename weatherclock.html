@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quad Weather</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(4, 1fr);
+            gap: 5px; /* Reduced gap between grid items */
+        }
+
+        .clock, .weather {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 5vw; /* Adjusted font size for initial scaling */
+            border: 2px solid #fff;
+            border-radius: 10px;
+            grid-column: span 1;
+            grid-row: span 1;
+            padding: 10px; /* Added padding for spacing */
+        }
+
+        .timezone-label {
+            display: none;
+        }
+
+        .weather-location {
+            font-size: 2.5vw; /* Adjusted font size for location */
+        }
+
+        @media screen and (min-width: 768px) {
+            /* Adjust font sizes for larger screens */
+            .clock, .weather {
+                font-size: 3vw;
+            }
+
+            .weather-location {
+                font-size: 1.5vw;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="clock" id="easternClock">
+        Eastern Time: 
+        <span class="time"></span>
+    </div>
+    <div class="clock" id="centralClock">
+        Central Time: 
+        <span class="time"></span>
+    </div>
+    <div class="clock" id="mountainClock">
+        Mountain Time: 
+        <span class="time"></span>
+    </div>
+    <div class="clock" id="zuluClock">
+        Zulu Time: 
+        <span class="time"></span>
+    </div>
+
+    <!-- Quad Weather -->
+    <div class="weather" id="cltWeather">
+        CLT Weather: 
+        <span class="weather-data"></span>
+    </div>
+    <div class="weather" id="dcaWeather">
+        DCA Weather: 
+        <span class="weather-data"></span>
+    </div>
+    <div class="weather" id="phlWeather">
+        PHL Weather: 
+        <span class="weather-data"></span>
+    </div>
+    <div class="weather" id="dfwWeather">
+        DFW Weather: 
+        <span class="weather-data"></span>
+    </div>
+
+    <script>
+        function updateClock(clockId, timeZone) {
+            const now = new Date();
+            const timeOptions = { timeZone: timeZone, hour12: false };
+            const timeString = now.toLocaleTimeString('en-US', timeOptions);
+
+            document.getElementById(clockId).querySelector('.time').innerText = timeString;
+        }
+
+        function updateClocks() {
+            updateClock("easternClock", 'America/New_York');
+            updateClock("centralClock", 'America/Chicago');
+            updateClock("mountainClock", 'America/Denver');
+            updateClock("zuluClock", 'Etc/UTC');
+        }
+
+        // Modify the updateWeather function to use coordinates
+        function updateWeather(locationId, latitude, longitude) {
+            fetch(`https://api.weather.gov/points/${latitude},${longitude}`)
+                .then(response => response.json())
+                .then(data => {
+                    const forecastUrl = data.properties.forecast;
+                    
+                    // Fetch the forecast data using the forecast URL
+                    fetch(forecastUrl)
+                        .then(response => response.json())
+                        .then(forecastData => {
+                            // Extract relevant weather information from the forecastData
+                            const temperature = forecastData.properties.periods[0].temperature;
+                            const weatherDescription = forecastData.properties.periods[0].shortForecast;
+                            const locationName = data.properties.relativeLocation.properties.city;
+
+                            const weatherElement = document.getElementById(locationId);
+                            weatherElement.querySelector('.weather-data').innerText = `${temperature}°F, ${weatherDescription}`;
+                           
+                        })
+                        .catch(error => {
+                            console.error(`Error fetching weather data for ${locationId}: ${error}`);
+                        });
+                })
+                .catch(error => {
+                    console.error(`Error fetching coordinates data for ${locationId}: ${error}`);
+                });
+        }
+
+        // Define GPS coordinates for each location
+        const cltCoordinates = { latitude: 35.214, longitude: -80.943 };
+        const dcaCoordinates = { latitude: 38.854, longitude: -77.042 };
+        const phlCoordinates = { latitude: 39.874, longitude: -75.241 };
+        const dfwCoordinates = { latitude: 32.899, longitude: -97.040 };
+
+        function updateWeathers() {
+            // Update weather for each location using coordinates
+            updateWeather("cltWeather", cltCoordinates.latitude, cltCoordinates.longitude);
+            updateWeather("dcaWeather", dcaCoordinates.latitude, dcaCoordinates.longitude);
+            updateWeather("phlWeather", phlCoordinates.latitude, phlCoordinates.longitude);
+            updateWeather("dfwWeather", dfwCoordinates.latitude, dfwCoordinates.longitude);
+        }
+
+        // Call updateWeathers to fetch initial weather data
+        updateWeathers();
+        setInterval(updateWeathers, 60000); // Update weather every 60 seconds
+
+        // Call updateClocks to update time initially and every second
+        updateClocks();
+        setInterval(updateClocks, 1000);
+    </script>
+</body>
+</html>
