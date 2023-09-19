@@ -104,23 +104,33 @@
             updateClock("zuluClock", 'Etc/UTC');
         }
 
-        // Function to update the current weather
-        function updateWeather(locationId, stationId) {
-            fetch(`https://api.weather.gov/stations/${stationId}/observations/latest`)
-                .then(response => response.json())
-                .then(data => {
-                    const currentWeather = data.properties;
-                    const temperatureCelsius = currentWeather.temperature.value;
-                    const temperatureFahrenheit = (temperatureCelsius * 9/5) + 32; // Convert Celsius to Fahrenheit
-                    const weatherDescription = currentWeather.textDescription;
+// Function to update the current weather
+function updateWeather(locationId, stationId) {
+    fetch(`https://api.weather.gov/stations/${stationId}/observations/latest`)
+        .then(response => response.json())
+        .then(data => {
+            const currentWeather = data.properties;
+            const temperatureCelsius = currentWeather.temperature.value;
+            let displayText = "";
 
-                    const weatherElement = document.getElementById(locationId);
-                    weatherElement.querySelector('.weather-data').innerText = `${temperatureFahrenheit.toFixed(1)}°F, ${weatherDescription}`;
-                })
-                .catch(error => {
-                    console.error(`Error fetching weather data for ${locationId}: ${error}`);
-                });
-        }
+            if (temperatureCelsius === null) {
+                // Display error message when temperature is null
+                displayText = "Temperature unavailable";
+            } else {
+                // Convert Celsius to Fahrenheit
+                const temperatureFahrenheit = (temperatureCelsius * 9/5) + 32;
+                const weatherDescription = currentWeather.textDescription;
+                displayText = `${temperatureFahrenheit.toFixed(1)}°F, ${weatherDescription}`;
+            }
+
+            const weatherElement = document.getElementById(locationId);
+            weatherElement.querySelector('.weather-data').innerText = displayText;
+        })
+        .catch(error => {
+            console.error(`Error fetching weather data for ${locationId}: ${error}`);
+        });
+}
+
 
         // Station IDs for each location
         const locations = [
