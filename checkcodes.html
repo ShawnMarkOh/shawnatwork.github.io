@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Error Code Checking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+        }
+
+        center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #validation-results {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        #datetime {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h1>Error Code Checking</h1>
+        <form enctype="multipart/form-data" id="upload-form">
+            <input type="file" id="file-input" accept=".txt">
+            <input type="submit" value="Validate File">
+        </form>
+        <div id="validation-results"></div>
+        <div id="datetime"></div>
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const fileInput = document.getElementById('file-input');
+            const validationResults = document.getElementById('validation-results');
+            
+            const file = fileInput.files[0];
+            if (!file) {
+                validationResults.innerHTML = 'Please select a file.';
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                const fileContent = event.target.result;
+                const lines = fileContent.split('\n');
+
+const referenceData = [
+    ['0000', 'error message 0-informational', '3 - Critical'],
+    ['0001', 'error message 1-warning', '2 - Overridable'],
+    ['0002', 'error message 2-overridable', '3 - Critical'],
+    ['0003', 'error message 3-critical', '1 - Warning'],
+    ['0100', '30 in 168', '3 - Critical'],
+    ['0101', 'No Pairing Master', '3 - Critical'],
+    ['0102', 'Invalid Pairing Drop', '3 - Critical'],
+    ['0103', 'Must begin on duty day', '1 - Warning'],
+    ['0104', 'Removing HARD day off', '1 - Warning'],
+    ['0105', 'Conflicting Absence', '4 - Critical - password overridable'],
+    ['0106', 'Invalid Absence Day', '4 - Critical - password overridable'],
+    ['0107', 'Invalid Removal', '1 - Warning'],
+    ['0108', 'Day Off over Day Off', '3 - Critical'],
+    ['0109', 'Conflict w/ Day Off', '1 - Warning'],
+    ['0110', 'Conflict w/ Absence', '4 - Critical - password overridable'],
+    ['0111', 'Conflict with Pairing', '3 - Critical'],
+    ['0112', 'Assign pairing over absence', '4 - Critical - password overridable'],
+    ['0113', 'Invalid Draft Drop', '3 - Critical'],
+    ['0114', 'Minimum Days Off', '1 - Warning'],
+    ['0115', 'Weekly Buffer Exceeded', '4 - Critical - password overridable'],
+    ['0116', 'Crew Rest Violation after DO', '3 - Critical'],
+    ['0117', 'Crew DO Rest Violation', '1 - Warning'],
+    ['0119', 'Less than Min Rest @ Base', '4 - Critical - password overridable'],
+    ['0120', '24/7', '3 - Critical'],
+    ['0121', 'max duty', '3 - Critical'],
+    ['0122', 'No open reserve day', '1 - Warning'],
+    ['0123', 'Conflict with Other Time', '4 - Critical - password overridable'],
+    ['0124', 'Restricted city violation', '3 - Critical'],
+    ['0125', 'Absence rest violation', '2 - Overridable'],
+    ['0126', 'Conflict w/ R Day', '3 - Critical'],
+    ['0127', 'TRANSITING', '3 - Critical'],
+    ['0128', 'Invalid Reserve Assign', '3 - Critical'],
+    ['0129', 'Monthly Buffer exceeded', '2 - Overridable'],
+    ['0130', 'Annual Buffer exceeded', '2 - Overridable'],
+    ['0131', 'Assign blk hrs > week Buffer', '1 - Warning'],
+    ['0132', 'Assign blk hrs > month Buffer', '1 - Warning'],
+    ['0133', 'Assign blk hrs > annual Buffe', '1 - Warning'],
+    ['0134', 'FAR! Weekly max violation', '3 - Critical'],
+    ['0135', 'Assign blk hrs > week Buffer', '2 - Overridable'],
+    ['0136', 'FAR! Monthly max violation', '3 - Critical'],
+    ['0137', 'Assign blk hrs > month Buffer', '2 - Overridable'],
+    ['0138', 'FAR! Annual max violation', '3 - Critical'],
+    ['0139', 'Assign blk hrs > annual Buffe', '2 - Overridable'],
+    ['0140', 'F/A Rest Violation', '3 - Critical'],
+    ['0141', 'F/A Absence Rest Violation', '3 - Critical'],
+    ['0142', 'FAR! F/A Comp. Rest Violation', '3 - Critical'],
+    ['0143', 'FAR! F/A 24/7 Violation', '3 - Critical'],
+    ['0144', 'F/A Rest Violation', '3 - Critical'],
+    ['0145', '1 in 7 violation', '4 - Critical - password overridable'],
+    ['0146', '12-in-24 block hrs violation', '4 - Critical - password overridable'],
+    ['0147', '20-in-48 w/o 18 hr. crew rest', '3 - Critical'],
+    ['0148', '24-in-72 w/o 18 hr. crew rest', '3 - Critical'],
+    ['0149', 'Missing HARD Dayoff', '1 - Warning'],
+    ['0150', 'Multiple HARD Dayoff', '3 - Critical'],
+    ['0151', '120hr-in-30day violation', '3 - Critical'],
+    ['0152', '300hr-in-90day violation', '3 - Critical'],
+    ['0153', 'ABX Exemption Perform 32/7', '1 - Warning'],
+    ['0154', 'Crew not qualfd for eqpt/seat', '4 - Critical - password overridable'],
+    ['0155', 'Transiting prohibited city', '3 - Critical'],
+    ['0156', '100hr-in-30day violation', '3 - Critical'],
+    ['0157', '350hr-in-90day violation', '3 - Critical'],
+    ['0158', 'Max On Duty', '3 - Critical'],
+    ['0160', 'Below GDO Count', '1 - Warning'],
+    ['0161', 'Below Blank Day Count', '1 - Warning'],
+    ['0162', 'international rest in base', '2 - Overridable'],
+    ['0173', 'Crew over 14 hours duty', '3 - Critical'],
+    ['0184', 'Credit below bid period min.', '1 - Warning'],
+    ['0185', 'Need 2 off after 6 cons. on', '1 - Warning'],
+    ['0190', 'DEQUAL EXIST W/IN PAIRING', '4 - Critical - password overridable'],
+    ['0198', 'Exceed Skd Blk in Bid Period', '1 - Warning'],
+    ['0203', 'Res.Day Conflicts w/Norm.Rest', '4 - Critical - password overridable'],
+    ['0208', 'Pairing assigned out of base', '1 - Warning'],
+    ['0209', 'PRG assigned different eqpt', '5 - Critical - Dequalification'],
+    ['0210', 'PRG has different Position', '1 - Warning'],
+    ['0248', 'Short day Sked duty Exceeded', '2 - Overridable'],
+    ['0249', 'Short day Est duty exceeded', '2 - Overridable'],
+    ['0250', 'Short day Act duty exceeded', '2 - Overridable'],
+    ['0251', 'SKED rest between 2 CDOs', '3 - Critical'],
+    ['0252', 'ACTUAL rest between 2 CDOs', '3 - Critical'],
+    ['0253', 'Rest before BOTC', '2 - Overridable'],
+    ['0254', 'Rest after BTOC', '2 - Overridable'],
+    ['0255', 'Dayoff after spec Trips', '2 - Overridable'],
+    ['2007', 'Invalid Flight number', '3 - Critical'],
+    ['2008', 'Leg must be other airline dhd', '3 - Critical'],
+    ['2009', 'Flight Inactive (Needs fixed)', '3 - Critical'],
+    ['2010', 'Leg equip invalid for pairing', '4 - Critical - password overridable'],
+    ['2011', 'Position not valid for eqpt.', '4 - Critical - password overridable'],
+    ['2100', 'no cities input for deadhead', '3 - Critical'],
+    ['2101', 'Leg not open for position', '4 - Critical - password overridable'],
+    ['2102', 'Time continuity (Needs fixed)', '3 - Critical'],
+    ['2103', 'Base continuity - beginning', '3 - Critical'],
+    ['2104', 'Base continuity - end', '3 - Critical'],
+    ['2105', 'Minimum Connection violation', '0 - Informational'],
+    ['2106', 'FLIGHT INACT', '4 - Critical - password overridable'],
+    ['2107', 'City continuity', '3 - Critical'],
+    ['2108', 'Deadhead code must be entered', '3 - Critical'],
+    ['2109', 'Flight not found on schedule', '3 - Critical'],
+    ['2120', 'MAX DUTY', '3 - Critical'],
+    ['2121', 'No citypair entry found', '3 - Critical'],
+    ['2123', 'No agreed seg. found for dhd', '1 - Warning'],
+    ['2124', 'No LIMO agreed segment found', '1 - Warning'],
+    ['2125', 'No legs in pairing', '3 - Critical'],
+    ['2129', 'FAR! 24/7 violation', '3 - Critical'],
+    ['2130', 'Code Not Legal in Pairing', '2 - Overridable'],
+    ['2131', 'Trans Code not found on table', '4 - Critical - password overridable'],
+    ['2200', 'Total Block time exceeds max', '4 - Critical - password overridable'],
+    ['2201', 'No. of duty days exceeds max', '4 - Critical - password overridable'],
+    ['2202', 'Number of days exceeds max', '4 - Critical - password overridable'],
+    ['2207', 'Max Restrictd Cities Exceeded', '3 - Critical'],
+    ['2210', 'MAX ONDUTY exceeded - EST/ACT', '3 - Critical'],
+    ['2211', 'Maximum landings exceeded', '3 - Critical'],
+    ['2212', 'Maximum block time exceeded', '3 - Critical'],
+    ['2213', 'Not allowed to transit base', '3 - Critical'],
+    ['2216', 'MAX DUTY Exceeded-Scheduled', '3 - Critical'],
+    ['2217', 'MAX DUTY Exceeded-Deadhd Only', '4 - Critical - password overridable'],
+    ['2220', 'SCHEDULED BLOCK OVER 8 HRS.', '2 - Overridable'],
+    ['2221', 'EXCEEDS MAX BLOCK TIME', '2 - Overridable'],
+    ['2222', 'Duty sked block over 12:00', '3 - Critical'],
+    ['2223', 'Duty sked block over 16:00', '3 - Critical'],
+    ['2230', 'Day->Day Min. Rest Violation', '3 - Critical'],
+    ['2231', 'Day->Ngt Min. Rest Violation', '1 - Warning'],
+    ['2232', 'Ngt->Day Min. Rest Violation', '1 - Warning'],
+    ['2233', 'Ngt->Ngt Min. Rest Violation', '1 - Warning'],
+    ['2239', 'Under Reserve to RES Rest', '4 - Critical - password overridable'],
+    ['2240', 'Exceed Max TimeAwayFromBase', '0 - Informational'],
+    ['2241', 'Exceed Skd Blk in 24Hrs-Intl', '1 - Warning'],
+    ['2242', 'DUTY TIME AT 12 HOURS OR MORE', '3 - Critical'],
+    ['2244', '> 2 takeoffs from base in CDO', '2 - Overridable'],
+    ['2245', '> 5 takeoffs in CDO', '2 - Overridable'],
+    ['2246', 'Days Off After Spec Trip', '2 - Overridable'],
+    ['2247', 'Dep from dom after lay in CDO', '2 - Overridable'],
+    ['2248', '> than nn takeoffs in BOTC', '2 - Overridable'],
+    ['2700', 'Groundtime enough for Hotel', '0 - Informational'],
+    ['2701', 'Groundtime < time for Hotel', '1 - Warning'],
+    ['2702', 'Break exist, S/B short layovr', '3 - Critical'],
+    ['2703', 'Short layovr exist, S/B break', '1 - Warning'],
+    ['2704', 'Hotel change possible', '0 - Informational'],
+    ['2705', 'Within FAR rest buffer', '4 - Critical - password overridable'],
+    ['2706', 'CR Must Begin Time Warning!!!', '3 - Critical'],
+    ['2711', 'Intl away rest < 12 hr.', '0 - Informational'],
+    ['2712', 'Intl away rest < 14 hr', '0 - Informational'],
+    ['2713', 'Report time after leg dept', '1 - Warning'],
+    ['2714', 'Under Pilot min pos./ Company', '3 - Critical'],
+    ['2715', 'Over Pilot Max pos./ Company', '4 - Critical - password overridable'],
+    ['2716', 'Under Cabin Min pos. -Company', '3 - Critical'],
+    ['2717', 'Over Cabin Max pos. -Company', '3 - Critical'],
+    ['2718', 'UNDER PILOT MIN -FAR', '3 - Critical'],
+    ['2719', 'OVER PILOT MAX POS -FAR', '3 - Critical'],
+    ['2720', 'UNDER CABIN MIN POS -FAR', '3 - Critical'],
+    ['2721', 'OVER CABIN MAX POS -FAR', '3 - Critical'],
+    ['2722', 'UNDER PILOT MIN POS -EQUIV', '3 - Critical'],
+    ['2723', 'OVER PILOT MAX POS -EQUIV', '3 - Critical'],
+    ['2724', 'UNDER CABIN MIN POS -EQUIV', '3 - Critical'],
+    ['2725', 'OVER CABIN MAX POS -EQUIV', '3 - Critical'],
+    ['2726', 'OTHER EQUIV POS IN USE', '3 - Critical'],
+    ['2800', 'Over 15 Hours Rap/Duty sched', '3 - Critical'],
+    ['2801', 'Over 15 Hours Rap/Duty actual', '3 - Critical'],
+    ['3110', '>8 hrs flight time', '3 - Critical'],
+    ['3111', '>9 hrs flight time', '3 - Critical'],
+    ['3112', '>13 hrs flight time', '3 - Critical'],
+    ['3113', '>17 hrs flight time', '3 - Critical'],
+    ['3130', '>Max Duty (Scheduled)', '3 - Critical'],
+    ['3131', '>Max Duty (Estimated)', '3 - Critical'],
+    ['3132', '>Max Duty (Actual)', '3 - Critical'],
+    ['3150', 'Rest Opp outside of 2200-0500', '3 - Critical'],
+    ['3151', 'Suitable accom < 3hrs', '3 - Critical'],
+    ['3152', 'Act Rest Opp < Sked Rest Opp', '3 - Critical'],
+    ['3153', 'Split Duty > 14 hrs', '3 - Critical'],
+    ['3154', 'SDuty rest start below margin', '3 - Critical'],
+    ['3155', 'SDuty rest end below margin', '3 - Critical'],
+    ['3170', '>Max Aug Duty (Schedule)', '3 - Critical'],
+    ['3171', '>Max Aug Duty (Estimated)', '3 - Critical'],
+    ['3172', '>Max Aug Duty (Actual)', '3 - Critical'],
+    ['3190', 'Duty extension > 2 hours', '3 - Critical'],
+    ['3191', 'Duty ext >30 mins >one time', '3 - Critical'],
+    ['3210', 'Short call reserve >14hrs', '3 - Critical'],
+    ['3211', '>Max Duty Reserve (Schedule)', '3 - Critical'],
+    ['3212', '>Max Duty Reserve (Estimated)', '3 - Critical'],
+    ['3213', '>Max Duty Reserve (Actual)', '3 - Critical'],
+    ['3214', '>Max Aug Duty Rsv (Schedule)', '3 - Critical'],
+    ['3215', '>Max Aug Duty Rsv (Estimated)', '3 - Critical'],
+    ['3216', '>Max Aug Duty Rsv (Actual)', '3 - Critical'],
+    ['3217', 'LongCall prg assigned <12hrs', '3 - Critical'],
+    ['3231', '>100 FLT HRS IN 672 (Skd/Act)', '3 - Critical'],
+    ['3232', '>100 flt hrs in 672 (Estimate', '3 - Critical'],
+    ['3233', '>1000 flt hrs in 365 days', '3 - Critical'],
+    ['3234', '>60 duty hrs in 168 (Schedule', '3 - Critical'],
+    ['3235', '>60 duty hrs in 168 (Estimate', '3 - Critical'],
+    ['3236', '>60 duty hrs in 168 (Actual)', '3 - Critical'],
+    ['3237', '>190 duty hrs in 672 (Sched)', '3 - Critical'],
+    ['3238', '>190 duty hrs in 672 (Est)', '3 - Critical'],
+    ['3239', '>190 duty hrs in 672 (Actual)', '3 - Critical'],
+    ['3240', '>1000 flt hrs in 365 d. (Est)', '3 - Critical'],
+    ['3250', 'No 30 hrs free of duty in 168', '3 - Critical'],
+    ['3251', 'No 30 hrs free of duty in 168', '3 - Critical'],
+    ['3252', 'No 56 hrs rest after 168TAFB', '3 - Critical'],
+    ['3253', 'Need 3 physiological nights', '3 - Critical'],
+    ['3254', '<Reqd rest (Layover away)', '3 - Critical'],
+    ['3255', '<10hrs rest (Prgs at base)', '3 - Critical'],
+    ['3256', '<10hrs rest (Reserve to Prg)', '3 - Critical'],
+    ['3257', '<10hrs rest (reserve-reserve)', '3 - Critical'],
+    ['3258', '<10hrs rest (Prg to reserve)', '3 - Critical'],
+    ['3259', '< DHD rest after (Prg-Prg)', '3 - Critical'],
+    ['3260', '< DHD rest after (Prg-other)', '3 - Critical'],
+    ['3270', '>3 nighttime duties', '3 - Critical'],
+    ['3271', '>5 nighttime duties', '3 - Critical'],
+    ['3990', 'cannot read city', '3 - Critical'],
+    ['3991', 'cannot convert time', '3 - Critical'],
+    ['4000', 'Legality Check Bypased (DATA)', '3 - Critical'],
+    ['4004', 'Green check not completed', '3 - Critical'],
+    ['4005', 'Green on green assignment', '3 - Critical'],
+    ['4006', 'IOE Check not complete', '3 - Critical'],
+    ['4007', 'IOE Pilot with no instructor', '3 - Critical'],
+    ['4012', 'FAR! Comp Rest Violation', '3 - Critical'],
+    ['4116', 'FAR! Weekly max violation', '3 - Critical'],
+    ['4117', 'max duty', '3 - Critical'],
+    ['4118', 'FAR! Annual max violation', '3 - Critical'],
+    ['4119', 'FAR! 8 Off in 24 Hr.Violation', '3 - Critical'],
+    ['4120', 'FAR!Comp Rest must begin time', '3 - Critical'],
+    ['4121', 'Over Max. On Duty', '3 - Critical'],
+    ['4122', 'FAR Rest Violation after DO', '3 - Critical'],
+    ['4123', 'DO Rest Violation', '3 - Critical'],
+    ['4124', 'Twice Hours Flown-Intl Rest', '3 - Critical'],
+    ['4125', 'FA Minimum Rest Required', '3 - Critical'],
+    ['4126', 'FA Compensatory Rest Required', '3 - Critical'],
+    ['4127', 'FA Max Duty - FAR VIOLATION!', '3 - Critical'],
+    ['4128', 'FA Illegal duty time', '3 - Critical'],
+    ['4134', 'FAR! Weekly Max Violation -FA', '3 - Critical'],
+    ['4136', 'FAR! Monthly Max Violation-FA', '3 - Critical'],
+    ['4138', 'FAR! Annual Max Violation -FA', '3 - Critical'],
+    ['4143', 'FAR! Crew 24/7 Violation-FA', '3 - Critical'],
+    ['4144', 'FAR! Crew Rest Violation - FA', '3 - Critical'],
+    ['4145', 'Greater than 16:00 Duty/24 hr', '3 - Critical'],
+    ['4146', 'FA Must Begin Rest Violation', '3 - Critical'],
+    ['4148', 'Both pilots over 60 yrs', '3 - Critical'],
+    ['4150', 'FA 10hrs Min Rest Required', '3 - Critical'],
+    ['4232', '120hr-in-30 days violation', '3 - Critical'],
+    ['4233', '300hr-in-90 days violation', '3 - Critical'],
+    ['4234', '100hr-in-30 days violation', '3 - Critical'],
+    ['4235', '350hr-in90 days violation', '3 - Critical'],
+    ['6500', 'Trip Must be Split/ Min Credi', '0 - Informational'],
+    ['7110', 'Max Flight Hours Buffer', '4 - Critical - password overridable'],
+    ['7130', 'Max FDP duty Buffer', '4 - Critical - password overridable'],
+    ['7231', '100 in 672 Flight Time Buffer', '4 - Critical - password overridable'],
+    ['7233', '1000 in365 Flight Time Buffer', '4 - Critical - password overridable'],
+    ['7234', '60 in 168 Duty Buffer', '4 - Critical - password overridable'],
+    ['7237', '190 in 672 Duty Buffer', '4 - Critical - password overridable'],
+    ['7250', '30 in 168 Rest Buffer', '4 - Critical - password overridable'],
+    ['7254', 'Min Rest Buffer', '2 - Overridable']
+];
+                const dataErrorCodes = {};
+
+                // Parse the uploaded data and store it in dataErrorCodes
+                lines.forEach(line => {
+                    const parts = line.trim().split(/\s{2,}/);
+                    if (parts.length === 3) {
+                        const [code, description, severity] = parts;
+                        dataErrorCodes[code] = { description, severity };
+                    }
+                });
+
+                // Compare the data with the reference data
+                const discrepancies = [];
+                referenceData.forEach(([code, description, severity]) => {
+                    if (!dataErrorCodes[code]) {
+                        discrepancies.push(`Code ${code} is missing in the uploaded file.`);
+                    } else {
+                        const { description: dataDescription, severity: dataSeverity } = dataErrorCodes[code];
+                        if (dataDescription !== description) {
+                            discrepancies.push(`Code ${code} has a different description in the uploaded file: ${dataDescription}`);
+                        }
+                        if (dataSeverity !== severity) {
+                            discrepancies.push(`Code ${code} has a different severity in the uploaded file: ${dataSeverity}`);
+                        }
+                    }
+                });
+
+                // Display validation results
+                if (discrepancies.length === 0) {
+                    validationResults.innerHTML = 'All error codes are on their correct settings.';
+                } else {
+                    validationResults.innerHTML = 'The following error codes are on the incorrect settings:<br>' + discrepancies.join('<br>');
+                }
+            };
+
+            reader.readAsText(file);
+        });
+
+		        // Get the current date and time when the validation was run
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString();
+        const formattedTime = currentDate.toLocaleTimeString();
+
+        // Display the captured date and time
+        const datetimeDiv = document.getElementById('datetime');
+        datetimeDiv.textContent = `Page Loaded At:  ${formattedTime}, ${formattedDate}`;
+    </script>
+    </center>
+</body>
+</html>
