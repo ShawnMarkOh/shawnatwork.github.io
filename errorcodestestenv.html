@@ -3,78 +3,7 @@
 <head>
     <title>Error Code Checking</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f2f2f2;
-            margin: 0;
-            padding: 0;
-        }
-
-        center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-
-        h1 {
-            font-size: 36px;
-            color: #333;
-        }
-
-        form {
-            margin-top: 20px;
-        }
-
-        input[type="file"] {
-            padding: 10px;
-            font-size: 16px;
-            border: 2px solid #ccc;
-            border-radius: 5px;
-        }
-
-        input[type="submit"] {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0056b3;
-        }
-
-        button#download-button {
-            padding: 10px 20px;
-            font-size: 18px;
-            background-color: #4CAF50;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 20px;
-        }
-
-        button#download-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-
-        #validation-results {
-            margin-top: 20px;
-            font-size: 20px;
-            color: #333;
-        }
-
-        #datetime {
-            margin-top: 20px;
-            font-size: 16px;
-            color: #666;
-        }
+        /* ... (existing styles) ... */
     </style>
 </head>
 <body>
@@ -85,16 +14,15 @@
             <input type="submit" value="Validate File">
         </form>
         <div id="validation-results"></div>
-        <button id="download-button" disabled>Download Error Codes</button>
+        <button id="download-button" style="display: none;">Download Highlighted Error Codes</button>
         <div id="datetime"></div>
-    </center>
     <script>
         document.getElementById('upload-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const fileInput = document.getElementById('file-input');
             const validationResults = document.getElementById('validation-results');
             const downloadButton = document.getElementById('download-button');
-
+            
             const file = fileInput.files[0];
             if (!file) {
                 validationResults.innerHTML = 'Please select a file.';
@@ -367,69 +295,55 @@ const referenceData = [
                     }
                 });
 
-                // Compare the data with the reference data
-                const discrepancies = [];
+                // Compare the data with the reference data and highlight critical codes
+                const highlightedCodes = [];
                 referenceData.forEach(([code, description, severity]) => {
                     if (!dataErrorCodes[code]) {
-                        discrepancies.push(`Code ${code} is missing in the uploaded file.`);
+                        highlightedCodes.push(`Code ${code} is missing in the uploaded file.`);
                     } else {
                         const { description: dataDescription, severity: dataSeverity } = dataErrorCodes[code];
                         if (dataDescription !== description) {
-                            discrepancies.push(`Code ${code} has a different description in the uploaded file: ${dataDescription}`);
+                            highlightedCodes.push(`Code ${code} has a different description in the uploaded file: ${dataDescription}`);
                         }
                         if (dataSeverity !== severity) {
-                            discrepancies.push(`Code ${code} has a different severity in the uploaded file: ${dataSeverity}`);
+                            // Highlight critical codes by adding HTML markup
+                            highlightedCodes.push(`Code <span style="color: red;">${code}</span> has a different severity in the uploaded file: ${dataSeverity}`);
                         }
                     }
                 });
 
                 // Display validation results
-                if (discrepancies.length === 0) {
+                if (highlightedCodes.length === 0) {
                     validationResults.innerHTML = 'All error codes are on their correct settings.';
                 } else {
-                    validationResults.innerHTML = 'The following error codes are on the incorrect settings:<br>' + discrepancies.join('<br>');
+                    validationResults.innerHTML = 'The following error codes are on the incorrect settings:<br>' + highlightedCodes.join('<br>');
                 }
 
                 // Enable the download button
-                downloadButton.disabled = false;
+                downloadButton.style.display = 'block';
+
+                // Create a downloadable .txt file with the highlighted codes
+                downloadButton.addEventListener('click', function () {
+                    const highlightedText = highlightedCodes.join('\n');
+                    const blob = new Blob([highlightedText], { type: 'text/plain' });
+                    const url = window.URL.createObjectURL(blob);
+
+                    // Create a download link and trigger the download
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'highlighted_error_codes.txt';
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+
+                    // Clean up
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                });
             };
 
             reader.readAsText(file);
         });
-
-// Handle the download button click
-document.getElementById('download-button').addEventListener('click', function () {
-    const dataErrorCodes = {}; // You can use the previously parsed data here
-
-    // Generate the highlighted .txt content
-    const highlightedText = generateHighlightedText(dataErrorCodes);
-
-    // Create a Blob to hold the text data
-    const blob = new Blob([highlightedText], { type: 'text/plain' });
-
-    // Create a download link
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'error_codes.txt';
-
-    // Trigger the download
-    a.click();
-});
-
-// Function to generate highlighted .txt content with critical codes
-function generateHighlightedText(dataErrorCodes) {
-    const criticalCodes = Object.keys(dataErrorCodes).filter(code => dataErrorCodes[code].severity === '3 - Critical');
-    const content = [];
-
-    for (const code in dataErrorCodes) {
-        const { description, severity } = dataErrorCodes[code];
-        const isCritical = severity === '3 - Critical';
-        const line = isCritical ? `[Critical] Code ${code}: ${description}` : `Code ${code}: ${description}`;
-        content.push(line);
-    }
-
-    return content.join('\n');
-}
 
         // Get the current date and time when the validation was run
         const currentDate = new Date();
@@ -440,5 +354,6 @@ function generateHighlightedText(dataErrorCodes) {
         const datetimeDiv = document.getElementById('datetime');
         datetimeDiv.textContent = `Page Loaded At:  ${formattedTime}, ${formattedDate}`;
     </script>
+    </center>
 </body>
 </html>
