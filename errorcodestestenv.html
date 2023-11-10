@@ -397,39 +397,39 @@ const referenceData = [
             reader.readAsText(file);
         });
 
-        // Function to generate highlighted .txt content with critical codes
-        function generateHighlightedText(dataErrorCodes) {
-            const criticalCodes = Object.keys(dataErrorCodes).filter(code => dataErrorCodes[code].severity === '3 - Critical');
-            const content = [];
+// Handle the download button click
+document.getElementById('download-button').addEventListener('click', function () {
+    const dataErrorCodes = {}; // You can use the previously parsed data here
 
-            for (const code in dataErrorCodes) {
-                const { description, severity } = dataErrorCodes[code];
-                const isCritical = severity === '3 - Critical';
-                const line = isCritical ? `[Critical] Code ${code}: ${description}` : `Code ${code}: ${description}`;
-                content.push(line);
-            }
+    // Generate the highlighted .txt content
+    const highlightedText = generateHighlightedText(dataErrorCodes);
 
-            return content.join('\n');
-        }
+    // Create a Blob to hold the text data
+    const blob = new Blob([highlightedText], { type: 'text/plain' });
 
-        // Handle the download button click
-        document.getElementById('download-button').addEventListener('click', function () {
-            const dataErrorCodes = {}; // You can use the previously parsed data here
+    // Create a download link
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'error_codes.txt';
 
-            // Generate the highlighted .txt content
-            const highlightedText = generateHighlightedText(dataErrorCodes);
+    // Trigger the download
+    a.click();
+});
 
-            // Create a Blob to hold the text data
-            const blob = new Blob([highlightedText], { type: 'text/plain' });
+// Function to generate highlighted .txt content with critical codes
+function generateHighlightedText(dataErrorCodes) {
+    const criticalCodes = Object.keys(dataErrorCodes).filter(code => dataErrorCodes[code].severity === '3 - Critical');
+    const content = [];
 
-            // Create a download link
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'error_codes.txt';
+    for (const code in dataErrorCodes) {
+        const { description, severity } = dataErrorCodes[code];
+        const isCritical = severity === '3 - Critical';
+        const line = isCritical ? `[Critical] Code ${code}: ${description}` : `Code ${code}: ${description}`;
+        content.push(line);
+    }
 
-            // Trigger the download
-            a.click();
-        });
+    return content.join('\n');
+}
 
         // Get the current date and time when the validation was run
         const currentDate = new Date();
