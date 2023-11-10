@@ -362,7 +362,7 @@ const referenceData = [
                         }
                         if (dataSeverity !== severity) {
                             // Highlight critical codes by adding HTML markup
-                            highlightedCodes.push(`Code <span style="color: red;">${code}</span> has a different severity in the uploaded file: ${dataSeverity}`);
+                            highlightedCodes.push(`Code <span style="color: red;">${code} has a different severity in the uploaded file: ${dataSeverity}</span>`);
                         }
                     }
                 });
@@ -377,10 +377,10 @@ const referenceData = [
                 // Enable the download button
                 downloadButton.style.display = 'block';
 
-                // Create a downloadable .txt file with the highlighted codes
+                // Create a downloadable .html file with the highlighted codes
                 downloadButton.addEventListener('click', function () {
                     const highlightedText = highlightedCodes.join('\n');
-                    const blob = new Blob([highlightedText], { type: 'text/plain' });
+                    const blob = new Blob([highlightedText], { type: 'html' });
                     const url = window.URL.createObjectURL(blob);
 
                     // Create a download link and trigger the download
