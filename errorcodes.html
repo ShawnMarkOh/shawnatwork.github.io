@@ -75,6 +75,7 @@
             e.preventDefault();
             const fileInput = document.getElementById('file-input');
             const validationResults = document.getElementById('validation-results');
+            const datetime = document.getElementById('datetime');
             
             const file = fileInput.files[0];
             if (!file) {
@@ -338,7 +339,7 @@ const referenceData = [
     ['7250', '30 in 168 Rest Buffer', '4 - Critical - password overridable'],
     ['7254', 'Min Rest Buffer', '2 - Overridable']
 ];
-                const dataErrorCodes = {};
+               const dataErrorCodes = {};
 
                 // Parse the uploaded data and store it in dataErrorCodes
                 lines.forEach(line => {
@@ -371,19 +372,30 @@ const referenceData = [
                 } else {
                     validationResults.innerHTML = 'The following error codes are on the incorrect settings:<br>' + discrepancies.join('<br>');
                 }
+
+                // Update the current time
+                const currentDate = new Date();
+                const formattedTime = currentDate.toLocaleTimeString();
+                datetime.textContent = `Last validated at: ${formattedTime}`;
             };
 
             reader.readAsText(file);
         });
 
-		        // Get the current date and time when the validation was run
-        const currentDate = new Date();
-        const formattedDate = currentDate.toLocaleDateString();
-        const formattedTime = currentDate.toLocaleTimeString();
+        function updateCurrentTime() {
+            const currentDate = new Date();
+            const formattedTime = currentDate.toLocaleTimeString();
 
-        // Display the captured date and time
-        const datetimeDiv = document.getElementById('datetime');
-        datetimeDiv.textContent = `Page Loaded At:  ${formattedTime}, ${formattedDate}`;
+            // Display the current time
+            const datetime = document.getElementById('datetime');
+            datetime.textContent = `Last validated at: ${formattedTime}`;
+        }
+
+        // Call the updateCurrentTime function initially to show the current time
+        updateCurrentTime();
+
+        // Update the current time every second (1000 milliseconds)
+        setInterval(updateCurrentTime, 1000);
     </script>
     </center>
 </body>
