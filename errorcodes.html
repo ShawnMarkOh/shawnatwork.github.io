@@ -65,7 +65,7 @@
     <center>
         <h1>Error Code Checking</h1>
         <form enctype="multipart/form-data" id="upload-form">
-            <input type="file" id="file-input" accept=".txt, .lis">
+            <input type="file" id="file-input" accept=".txt">
             <input type="submit" value="Validate File">
         </form>
         <div id="validation-results"></div>
@@ -86,7 +86,6 @@
             reader.onload = function (event) {
                 const fileContent = event.target.result;
                 const lines = fileContent.split('\n');
-
 const referenceData = [
     ['0000', 'error message 0-informational', '3 - Critical'],
     ['0001', 'error message 1-warning', '2 - Overridable'],
@@ -376,20 +375,14 @@ const referenceData = [
             reader.readAsText(file);
         });
 
-        function updateCurrentTime() {
-            const currentDate = new Date();
-            const formattedTime = currentDate.toLocaleTimeString();
+		        // Get the current date and time when the validation was run
+        const currentDate = new Date();
+        const formattedDate = currentDate.toLocaleDateString();
+        const formattedTime = currentDate.toLocaleTimeString();
 
-            // Display the current time
-            const currentTimeSpan = document.getElementById('current-time');
-            currentTimeSpan.textContent = formattedTime;
-        }
-
-        // Call the updateCurrentTime function initially to show the current time
-        updateCurrentTime();
-
-        // Update the current time every second (1000 milliseconds)
-        setInterval(updateCurrentTime, 1000);
+        // Display the captured date and time
+        const datetimeDiv = document.getElementById('datetime');
+        datetimeDiv.textContent = `Page Loaded At:  ${formattedTime}, ${formattedDate}`;
     </script>
     </center>
 </body>
