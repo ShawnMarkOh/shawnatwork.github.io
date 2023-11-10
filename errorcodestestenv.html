@@ -48,6 +48,22 @@
             background-color: #0056b3;
         }
 
+        button#download-button {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        button#download-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
         #validation-results {
             margin-top: 20px;
             font-size: 20px;
@@ -69,13 +85,16 @@
             <input type="submit" value="Validate File">
         </form>
         <div id="validation-results"></div>
+        <button id="download-button" disabled>Download Error Codes</button>
         <div id="datetime"></div>
+    </center>
     <script>
         document.getElementById('upload-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const fileInput = document.getElementById('file-input');
             const validationResults = document.getElementById('validation-results');
-            
+            const downloadButton = document.getElementById('download-button');
+
             const file = fileInput.files[0];
             if (!file) {
                 validationResults.innerHTML = 'Please select a file.';
@@ -86,21 +105,21 @@
             reader.onload = function (event) {
                 const fileContent = event.target.result;
                 const lines = fileContent.split('\n');
-const referenceData = [
-    ['0000', 'error message 0-informational', '3 - Critical'],
-    ['0001', 'error message 1-warning', '2 - Overridable'],
-    ['0002', 'error message 2-overridable', '3 - Critical'],
-    ['0003', 'error message 3-critical', '1 - Warning'],
-    ['0100', '30 in 168', '3 - Critical'],
-    ['0101', 'No Pairing Master', '3 - Critical'],
-    ['0102', 'Invalid Pairing Drop', '3 - Critical'],
-    ['0103', 'Must begin on duty day', '1 - Warning'],
-    ['0104', 'Removing HARD day off', '1 - Warning'],
-    ['0105', 'Conflicting Absence', '4 - Critical - password overridable'],
-    ['0106', 'Invalid Absence Day', '4 - Critical - password overridable'],
-    ['0107', 'Invalid Removal', '1 - Warning'],
-    ['0108', 'Day Off over Day Off', '3 - Critical'],
-];
+                const referenceData = [
+                    ['0000', 'error message 0-informational', '3 - Critical'],
+                    ['0001', 'error message 1-warning', '2 - Overridable'],
+                    ['0002', 'error message 2-overridable', '3 - Critical'],
+                    ['0003', 'error message 3-critical', '1 - Warning'],
+                    ['0100', '30 in 168', '3 - Critical'],
+                    ['0101', 'No Pairing Master', '3 - Critical'],
+                    ['0102', 'Invalid Pairing Drop', '3 - Critical'],
+                    ['0103', 'Must begin on duty day', '1 - Warning'],
+                    ['0104', 'Removing HARD day off', '1 - Warning'],
+                    ['0105', 'Conflicting Absence', '4 - Critical - password overridable'],
+                    ['0106', 'Invalid Absence Day', '4 - Critical - password overridable'],
+                    ['0107', 'Invalid Removal', '1 - Warning'],
+                    ['0108', 'Day Off over Day Off', '3 - Critical'],
+                ];
                 const dataErrorCodes = {};
 
                 // Parse the uploaded data and store it in dataErrorCodes
@@ -134,12 +153,49 @@ const referenceData = [
                 } else {
                     validationResults.innerHTML = 'The following error codes are on the incorrect settings:<br>' + discrepancies.join('<br>');
                 }
+
+                // Enable the download button
+                downloadButton.disabled = false;
             };
 
             reader.readAsText(file);
         });
 
-		        // Get the current date and time when the validation was run
+        // Function to generate highlighted .txt content with critical codes
+        function generateHighlightedText(dataErrorCodes) {
+            const criticalCodes = Object.keys(dataErrorCodes).filter(code => dataErrorCodes[code].severity === '3 - Critical');
+            const content = [];
+
+            for (const code in dataErrorCodes) {
+                const { description, severity } = dataErrorCodes[code];
+                const isCritical = severity === '3 - Critical';
+                const line = isCritical ? `[Critical] Code ${code}: ${description}` : `Code ${code}: ${description}`;
+                content.push(line);
+            }
+
+            return content.join('\n');
+        }
+
+        // Handle the download button click
+        document.getElementById('download-button').addEventListener('click', function () {
+            const dataErrorCodes = {}; // You can use the previously parsed data here
+
+            // Generate the highlighted .txt content
+            const highlightedText = generateHighlightedText(dataErrorCodes);
+
+            // Create a Blob to hold the text data
+            const blob = new Blob([highlightedText], { type: 'text/plain' });
+
+            // Create a download link
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'error_codes.txt';
+
+            // Trigger the download
+            a.click();
+        });
+
+        // Get the current date and time when the validation was run
         const currentDate = new Date();
         const formattedDate = currentDate.toLocaleDateString();
         const formattedTime = currentDate.toLocaleTimeString();
@@ -148,6 +204,5 @@ const referenceData = [
         const datetimeDiv = document.getElementById('datetime');
         datetimeDiv.textContent = `Page Loaded At:  ${formattedTime}, ${formattedDate}`;
     </script>
-    </center>
 </body>
 </html>
