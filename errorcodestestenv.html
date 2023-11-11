@@ -59,6 +59,22 @@
             font-size: 16px;
             color: #666;
         }
+
+        #download-button {
+            display: none;
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #download-button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -69,10 +85,8 @@
             <input type="submit" value="Validate File">
         </form>
         <div id="validation-results"></div>
-        <button id="download-button" style="display: none;">Download Report</button>
         <div id="datetime"></div>
-
-    </center>
+        <button id="download-button" disabled>Download Modified File</button>
     <script>
         document.getElementById('upload-form').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -340,6 +354,7 @@ const referenceData = [
     ['7250', '30 in 168 Rest Buffer', '4 - Critical - password overridable'],
     ['7254', 'Min Rest Buffer', '2 - Overridable']
 ];
+
                 const dataErrorCodes = {};
 
                 // Parse the uploaded data and store it in dataErrorCodes
@@ -351,71 +366,56 @@ const referenceData = [
                     }
                 });
 
-                // Create an HTML template for the output file
-                let htmlContent = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Error Code Report</title>
-                    </head>
-                    <body>
-                        <h1>Error Code Report</h1>
-                        <h2>All incorrect codes are highlighted, all other codes are normal.</h2>
-                        <table>
-                            <tr>
-                                <th>Code</th>
-                                <th>Description</th>
-                                <th>Severity</th>
-                            </tr>
-                `;
+                // Compare the data with the reference data and generate the HTML table
+                const discrepancies = [];
+                let htmlTable = '<table border="1"><tr><th>Error Code</th><th>Description</th><th>Severity</th></tr>';
 
-                // Compare the data with the reference data and update the HTML content
                 referenceData.forEach(([code, description, severity]) => {
                     const { description: dataDescription, severity: dataSeverity } = dataErrorCodes[code];
-                    const highlightedDescription = (dataDescription === description) ? dataDescription : `<span style="color: red;">${dataDescription}</span>`;
-                    const highlightedSeverity = (dataSeverity === severity) ? dataSeverity : `<span style="color: red;">${dataSeverity}</span>`;
-                    
-                    htmlContent += `
-                        <tr>
-                            <td>${code}</td>
-                            <td>${highlightedDescription}</td>
-                            <td>${highlightedSeverity}</td>
-                        </tr>
-                    `;
+                    const rowClass = (dataDescription === description && dataSeverity === severity) ? '' : 'highlighted-row';
+                    htmlTable += `<tr class="${rowClass}"><td>${code}</td><td>${dataDescription}</td><td>${dataSeverity}</td></tr>`;
                 });
 
-                htmlContent += `
-                    </table>
-                    </body>
-                    </html>
-                `;
+                htmlTable += '</table>';
 
-                // Display validation results
-                if (validationResults) {
-                    if (htmlContent.includes('color: red;')) {
-                        validationResults.innerHTML = 'The following error codes are on the incorrect settings:';
-                    } else {
-                        validationResults.innerHTML = 'All error codes are on their correct settings.';
-                    }
+                // Display validation results with the HTML table
+                if (discrepancies.length === 0) {
+                    validationResults.innerHTML = 'All error codes are on their correct settings.';
+                } else {
+                    validationResults.innerHTML = 'The following error codes are on the incorrect settings:';
                 }
 
-                // Add download button
+                validationResults.innerHTML += htmlTable;
+
+                // Enable the download button
                 const downloadButton = document.getElementById('download-button');
                 downloadButton.style.display = 'block';
-                downloadButton.addEventListener('click', function () {
-                    const blob = new Blob([htmlContent], { type: 'text/html' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'error_report.html';
-                    a.style.display = 'none';
-                    document.body.appendChild(a);
-                    a.click();
-                    URL.revokeObjectURL(url);
-                });
+                downloadButton.disabled = false;
             };
 
             reader.readAsText(file);
+        });
+
+        // Download the modified file as HTML
+        document.getElementById('download-button').addEventListener('click', function () {
+            const validationResults = document.getElementById('validation-results');
+            const htmlContent = validationResults.innerHTML;
+
+            // Create a Blob with the HTML content
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+
+            // Create a download link
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'modified_file.html';
+            a.style.display = 'none';
+
+            // Append the link to the body and trigger the click event
+            document.body.appendChild(a);
+            a.click();
+
+            // Clean up
+            document.body.removeChild(a);
         });
 
         // Get the current date and time when the validation was run
@@ -425,7 +425,7 @@ const referenceData = [
 
         // Display the captured date and time
         const datetimeDiv = document.getElementById('datetime');
-        datetimeDiv.textContent = `Page Loaded At: ${formattedTime}, ${formattedDate}`;
+        datetimeDiv.textContent = `Page Loaded At:  ${formattedTime}, ${formattedDate}`;
     </script>
     </center>
 </body>
