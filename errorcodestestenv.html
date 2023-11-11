@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Error Code Checking</title>
-    <style>
+        <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
@@ -59,6 +59,9 @@
             font-size: 16px;
             color: #666;
         }
+        .highlight {
+            background-color: yellow;
+        }
     </style>
 </head>
 <body>
@@ -68,8 +71,8 @@
             <input type="file" id="file-input" accept=".txt,.lis">
             <input type="submit" value="Validate File">
         </form>
+        <button id="download-button" style="display: none;">Download HTML Report</button>
         <div id="validation-results"></div>
-        <button id="download-button" style="display: none;">Download Highlighted Error Codes</button>
         <div id="datetime"></div>
     <script>
         document.getElementById('upload-form').addEventListener('submit', function (e) {
@@ -350,51 +353,54 @@ const referenceData = [
                     }
                 });
 
-                // Compare the data with the reference data and highlight critical codes
-                const highlightedCodes = [];
+                // Generate HTML content with highlighted critical codes
+                const htmlContent = ['<html><head><title>Error Report</title></head><body>'];
+                htmlContent.push('<h1>Error Code Report</h1>');
+
                 referenceData.forEach(([code, description, severity]) => {
-                    if (!dataErrorCodes[code]) {
-                        highlightedCodes.push(`Code ${code} is missing in the uploaded file.`);
-                    } else {
+                    if (dataErrorCodes[code]) {
                         const { description: dataDescription, severity: dataSeverity } = dataErrorCodes[code];
-                        if (dataDescription !== description) {
-                            highlightedCodes.push(`Code ${code} has a different description in the uploaded file: ${dataDescription}`);
-                        }
-                        if (dataSeverity !== severity) {
-                            // Highlight critical codes by adding HTML markup
-                            highlightedCodes.push(`Code <span style="color: red;">${code} has a different severity in the uploaded file: ${dataSeverity}</span>`);
+                        if (dataSeverity === '3 - Critical') {
+                            // Highlight critical codes with the "highlight" class
+                            htmlContent.push(`<p class="highlight"><strong>Error Code:</strong> ${code}</p>`);
+                            htmlContent.push(`<p class="highlight"><strong>Description:</strong> ${dataDescription}</p>`);
+                            htmlContent.push(`<p class="highlight"><strong>Severity:</strong> ${dataSeverity}</p>`);
+                        } else {
+                            htmlContent.push(`<p><strong>Error Code:</strong> ${code}</p>`);
+                            htmlContent.push(`<p><strong>Description:</strong> ${dataDescription}</p>`);
+                            htmlContent.push(`<p><strong>Severity:</strong> ${dataSeverity}</p>`);
                         }
                     }
                 });
 
+                htmlContent.push('</body></html>');
+
                 // Display validation results
-                if (highlightedCodes.length === 0) {
-                    validationResults.innerHTML = 'All error codes are on their correct settings.';
+                if (htmlContent.length <= 8) { // If there are only HTML structure tags, it means no critical codes were found.
+                    validationResults.innerHTML = 'No critical error codes were found.';
                 } else {
-                    validationResults.innerHTML = 'The following error codes are on the incorrect settings:<br>' + highlightedCodes.join('<br>');
+                    validationResults.innerHTML = 'Critical error codes found. Click the "Download HTML Report" button below to get the report.';
+                    downloadButton.style.display = 'block';
+
+                    // Create a downloadable HTML file
+                    downloadButton.addEventListener('click', function () {
+                        const html = htmlContent.join('\n');
+                        const blob = new Blob([html], { type: 'text/html' });
+                        const url = window.URL.createObjectURL(blob);
+
+                        // Create a download link and trigger the download
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = 'error_report.html';
+                        a.style.display = 'none';
+                        document.body.appendChild(a);
+                        a.click();
+
+                        // Clean up
+                        window.URL.revokeObjectURL(url);
+                        document.body.removeChild(a);
+                    });
                 }
-
-                // Enable the download button
-                downloadButton.style.display = 'block';
-
-                // Create a downloadable .html file with the highlighted codes
-                downloadButton.addEventListener('click', function () {
-                    const highlightedText = highlightedCodes.join('\n');
-                    const blob = new Blob([highlightedText], { type: 'html' });
-                    const url = window.URL.createObjectURL(blob);
-
-                    // Create a download link and trigger the download
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'highlighted_error_codes.txt';
-                    a.style.display = 'none';
-                    document.body.appendChild(a);
-                    a.click();
-
-                    // Clean up
-                    window.URL.revokeObjectURL(url);
-                    document.body.removeChild(a);
-                });
             };
 
             reader.readAsText(file);
