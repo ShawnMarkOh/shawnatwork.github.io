@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Error Code Checking</title>
-        <style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f2f2f2;
@@ -59,9 +59,6 @@
             font-size: 16px;
             color: #666;
         }
-        .highlight {
-            background-color: yellow;
-        }
     </style>
 </head>
 <body>
@@ -71,15 +68,15 @@
             <input type="file" id="file-input" accept=".txt,.lis">
             <input type="submit" value="Validate File">
         </form>
-        <button id="download-button" style="display: none;">Download HTML Report</button>
         <div id="validation-results"></div>
         <div id="datetime"></div>
+        <button id="download-button" style="display: none;">Download HTML</button>
+    </center>
     <script>
         document.getElementById('upload-form').addEventListener('submit', function (e) {
             e.preventDefault();
             const fileInput = document.getElementById('file-input');
             const validationResults = document.getElementById('validation-results');
-            const downloadButton = document.getElementById('download-button');
             
             const file = fileInput.files[0];
             if (!file) {
@@ -353,54 +350,67 @@ const referenceData = [
                     }
                 });
 
-                // Generate HTML content with highlighted critical codes
-                const htmlContent = ['<html><head><title>Error Report</title></head><body>'];
-                htmlContent.push('<h1>Error Code Report</h1>');
+                // Create an HTML template for the output file
+                let htmlContent = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <title>Error Code Report</title>
+                    </head>
+                    <body>
+                        <h1>Error Code Report</h1>
+                        <table>
+                            <tr>
+                                <th>Code</th>
+                                <th>Description</th>
+                                <th>Severity</th>
+                            </tr>
+                `;
 
+                // Compare the data with the reference data and update the HTML content
                 referenceData.forEach(([code, description, severity]) => {
-                    if (dataErrorCodes[code]) {
-                        const { description: dataDescription, severity: dataSeverity } = dataErrorCodes[code];
-                        if (dataSeverity === '3 - Critical') {
-                            // Highlight critical codes with the "highlight" class
-                            htmlContent.push(`<p class="highlight"><strong>Error Code:</strong> ${code}</p>`);
-                            htmlContent.push(`<p class="highlight"><strong>Description:</strong> ${dataDescription}</p>`);
-                            htmlContent.push(`<p class="highlight"><strong>Severity:</strong> ${dataSeverity}</p>`);
-                        } else {
-                            htmlContent.push(`<p><strong>Error Code:</strong> ${code}</p>`);
-                            htmlContent.push(`<p><strong>Description:</strong> ${dataDescription}</p>`);
-                            htmlContent.push(`<p><strong>Severity:</strong> ${dataSeverity}</p>`);
-                        }
-                    }
+                    const { description: dataDescription, severity: dataSeverity } = dataErrorCodes[code];
+                    const highlightedDescription = (dataDescription === description) ? dataDescription : `<span style="color: red;">${dataDescription}</span>`;
+                    const highlightedSeverity = (dataSeverity === severity) ? dataSeverity : `<span style="color: red;">${dataSeverity}</span>`;
+                    
+                    htmlContent += `
+                        <tr>
+                            <td>${code}</td>
+                            <td>${highlightedDescription}</td>
+                            <td>${highlightedSeverity}</td>
+                        </tr>
+                    `;
                 });
 
-                htmlContent.push('</body></html>');
+                htmlContent += `
+                    </table>
+                    </body>
+                    </html>
+                `;
 
                 // Display validation results
-                if (htmlContent.length <= 8) { // If there are only HTML structure tags, it means no critical codes were found.
-                    validationResults.innerHTML = 'No critical error codes were found.';
-                } else {
-                    validationResults.innerHTML = 'Critical error codes found. Click the "Download HTML Report" button below to get the report.';
-                    downloadButton.style.display = 'block';
-
-                    // Create a downloadable HTML file
-                    downloadButton.addEventListener('click', function () {
-                        const html = htmlContent.join('\n');
-                        const blob = new Blob([html], { type: 'text/html' });
-                        const url = window.URL.createObjectURL(blob);
-
-                        // Create a download link and trigger the download
-                        const a = document.createElement('a');
-                        a.href = url;
-                        a.download = 'error_report.html';
-                        a.style.display = 'none';
-                        document.body.appendChild(a);
-                        a.click();
-
-                        // Clean up
-                        window.URL.revokeObjectURL(url);
-                        document.body.removeChild(a);
-                    });
+                if (validationResults) {
+                    if (htmlContent.includes('color: red;')) {
+                        validationResults.innerHTML = 'The following error codes are on the incorrect settings:';
+                    } else {
+                        validationResults.innerHTML = 'All error codes are on their correct settings.';
+                    }
                 }
+
+                // Add download button
+                const downloadButton = document.getElementById('download-button');
+                downloadButton.style.display = 'block';
+                downloadButton.addEventListener('click', function () {
+                    const blob = new Blob([htmlContent], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'error_report.html';
+                    a.style.display = 'none';
+                    document.body.appendChild(a);
+                    a.click();
+                    URL.revokeObjectURL(url);
+                });
             };
 
             reader.readAsText(file);
@@ -413,7 +423,7 @@ const referenceData = [
 
         // Display the captured date and time
         const datetimeDiv = document.getElementById('datetime');
-        datetimeDiv.textContent = `Page Loaded At:  ${formattedTime}, ${formattedDate}`;
+        datetimeDiv.textContent = `Page Loaded At: ${formattedTime}, ${formattedDate}`;
     </script>
     </center>
 </body>
