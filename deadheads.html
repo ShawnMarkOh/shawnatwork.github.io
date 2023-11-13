@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deadheads</title>
+    <link href="/Content/css?v=fxQK7hKcrnlfTl1mqrh5qRAN-htSdQ9_A4hnsbZWd4g1" rel="stylesheet"/>
+
+    <script src="/bundles/modernizr?v=inCVuEFe6J4Q07A0AcRsbJic_UE5MwpRMNGcOtk94TE1"></script>
+</head>
+<body>
+    <div class="container-fluid body-content">
+        <div class="container-fluid" id="dh">
+            <div id="dh-header">
+                <div class="row">
+                    <div class="col-xs-1 col-sm-1 col-md-1 flight-header" data-sort="FlightNumber"><h4>Flt#</h4></div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 flight-header" data-sort="FlightDate"><h4>Date</h4></div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 flight-header" data-sort="DepartureTime"><h4>Dep</h4></div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 flight-header" data-sort="ArrivalTime"><h4>Arr</h4></div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 flight-header" data-sort="Origin"><h4>Origin</h4></div>
+                    <div class="col-xs-1 col-sm-1 col-md-1 flight-header" data-sort="Destination"><h4>Destn</h4></div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 flight-header" data-sort="FlightStatus"><h4>Status</h4></div>
+                </div>
+            </div>
+            <div id="please-wait-message" class="col-xs-12"><h2>Gathering data. Please wait...</h2></div>
+            <div id="dh-error"></div>
+            <div id="dh-warning"></div>
+            <div id="dh-success"></div>
+        </div>
+
+        <script id="dh-row" type="text/template">
+            <div class="panel-group" id="flight-[[DHID]]" data-status="[[StatusEnum]]" data-flight="[[FlightNumber]]">
+                <div class="panel [[StatusTypeCss]]">
+                    <a class="collapsed [[StatusTypeCss]]" data-toggle="collapse" data-dh-id="#[[DHID]]" href="#collapse[[DHID]]">
+                        <div class="panel-title">
+                            <div class="row flight-header">
+                                <div class="col-xs-1 col-sm-1 col-md-1"><span data-item="FlightNumber">[[FlightNumber]]</span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="FlightDate">[[FlightDate]]</span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="DepartureTime">[[DepartureTime]]</span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="ArrivalTime">[[ArrivalTime]]</span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="Origin">[[Origin]]</span></div>
+                                <div class="col-xs-1 col-sm-1 col-md-1"><span data-item="Destination">[[Destination]]</span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="FlightStatus">[[FlightStatus]]</span></div>
+                            </div>
+                        </div>
+                    </a>
+                    <div id="collapse[[DHID]]" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <div class="row employees-header">
+                                <div class="col-xs-1 col-sm-1 col-md-1"><span><strong>Pairing</strong></span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span><strong>Pr. Date</strong></span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span><strong>Emp #</strong></span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span><strong>Name</strong></span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span><strong>Position</strong></span></div>
+                                <div class="col-xs-1 col-sm-1 col-md-1"><span><strong>Next Flt #</strong></span></div>
+                                <div class="col-xs-2 col-sm-2 col-md-2"><span><strong>Next Flt Time</strong></span></div>
+                            </div>
+                            <div class="employees">
+                                [[Employees]]
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </script>
+
+        <script id="dh-emp-row" type="text/template">
+            <div class="row employee[[MogtInfringementCss]]" id="emp-[[EmployeeNumberUid]]">
+                <div class="col-xs-1 col-sm-1 col-md-1"><span data-item="Pairing">[[Pairing]]</span></div>
+                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="PairingDate">[[PairingDate]]</span></div>
+                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="EmployeeNumber">[[EmployeeNumber]]</span></div>
+                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="EmployeeName">[[EmployeeName]]</span></div>
+                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="EmployeePosition">[[EmployeePosition]]</span></div>
+                <div class="col-xs-1 col-sm-1 col-md-1"><span data-item="NextFlightNumber">[[NextFlightNumber]]</span></div>
+                <div class="col-xs-2 col-sm-2 col-md-2"><span data-item="NextFlightTime">[[NextFlightTime]]</span></div>
+            </div>
+        </script>
+
+        <br />
+    </div>
+
+    <script src="/bundles/jquery?v=CoABgkQ31568NGWjZ53NF4i9KGZoF5JGcG03BHK70j01"></script>
+    <script src="/Scripts/jquery.signalR-2.2.2.min.js"></script>
+    <script src="/signalr/hubs"></script>
+    <script src="/bundles/site/js?v=KxC0ZmiH6xFmRUGH5S4mgD99nv1eHl97khKFq3KhxBU1"></script>
+
+    <script>
+        // Function to sort the data by a specific column
+        function sortDataByColumn(column) {
+            var rows = $('.panel-group');
+
+            rows.sort(function(a, b) {
+                var aValue = $(a).find('[data-item="' + column + '"]').text();
+                var bValue = $(b).find('[data-item="' + column + '"]').text();
+                return aValue.localeCompare(bValue);
+            });
+
+            $('#dh').empty().append(rows);
+        }
+
+        $(function () {
+            // Add click event listeners to the header columns for sorting
+            $('.flight-header').click(function () {
+                var column = $(this).data('sort');
+                sortDataByColumn(column);
+            });
+
+            // Get a connection to the SignalR messaging hub
+            var appResults = $.connection.results;
+            psa.basePath = '/';
+            $(function () {
+                psa.init();
+            });
+    </script>
+
+    <script src="/bundles/psa.dh/js?v=SxIOxXWrk_tHsTpbd0ezsdCdZpvpqlhygxVyTIXCz281"></script>
+
+    <script>
+        $(function () {
+            psa.dh.init();
+        });
+    </script>
+</body>
+</html>
