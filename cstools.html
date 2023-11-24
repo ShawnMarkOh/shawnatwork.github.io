@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tool Selection Page</title>
+    <style>
+        #top-bar {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+        }
+
+        #top-bar-title {
+            font-size: 24px;
+        }
+
+        .top-bar-button {
+            background-color: #4CAF50;
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .top-bar-button:hover {
+            background-color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            padding-top: 60px; /* Adjust for fixed top bar */
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .button-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 60%; /* Adjust width as needed */
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-right: 20px;
+            text-decoration: none; /* Remove underline from links */
+        }
+
+        .button:hover {
+            background-color: #45a049;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #333;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="top-bar">
+        <div id="top-bar-title">Tool Selection</div>
+        <div>
+            <a class="top-bar-button" href="https://isshawnat.work/airport.html">Airport Tool</a>
+            <a class="top-bar-button" href="https://isshawnat.work/phonetic.html">Phonetic Tool</a>
+            <a class="top-bar-button" href="https://isshawnat.work/errorcodes.html">Error Codes Tool</a>
+            <a class="top-bar-button" href="https://isshawnat.work/deadheads.html">Deadheads Tool</a>
+            <a class="top-bar-button" href="https://isshawnat.work/time.html">Time Tool</a>
+        </div>
+    </div>
+    <div class="main-container">
+        <h1>Tool Selection Page</h1>
+        <div class="button-container">
+            <a href="https://isshawnat.work/airport.html" class="button">Airport Tool</a>
+            <div class="description">Description for Airport Tool</div>
+        </div>
+        <div class="button-container">
+            <a href="https://isshawnat.work/phonetic.html" class="button">Phonetic Tool</a>
+            <div class="description">Description for Phonetic Tool</div>
+        </div>
+        <div class="button-container">
+            <a href="https://isshawnat.work/errorcodes.html" class="button">Error Codes Tool</a>
+            <div class="description">Description for Error Codes Tool</div>
+        </div>
+        <div class="button-container">
+            <a href="https://isshawnat.work/deadheads.html" class="button">Deadheads Tool</a>
+            <div class="description">Description for Deadheads Tool</div>
+        </div>
+        <div class="button-container">
+            <a href="https://isshawnat.work/time.html" class="button">Time Tool</a>
+            <div class="description">Description for Time Tool</div>
+        </div>
+        <!-- Additional buttons can be added here in similar fashion -->
+    </div>
+</body>
+</html>
