@@ -7,7 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.33/moment-timezone-with-data.min.js"></script>
   <style>
-    #top-bar {
+     #top-bar {
       background-color: #333;
       color: #fff;
       display: flex;
@@ -25,7 +25,7 @@
       font-size: 24px;
     }
 
-    #converter-button {
+    .top-bar-button {
       background-color: #4CAF50;
       border: none;
       color: #fff;
@@ -34,10 +34,15 @@
       text-decoration: none;
       display: inline-block;
       font-size: 16px;
+      margin-left: 10px;
       border-radius: 4px;
       cursor: pointer;
     }
 
+    .top-bar-button:hover {
+      background-color: #45a049;
+    }
+	
     body {
       background-color: #f0f0f0;
       display: flex;
@@ -113,7 +118,13 @@
 
   <div id="top-bar">
     <div id="top-bar-title">Airport Time Zone Search</div>
-    <a id="converter-button" href="https://isshawnat.work/phonetic.html" target="_self">Phonetic Alphabet Converter</a>
+    <div>
+      <a class="top-bar-button" href="https://isshawnat.work/airport.html">Airport Tool</a>
+      <a class="top-bar-button" href="https://isshawnat.work/phonetic.html">Phonetic Tool</a>
+      <a class="top-bar-button" href="https://isshawnat.work/errorcodes.html">Error Codes Tool</a>
+      <a class="top-bar-button" href="https://isshawnat.work/deadheads.html">Deadheads Tool</a>
+      <a class="top-bar-button" href="https://isshawnat.work/time.html">Time Tool</a>
+    </div>
   </div>
 
   <!-- Work in Progress Modal (Displayed on Page Load) -->
