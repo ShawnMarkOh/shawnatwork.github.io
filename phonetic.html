@@ -24,7 +24,7 @@
       font-size: 24px;
     }
 
-    #converter-button {
+    .top-bar-button {
       background-color: #4CAF50;
       border: none;
       color: #fff;
@@ -33,10 +33,15 @@
       text-decoration: none;
       display: inline-block;
       font-size: 16px;
+      margin-left: 10px;
       border-radius: 4px;
       cursor: pointer;
     }
-    
+
+    .top-bar-button:hover {
+      background-color: #45a049;
+    }
+
     /* Styles for the body and converter container */
     body {
       background-color: #f0f0f0;
@@ -46,6 +51,7 @@
       align-items: center;
       min-height: 100vh;
       margin: 0;
+      padding-top: 60px; /* Adjust for the fixed top bar */
     }
 
     h1 {
@@ -59,7 +65,7 @@
 
     /* Styles for the search bar input */
     #search-input {
-      width: 200px; /* Adjust the width as needed */
+      width: 200px;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -68,22 +74,28 @@
 
     /* Styles for the output */
     #output {
-      width: 200px; /* Adjust the width as needed */
+      width: 200px;
       padding: 8px;
       border: 1px solid #ccc;
       border-radius: 4px;
-      background-color: transparent; /* Make the background transparent */
-      resize: none; /* Disable textarea resizing */
-      font-family: inherit; /* Use the same font as other elements */
-      white-space: pre-line; /* Preserve line breaks and spaces */
+      background-color: transparent;
+      resize: none;
+      font-family: inherit;
+      white-space: pre-line;
     }
   </style>
 </head>
 <body>
-  <!-- Top bar with title and converter button -->
+  <!-- Top bar with title and additional buttons -->
   <div id="top-bar">
     <div id="top-bar-title">Phonetic Alphabet Converter</div>
-    <a id="converter-button" href="https://isshawnat.work/airport.html" target="_self">Airport Time Zone Search</a>
+    <div>
+      <a class="top-bar-button" href="https://isshawnat.work/airport.html">Airport Tool</a>
+      <a class="top-bar-button" href="https://isshawnat.work/phonetic.html">Phonetic Tool</a>
+      <a class="top-bar-button" href="https://isshawnat.work/errorcodes.html">Error Codes Tool</a>
+      <a class="top-bar-button" href="https://isshawnat.work/deadheads.html">Deadheads Tool</a>
+      <a class="top-bar-button" href="https://isshawnat.work/time.html">Time Tool</a>
+    </div>
   </div>
 
   <!-- Converter section -->
