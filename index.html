@@ -75,11 +75,11 @@ setInterval(time, 100);
 </script>
 <h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
  
-<section class="work-status-section text-center" id="workstatus">
+        <section class="status-section text-center" id="status">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
                     <div class="col-lg-8">
-                        <h2 class="text-white mb-4" id="workStatusText"></h2>
+                        <h2 class="text-white mb-4" id="statusText"></h2>
                     </div>
                 </div>
             </div>
@@ -117,6 +117,7 @@ let day = weekday[d.getDay()];
 document.getElementById("Day").innerHTML = day;
 interval = setInterval(() => (Day),100);
 </script>
+
                         
                         <h3p class="text-white mb-4">
                             This means he is asleep for most of the night and working most of the day.
