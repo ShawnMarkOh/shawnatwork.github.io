@@ -112,7 +112,10 @@
     </div>
     <div class="main-container">
         <h1>Flight Swap Finder</h1>
-	<h2>This is fairly untested, always double check results!</h2>
+	<center><h3>This is fairly untested, always double check results! </br>
+	Tool will only show a crew member with a flight number on the same line as their name. </br>
+	Use this to find the first member in a crew that can possibly be swapped. </br>
+	This is typically a captain!</h3></center>
         <div class="form-container">
             <form id="flightForm">
                 <label for="inTime">In time (HHMM):</label><br>
@@ -168,6 +171,7 @@
                     const employeeNumber = parts[4];
                     const nameIndex = 5; // Assuming the name starts at the 6th element
                     const name = parts.slice(nameIndex, nameIndex + 1).join(' '); // Combine name parts (only first two parts)
+					const employeeRole = parts[3];
 
                     if (deptTime.match(/^\d{3,4}$/) && arrvTime.match(/^\d{3,4}$/)) {
                         if (checkTimeConstraints(deptTime, arrvTime, inTime, outTime)) {
@@ -176,7 +180,9 @@
                                 deptTime: deptTime,
                                 arrvTime: arrvTime,
                                 employeeName: name,
-                                employeeNumber: employeeNumber
+                                employeeNumber: employeeNumber,
+								employeeRole: employeeRole,
+								
                             });
                         }
                     }
@@ -193,7 +199,7 @@
                 const list = document.createElement('ul');
                 results.forEach(result => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = `Flight: ${result.flightNumber}, Departure: ${result.deptTime}, Arrival: ${result.arrvTime}, Crew: ${result.employeeName} (${result.employeeNumber})`;
+                    listItem.textContent = `Flight: ${result.flightNumber}, Departure: ${result.deptTime}, Arrival: ${result.arrvTime}, Crew: ${result.employeeRole} ${result.employeeName} (${result.employeeNumber})`;
                     list.appendChild(listItem);
                 });
                 resultsDiv.appendChild(list);
