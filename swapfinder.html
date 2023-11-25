@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flight Swap Finder</title>
+    <style>
+        #top-bar {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+        }
+
+        #top-bar-title {
+            font-size: 24px;
+        }
+
+        .top-bar-button {
+            background-color: #4CAF50;
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .top-bar-button:hover {
+            background-color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            padding-top: 60px; /* Adjust for fixed top bar */
+        }
+
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            width: 60%; /* Adjust width as needed */
+        }
+
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="button"] {
+            width: 100%;
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        input[type="button"]:hover {
+            background-color: #45a049;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+    <script>
+        function parseTime(timeStr) {
+            if (timeStr.length === 3) {
+                timeStr = '0' + timeStr; // Handles times like '945' to be '0945'
+            }
+            var hours = parseInt(timeStr.substring(0, 2), 10);
+            var minutes = parseInt(timeStr.substring(2, 4), 10);
+            return hours * 60 + minutes; // Convert to minutes since midnight
+        }
+
+        function checkTimeConstraints(deptTime, arrvTime, inTime, outTime) {
+            var deptTimeMins = parseTime(deptTime);
+            var arrvTimeMins = parseTime(arrvTime);
+            var inTimeMins = parseTime(inTime);
+            var outTimeMins = parseTime(outTime);
+            return deptTimeMins >= inTimeMins + 40 && arrvTimeMins <= outTimeMins - 40;
+        }
+
+    function analyzeFlights() {
+        const inTime = document.getElementById('inTime').value;
+        const outTime = document.getElementById('outTime').value;
+        const fileInput = document.getElementById('file');
+        if (fileInput.files.length === 0) {
+            alert('Please upload a .lis file.');
+            return;
+        }
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const lines = e.target.result.split('\n');
+            const results = [];
+            for (let i = 11; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line || line.startsWith('#')) continue; // Skip empty lines and comments
+                const parts = line.split(/\s+/);
+                if (parts.length > 9) {
+                    const deptTime = parts[2];
+                    const arrvTime = parts[parts.length - 2]; // Second-to-last element is arrival time
+                    const employeeNumber = parts[4];
+                    const nameIndex = 5; // Assuming the name starts at the 6th element
+                    const name = parts.slice(nameIndex, nameIndex + 1).join(' '); // Combine name parts (only first two parts)
+
+                    if (deptTime.match(/^\d{3,4}$/) && arrvTime.match(/^\d{3,4}$/)) {
+                        if (checkTimeConstraints(deptTime, arrvTime, inTime, outTime)) {
+                            results.push({
+                                flightNumber: parts[0],
+                                deptTime: deptTime,
+                                arrvTime: arrvTime,
+                                employeeName: name,
+                                employeeNumber: employeeNumber
+                            });
+                        }
+                    }
+                }
+            }
+            displayResults(results);
+        };
+        reader.readAsText(file);
+    }
+        function displayResults(results) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = '';
+            if (results.length > 0) {
+                const list = document.createElement('ul');
+                results.forEach(result => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `Flight: ${result.flightNumber}, Departure: ${result.deptTime}, Arrival: ${result.arrvTime}, Crew: ${result.employeeName} (${result.employeeNumber})`;
+                    list.appendChild(listItem);
+                });
+                resultsDiv.appendChild(list);
+            } else {
+                resultsDiv.innerHTML = 'No matching flights found.';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="top-bar">
+        <div id="top-bar-title">Flight Time Analyzer</div>
+        <div>
+            <a class="top-bar-button" href="https://isshawnat.work/cstools.html">Tool Selection</a>
+            <!-- Other top bar buttons here -->
+        </div>
+    </div>
+    <div class="main-container">
+        <h1>Flight Swap Finder</h1>
+        <div class="form-container">
+            <form id="flightForm">
+                <label for="inTime">In time (HHMM):</label><br>
+                <input type="text" id="inTime" name="inTime" required><br>
+                <label for="outTime">Out time (HHMM):</label><br>
+                <input type="text" id="outTime" name="outTime" required><br>
+                <label for="file">Upload .lis file:</label><br>
+                <input type="file" id="file" name="file" accept=".lis" required><br><br>
+                <input type="button" value="Find Matches" onclick="analyzeFlights()">
+            </form>
+        </div>
+        <div id="results"></div>
+    </div>
+</body>
+</html>
