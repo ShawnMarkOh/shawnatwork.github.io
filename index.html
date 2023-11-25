@@ -74,7 +74,32 @@ function time() {
 setInterval(time, 100);
 </script>
 <h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
+ 
+<section class="work-status-section text-center" id="workstatus">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-lg-8">
+                        <h2 class="text-white mb-4" id="workStatusText"></h2>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <script>
+            function updateWorkStatus() {
+                var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+                var day = now.getDay();
+                var hour = now.getHours();
 
+                var isWorkDay = (day === 4 || day === 5 || day === 6 || day === 0); // 0 is Sunday, 1 is Monday, etc.
+                var isWorkHour = (hour >= 14 && hour < 24);
+
+                var workStatusText = isWorkDay && isWorkHour ? "SHAWN IS AT WORK" : "SHAWN IS NOT AT WORK";
+                document.getElementById("workStatusText").innerText = workStatusText;
+            }
+
+            setInterval(updateWorkStatus, 1000); // Update the status every second
+            updateWorkStatus(); // Initial update
+        </script>
 <script>
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
