@@ -95,6 +95,38 @@
             color: #333;
         }
     </style>
+	</head>
+<body>
+    <div id="top-bar">
+        <div id="top-bar-title">Flight Time Analyzer</div>
+        <div>
+            <a class="top-bar-button" href="https://isshawnat.work/cstools.html">Tool Selection</a>
+            <a class="top-bar-button" href="https://isshawnat.work/airport.html">Airport Tool</a>
+            <a class="top-bar-button" href="https://isshawnat.work/phonetic.html">Phonetic Tool</a>
+            <a class="top-bar-button" href="https://isshawnat.work/errorcodes.html">Error Codes Tool</a>
+            <a class="top-bar-button" href="https://isshawnat.work/deadheads.html">Deadheads Tool</a>
+            <a class="top-bar-button" href="https://isshawnat.work/time.html">Time Tool</a>
+	    <a class="top-bar-button" href="https://isshawnat.work/swapfinder.html">Swap Finder</a>
+            <!-- Other top bar buttons here -->
+        </div>
+    </div>
+    <div class="main-container">
+        <h1>Flight Swap Finder</h1>
+	<h2>This is fairly untested, always double check results!</h2>
+        <div class="form-container">
+            <form id="flightForm">
+                <label for="inTime">In time (HHMM):</label><br>
+                <input type="text" id="inTime" name="inTime" required><br>
+                <label for="outTime">Out time (HHMM):</label><br>
+                <input type="text" id="outTime" name="outTime" required><br>
+                <label for="file">Upload CrewTrac Moveup .lis save file:</label><br>
+                <input type="file" id="file" name="file" accept=".lis" required><br><br>
+                <input type="button" value="Find Matches" onclick="analyzeFlights()">
+            </form>
+        </div>
+        <div id="results"></div>
+    </div>
+</body>
     <script>
         function parseTime(timeStr) {
             if (timeStr.length === 3) {
@@ -170,36 +202,5 @@
             }
         }
     </script>
-</head>
-<body>
-    <div id="top-bar">
-        <div id="top-bar-title">Flight Time Analyzer</div>
-        <div>
-            <a class="top-bar-button" href="https://isshawnat.work/cstools.html">Tool Selection</a>
-            <a class="top-bar-button" href="https://isshawnat.work/airport.html">Airport Tool</a>
-            <a class="top-bar-button" href="https://isshawnat.work/phonetic.html">Phonetic Tool</a>
-            <a class="top-bar-button" href="https://isshawnat.work/errorcodes.html">Error Codes Tool</a>
-            <a class="top-bar-button" href="https://isshawnat.work/deadheads.html">Deadheads Tool</a>
-            <a class="top-bar-button" href="https://isshawnat.work/time.html">Time Tool</a>
-	    <a class="top-bar-button" href="https://isshawnat.work/swapfinder.html">Swap Finder</a>
-            <!-- Other top bar buttons here -->
-        </div>
-    </div>
-    <div class="main-container">
-        <h1>Flight Swap Finder</h1>
-	<h2>This is fairly untested, always double check results!</h2>
-        <div class="form-container">
-            <form id="flightForm">
-                <label for="inTime">In time (HHMM):</label><br>
-                <input type="text" id="inTime" name="inTime" required><br>
-                <label for="outTime">Out time (HHMM):</label><br>
-                <input type="text" id="outTime" name="outTime" required><br>
-                <label for="file">Upload CrewTrac Moveup .lis save file:</label><br>
-                <input type="file" id="file" name="file" accept=".lis" required><br><br>
-                <input type="button" value="Find Matches" onclick="analyzeFlights()">
-            </form>
-        </div>
-        <div id="results"></div>
-    </div>
-</body>
+
 </html>
