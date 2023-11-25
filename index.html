@@ -85,20 +85,29 @@ setInterval(time, 100);
             </div>
         </section>
         <script>
-            function updateWorkStatus() {
+            function updateStatus() {
                 var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
                 var day = now.getDay();
                 var hour = now.getHours();
 
                 var isWorkDay = (day === 4 || day === 5 || day === 6 || day === 0); // 0 is Sunday, 1 is Monday, etc.
                 var isWorkHour = (hour >= 14 && hour < 24);
+                var isSleepHour = (hour >= 4 && hour < 12);
 
-                var workStatusText = isWorkDay && isWorkHour ? "SHAWN IS AT WORK" : "SHAWN IS NOT AT WORK";
-                document.getElementById("workStatusText").innerText = workStatusText;
+                var statusText;
+                if (isSleepHour) {
+                    statusText = "SHAWN SHOULD BE ASLEEP";
+                } else if (isWorkDay && isWorkHour) {
+                    statusText = "SHAWN IS AT WORK";
+                } else {
+                    statusText = "SHAWN IS NOT AT WORK";
+                }
+
+                document.getElementById("statusText").innerText = statusText;
             }
 
-            setInterval(updateWorkStatus, 1000); // Update the status every second
-            updateWorkStatus(); // Initial update
+            setInterval(updateStatus, 1000); // Update the status every second
+            updateStatus(); // Initial update
         </script>
 <script>
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
