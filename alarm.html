@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Alarm Setter</title>
+    <style>
+        #top-bar {
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 999;
+        }
+
+        #top-bar-title {
+            font-size: 24px;
+        }
+
+        .top-bar-button {
+            background-color: #4CAF50;
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin-left: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .top-bar-button:hover {
+            background-color: #45a049;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            padding-top: 60px; /* Adjust for fixed top bar */
+        }
+
+        center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-size: 36px;
+            color: #333;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        #validation-results {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #333;
+        }
+
+        #datetime {
+            margin-top: 20px;
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <center>
+    <h1>Set Multiple Alarms</h1>
+    <textarea id="alarmInput" class="alarm-time" placeholder="Enter times in 24h format. E.g., 15:45, 2130, 12-01-23 22:58"></textarea>
+    <button id="addAlarms">Add Alarms</button>
+    <ul id="alarmList"></ul>
+
+    <audio id="alarmSound" src="https://upload.wikimedia.org/wikipedia/commons/5/58/Zip_tone.ogg" preload="auto"></audio>
+
+    <script>
+document.addEventListener('DOMContentLoaded', function() {
+    loadAlarmsFromCookies();
+});
+
+document.getElementById('addAlarms').addEventListener('click', function() {
+    const alarmTimes = document.getElementById('alarmInput').value.split(/\s+/);
+    alarmTimes.forEach(time => {
+        const formattedTime = formatTime(time);
+        if (formattedTime && isValidTime(formattedTime)) {
+            addAlarm(formattedTime);
+        } else {
+            console.log(`Invalid time format: ${time}`);
+        }
+    });
+    document.getElementById('alarmInput').value = ''; // Clear input after adding alarms
+});
+
+function formatTime(time) {
+    const dateTimeMatch = time.match(/^(\d{2})-(\d{2})-(\d{2})\s+(\d{2}):(\d{2})$/);
+    if (dateTimeMatch) {
+        const [_, year, month, day, hour, minute] = dateTimeMatch;
+        return `20${year}-${month}-${day}T${hour}:${minute}`;
+    }
+
+    const timeMatch = time.match(/^(\d{2})(\d{2})$/);
+    if (timeMatch) {
+        return `${timeMatch[1]}:${timeMatch[2]}`;
+    }
+
+    return time.includes(':') ? time : null;
+}
+
+function isValidTime(time) {
+    if (time.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/)) {
+        const alarmDate = new Date(time);
+        return !isNaN(alarmDate.getTime());
+    }
+
+    return time.match(/^(\d{2}):(\d{2})$/) && time.substr(0, 2) < 24 && time.substr(-2) < 60;
+}
+
+function addAlarm(time) {
+    const listItem = addAlarmToList(time);
+    setupAlarm(time, listItem);
+    storeAlarmInCookies(time);
+}
+
+function addAlarmToList(time) {
+    const list = document.getElementById('alarmList');
+    const listItem = document.createElement('li');
+    listItem.textContent = `Alarm set for: ${time} `;
+    list.appendChild(listItem);
+    return listItem;
+}
+
+function setupAlarm(time, listItem) {
+    const now = new Date();
+    const alarmDate = new Date(time.match(/\d{4}-\d{2}-\d{2}/) ? time : `${now.toDateString()} ${time}`);
+
+    if (alarmDate.getTime() < now.getTime()) {
+        console.log(`Alarm time ${time} is in the past. Skipping.`);
+        listItem.remove();
+        return;
+    }
+
+    const timeout = alarmDate.getTime() - now.getTime();
+    setTimeout(function() {
+        playAlarmSound();
+        alert(`Alarm for ${time}!`);
+        listItem.remove();
+        removeAlarmFromCookies(time);
+    }, timeout);
+}
+
+function storeAlarmInCookies(time) {
+    const alarms = getAlarmsFromCookies();
+    if (!alarms.includes(time)) {
+        alarms.push(time);
+        document.cookie = `alarms=${JSON.stringify(alarms)};path=/;expires=${getCookieExpiryDate()}`;
+    }
+}
+
+function removeAlarmFromCookies(time) {
+    const alarms = getAlarmsFromCookies().filter(t => t !== time);
+    document.cookie = `alarms=${JSON.stringify(alarms)};path=/;expires=${getCookieExpiryDate()}`;
+}
+
+function getAlarmsFromCookies() {
+    const cookieValue = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('alarms='))
+        ?.split('=')[1];
+    return cookieValue ? JSON.parse(cookieValue) : [];
+}
+
+function loadAlarmsFromCookies() {
+    const alarms = getAlarmsFromCookies();
+    alarms.forEach(time => {
+        if (isValidTime(time)) {
+            addAlarm(time);
+        }
+    });
+}
+
+function getCookieExpiryDate() {
+    const expiryDate = new Date();
+    expiryDate.setFullYear(expiryDate.getFullYear() + 1); // Cookie expires after 1 year
+    return expiryDate.toUTCString();
+}
+
+function playAlarmSound() {
+    const sound = document.getElementById('alarmSound');
+    sound.play();
+}
+
+</script>
+</center> 
+</body>
+</html>
