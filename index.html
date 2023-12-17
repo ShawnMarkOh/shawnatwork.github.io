@@ -85,30 +85,32 @@ setInterval(time, 100);
             </div>
         </section>
         <script>
-            function updateStatus() {
-                var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
-                var day = now.getDay();
-                var hour = now.getHours();
+    function updateStatus() {
+        var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        var day = now.getDay();
+        var hour = now.getHours();
 
-                var isWorkDay = (day === 6 || day === 0 || day === 1 || day === 2); // 0 is Sunday, 1 is Monday, etc.
-                var isWorkHour = (hour >= 6 && hour < 14);
-                var isSleepHour = (hour >= 20 && hour < 4);
+        var isWorkDay = (day === 6 || day === 0 || day === 1 || day === 2); // 0 is Sunday, 1 is Monday, etc.
+        var isWorkHour = (hour >= 6 && hour < 14);
 
-                var statusText;
-                if (isSleepHour) {
-                    statusText = "SHAWN SHOULD BE ASLEEP";
-                } else if (isWorkDay && isWorkHour) {
-                    statusText = "SHAWN IS AT WORK";
-                } else {
-                    statusText = "SHAWN IS NOT AT WORK";
-                }
+        var isSleepHour = (hour >= 20 || hour < 4); 
 
-                document.getElementById("statusText").innerText = statusText;
-            }
+        var statusText;
+        if (isSleepHour) {
+            statusText = "SHAWN SHOULD BE ASLEEP";
+        } else if (isWorkDay && isWorkHour) {
+            statusText = "SHAWN IS AT WORK";
+        } else {
+            statusText = "SHAWN IS NOT AT WORK";
+        }
 
-            setInterval(updateStatus, 1000); // Update the status every second
-            updateStatus(); // Initial update
-        </script>
+        document.getElementById("statusText").innerText = statusText;
+    }
+
+    setInterval(updateStatus, 1000); 
+    updateStatus(); 
+</script>
+
 <script>
 const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
 
