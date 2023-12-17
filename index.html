@@ -51,9 +51,9 @@
                     <div class="col-lg-8">
 						<h1>
 							<div class="greeting"></div>
-							<h1 class="text-white mb-4">Shawn Currently Works 2ND SHIFT
-							<br>His hours are 1400 EST through 2400 EST. 
-							<br>He works on Thursday, Friday, Saturday, and Sunday
+							<h1 class="text-white mb-4">Shawn Currently Works 1ST SHIFT
+							<br>His hours are 0600 EST through 1600 EST. 
+							<br>He works on Saturday, Sunday, Monday, and Tuesday
 							</h1>
 								
 								<h2 class="text-white mb-4">Shawn's Local Time Is Currently <span id="span"></span> EST </h2>
@@ -90,9 +90,9 @@ setInterval(time, 100);
                 var day = now.getDay();
                 var hour = now.getHours();
 
-                var isWorkDay = (day === 4 || day === 5 || day === 6 || day === 0); // 0 is Sunday, 1 is Monday, etc.
-                var isWorkHour = (hour >= 14 && hour < 24);
-                var isSleepHour = (hour >= 4 && hour < 12);
+                var isWorkDay = (day === 6 || day === 0 || day === 1 || day === 2); // 0 is Sunday, 1 is Monday, etc.
+                var isWorkHour = (hour >= 6 && hour < 14);
+                var isSleepHour = (hour >= 20 && hour < 4);
 
                 var statusText;
                 if (isSleepHour) {
@@ -121,7 +121,7 @@ interval = setInterval(() => (Day),100);
                         
                         <h3p class="text-white mb-4">
                             This means he is asleep for most of the night and working most of the day.
-							<br>He will usually be asleep between the hours of 0400 EST and 1200 EST.
+							<br>He will usually be asleep between the hours of 8pm EST and 4am EST.
 							<br>He sleeps during these hours on his days off, as well.
 							<br>This will be his schedule for the months of November, December, and January. 
                         </h3>
