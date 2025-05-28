@@ -55,32 +55,32 @@
                         <h1>
                             <div class="greeting"></div>
                             <h1 class="text-white mb-4">
-                                Shawn Currently Works MORNING SHIFT.
-                                <br>His hours are 0500 EST through 1500 EST.
-                                <br>That is 5:00 AM EST to 3:00 PM EST.
-                                <br>He works on Friday, Saturday, Sunday, and Monday
+                                Shawn Currently Works EVENING/NIGHT SHIFT.<br>
+                                <br>
+                                <b>His hours are:</b><br>
+                                <span style="font-size:1.2em;">
+                                    Friday: 3:00 PM – 1:00 AM (Sat)<br>
+                                    Saturday: 3:00 PM – 1:00 AM (Sun)<br>
+                                    Sunday: 3:00 PM – 1:00 AM (Mon)<br>
+                                    Monday: 4:00 PM – 2:00 AM (Tue)
+                                </span>
+                                <br>
+                                He works on Friday, Saturday, Sunday, and Monday.
                             </h1>
-
                             <h2 class="text-white mb-4">Shawn's Local Time Is Currently <span id="span"></span> EST </h2>
-
                             <script>
                                 var span = document.getElementById('span');
-
                                 function time() {
                                     var d = new Date(new Date().toLocaleString('en', { timeZone: 'America/New_York' }));
                                     var s = d.getSeconds();
                                     var m = d.getMinutes();
                                     var h = d.getHours();
-
                                     span.textContent =
                                         ("0" + h).slice(-2) + ":" + ("0" + m).slice(-2) + ":" + ("0" + s).slice(-2);
                                 }
-
                                 setInterval(time, 100);
                             </script>
-
                             <h2 class="text-white mb-4">The Current Day of the Week is <span id="Day"></span> </h2>
-
                             <section class="status-section text-center" id="status">
                                 <div class="container px-4 px-lg-5">
                                     <div class="row gx-4 gx-lg-5 justify-content-center">
@@ -93,128 +93,160 @@
                                     </div>
                                 </div>
                             </section>
-
                             <script>
-                                // Function to update Shawn's status
+                                // Get Shawn's shift for a given day (0=Sun ... 6=Sat)
+                                // Returns: {start: hour, end: hour, endDay: dayOffset, valid: boolean}
+                                function getShawnShift(day) {
+                                    // Friday (5), Saturday (6), Sunday (0), Monday (1)
+                                    if (day === 5 || day === 6 || day === 0) {
+                                        return { start: 15, end: 1, endDay: (day === 6) ? 0 : day + 1, valid: true }; // 15:00-01:00
+                                    } else if (day === 1) {
+                                        return { start: 16, end: 2, endDay: 2, valid: true }; // 16:00-02:00
+                                    } else {
+                                        return { valid: false };
+                                    }
+                                }
+
+                                // Helper to check if now is during the shift
+                                function isDuringShift(now) {
+                                    var day = now.getDay();
+                                    var hour = now.getHours();
+                                    var minute = now.getMinutes();
+                                    var shift = getShawnShift(day);
+
+                                    if (!shift.valid) return false;
+
+                                    if (shift.end > shift.start) {
+                                        // Same-day shift (never used in this schedule)
+                                        return (hour > shift.start && hour < shift.end)
+                                            || (hour === shift.start && minute >= 0)
+                                            || (hour === shift.end && minute === 0);
+                                    } else {
+                                        // Overnight shift (e.g., 15:00-01:00 next day)
+                                        if (hour > shift.start || hour < shift.end) {
+                                            return true;
+                                        }
+                                        if (hour === shift.start && minute >= 0) return true;
+                                        return false;
+                                    }
+                                }
+
+                                // Calculate the next shift start time
+                                function getNextWorkStartTime(now) {
+                                    // List of workdays in order starting from today
+                                    // [dayOfWeek, startHour]
+                                    var workdays = [
+                                        { day: 5, start: 15 }, // Friday 15:00
+                                        { day: 6, start: 15 }, // Saturday 15:00
+                                        { day: 0, start: 15 }, // Sunday 15:00
+                                        { day: 1, start: 16 }  // Monday 16:00
+                                    ];
+                                    // Get current time in ms since midnight
+                                    var nowDay = now.getDay();
+                                    var nowHour = now.getHours();
+                                    var nowMin = now.getMinutes();
+                                    var nowSec = now.getSeconds();
+
+                                    // Step 1: Is there a remaining shift today?
+                                    for (let i = 0; i < workdays.length; i++) {
+                                        var w = workdays[i];
+                                        if (nowDay === w.day) {
+                                            // Shift start has not occurred yet today
+                                            if (nowHour < w.start || (nowHour === w.start && nowMin === 0 && nowSec === 0)) {
+                                                // Create new date for today at shift start
+                                                var start = new Date(now);
+                                                start.setHours(w.start, 0, 0, 0);
+                                                return start;
+                                            }
+                                        }
+                                    }
+                                    // Step 2: Find next shift in the week
+                                    // Calculate how many days ahead the next shift is
+                                    for (let offset = 1; offset <= 7; offset++) {
+                                        var futureDay = (nowDay + offset) % 7;
+                                        for (let i = 0; i < workdays.length; i++) {
+                                            var w = workdays[i];
+                                            if (futureDay === w.day) {
+                                                var next = new Date(now);
+                                                next.setDate(now.getDate() + offset);
+                                                next.setHours(w.start, 0, 0, 0);
+                                                return next;
+                                            }
+                                        }
+                                    }
+                                    // fallback
+                                    return null;
+                                }
+
+                                // Update Shawn's status and countdown
                                 function updateStatus() {
                                     var now = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
-                                    var day = now.getDay(); // 0=Sunday,1=Monday,...,6=Saturday
-                                    var hour = now.getHours();
+                                    var statusText = "";
+                                    var countdownText = "";
 
-                                    // Shawn's work days: Fri=5, Sat=6, Sun=0, Mon=1
-                                    var isWorkDay = (day === 5 || day === 6 || day === 0 || day === 1);
-                                    // Shawn's work hours: 5AM to 3PM
-                                    var isWorkHour = (hour >= 5 && hour < 15);
-                                    // Shawn's typical sleep hours: 7PM to 3AM
-                                    var isSleepHour = (hour >= 19 || hour < 3);
+                                    // Sleep logic: Shawn sleeps from 4:00 to 14:00 on workdays
+                                    var sleepStart = 4;
+                                    var sleepEnd = 14;
 
-                                    var statusText;
-                                    if (isSleepHour) {
-                                        statusText = "SHAWN SHOULD BE ASLEEP";
-                                    } else if (isWorkDay && isWorkHour) {
+                                    // Figure out if he's working, sleeping, or neither
+                                    if (isDuringShift(now)) {
                                         statusText = "SHAWN IS AT WORK";
+                                        countdownText = "";
                                     } else {
-                                        statusText = "SHAWN IS NOT AT WORK";
-                                    }
-
-                                    document.getElementById("statusText").innerText = statusText;
-
-                                    // Show/hide or update the countdown based on whether Shawn is at work
-                                    if (isWorkDay && isWorkHour) {
-                                        // Shawn is at work, so clear the countdown
-                                        document.getElementById("countdownText").innerText = "";
-                                    } else {
-                                        // Shawn is not at work, show the next time he has to be at work
-                                        var nextShiftStart = getNextWorkStartTime(now);
-                                        var timeDiff = nextShiftStart - now; // in ms
-                                        if (timeDiff <= 0) {
-                                            // If shift is supposed to start right now or time difference is negative, just say 0
-                                            document.getElementById("countdownText").innerText = "SHAWN NEEDS TO BE AT WORK IN 0 days 00 hours 00 minutes 00 seconds";
+                                        var hour = now.getHours();
+                                        var day = now.getDay();
+                                        // Is it a work day? (Fri/Sat/Sun/Mon)
+                                        var shift = getShawnShift(day);
+                                        // Is sleep time? (between 04:00 and 14:00 EST)
+                                        var isSleepHour = (hour >= sleepStart && hour < sleepEnd);
+                                        if (isSleepHour) {
+                                            statusText = "SHAWN SHOULD BE ASLEEP";
                                         } else {
-                                            // Convert ms to total seconds
-                                            var totalSeconds = Math.floor(timeDiff / 1000);
-
-                                            // Days
-                                            var days = Math.floor(totalSeconds / 86400);
-                                            totalSeconds = totalSeconds % 86400;
-
-                                            // Hours
-                                            var hours = Math.floor(totalSeconds / 3600);
-                                            totalSeconds = totalSeconds % 3600;
-
-                                            // Minutes
-                                            var minutes = Math.floor(totalSeconds / 60);
-
-                                            // Seconds
-                                            var seconds = totalSeconds % 60;
-
-                                            // We want to display:
-                                            // SHAWN NEEDS TO BE AT WORK IN <days> days <hours> hours <minutes> minutes <seconds> seconds
-                                            var countdownString = "SHAWN NEEDS TO BE AT WORK IN " 
-                                                + days + " DAYS " 
-                                                + ("0" + hours).slice(-2) + " HOURS "
-                                                + ("0" + minutes).slice(-2) + " MINUTES "
-                                                + ("0" + seconds).slice(-2) + " SECONDS";
-
-                                            document.getElementById("countdownText").innerText = countdownString;
+                                            statusText = "SHAWN IS NOT AT WORK";
+                                        }
+                                        // Show countdown to next shift
+                                        var nextShiftStart = getNextWorkStartTime(now);
+                                        if (nextShiftStart) {
+                                            var timeDiff = nextShiftStart - now;
+                                            if (timeDiff <= 0) {
+                                                countdownText = "SHAWN NEEDS TO BE AT WORK IN 0 DAYS 00 HOURS 00 MINUTES 00 SECONDS";
+                                            } else {
+                                                var totalSeconds = Math.floor(timeDiff / 1000);
+                                                var days = Math.floor(totalSeconds / 86400);
+                                                totalSeconds = totalSeconds % 86400;
+                                                var hours = Math.floor(totalSeconds / 3600);
+                                                totalSeconds = totalSeconds % 3600;
+                                                var minutes = Math.floor(totalSeconds / 60);
+                                                var seconds = totalSeconds % 60;
+                                                countdownText = "SHAWN NEEDS TO BE AT WORK IN "
+                                                    + days + " DAYS "
+                                                    + ("0" + hours).slice(-2) + " HOURS "
+                                                    + ("0" + minutes).slice(-2) + " MINUTES "
+                                                    + ("0" + seconds).slice(-2) + " SECONDS";
+                                            }
                                         }
                                     }
+                                    document.getElementById("statusText").innerText = statusText;
+                                    document.getElementById("countdownText").innerText = countdownText;
                                 }
-
-                                // Function to figure out the next valid shift start time (5:00 AM EST on Fri, Sat, Sun, Mon)
-                                function getNextWorkStartTime(now) {
-                                    // Clone current time
-                                    var nextTime = new Date(now.getTime());
-
-                                    // We need to find the next day/time that is in [Fri=5, Sat=6, Sun=0, Mon=1] at 05:00
-                                    // We'll increment hour-by-hour until we match the condition
-                                    for (var i = 0; i < 300; i++) {
-                                        var day = nextTime.getDay();
-                                        var hour = nextTime.getHours();
-
-                                        // Check if day is one of Shawn's work days
-                                        var isShawnWorkDay = (day === 5 || day === 6 || day === 0 || day === 1);
-
-                                        if (isShawnWorkDay && hour < 5) {
-                                            // If it's a work day and current hour is before 5 AM, set to 5 AM
-                                            nextTime.setHours(5, 0, 0, 0);
-                                            return nextTime;
-                                        }
-                                        else if (isShawnWorkDay && hour >= 5 && hour < 15) {
-                                            // Means he's currently within a shift, so the next shift is the next day's shift
-                                            nextTime.setDate(nextTime.getDate() + 1);
-                                            nextTime.setHours(0, 0, 0, 0);
-                                        }
-                                        else {
-                                            // Either it's not a work day, or it's after 3 PM on a work day
-                                            // Move forward one hour and check again
-                                            nextTime.setHours(nextTime.getHours() + 1);
-                                        }
-                                    }
-                                    // Fallback return (should rarely be used)
-                                    return nextTime;
-                                }
-
-                                // Run every 1 second
                                 setInterval(updateStatus, 1000);
-                                // Initial call
                                 updateStatus();
                             </script>
-
                             <script>
                                 // Day-of-week display
-                                const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-                                const d = new Date(new Date().toLocaleString('en', {timeZone: 'America/New_York'}));
-                                let day = weekday[d.getDay()];
-                                document.getElementById("Day").innerHTML = day;
-                                interval = setInterval(() => (Day), 100);
+                                const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+                                function setDayOfWeek() {
+                                    const d = new Date(new Date().toLocaleString('en', { timeZone: 'America/New_York' }));
+                                    let day = weekday[d.getDay()];
+                                    document.getElementById("Day").innerHTML = day;
+                                }
+                                setInterval(setDayOfWeek, 1000);
+                                setDayOfWeek();
                             </script>
-
                             <h3p class="text-white mb-4">
-                                This means he is asleep for most of the night and working most of the day.
-                                <br>He will usually be asleep between the hours of 7pm EST and 3am EST.
-                                <br>He normally tries to sleep during these hours on his days off, as well.
-                                <br>This will be his schedule for the months of February, March, and April.
+                                Shawn is typically <b>asleep between 4:00 AM and 2:00 PM EST</b> on his work days.<br>
+                                On other days, he tries to maintain a similar sleep schedule.<br>
+                                This will be his schedule for the months of February, March, and April.<br>
                             </h3p>
                     </div>
                 </div>
@@ -231,10 +263,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
-        <!-- * *                               SB Forms JS                               * *-->
-        <!-- * * Activate your form at https://startbootstrap.com/solution/contact-forms * *-->
-        <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *-->
+        <!-- SB Forms JS -->
         <script src="https://cdn.startbootstrap.com/sb-forms-latest.js"></script>
     </body>
 </html>
