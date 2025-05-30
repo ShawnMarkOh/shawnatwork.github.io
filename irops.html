@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>IROP Prediction Dashboard</title>
+<link rel="icon" type="image/png" href="static/iropfavicon.png">
+
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f3f6fa;
+      color: #232323;
+      margin: 0;
+      min-height: 100vh;
+    }
+    #top-bar {
+      background: #213f75;
+      color: #fff;
+      width: 100%;
+      padding: 18px 0 14px 0;
+      text-align: center;
+      font-size: 2.1rem;
+      letter-spacing: 2px;
+      font-weight: 600;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 7px rgba(33,63,117,0.10);
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    #briefing-summary {
+      max-width: 1600px;
+      margin: 18px auto 20px auto;
+      padding: 20px 26px 16px 26px;
+      background: #fffbe8;
+      border-left: 8px solid #ffa600;
+      border-radius: 13px;
+      font-size: 1.21rem;
+      font-weight: 500;
+      box-shadow: 0 2px 12px rgba(255, 196, 64, .10);
+      color: #724a00;
+      width: 95vw;
+    }
+    .daily-row {
+      display: flex;
+      flex-direction: row;
+      gap: 28px;
+      width: 98vw;
+      max-width: 1800px;
+      justify-content: flex-start;
+      align-items: flex-start;
+      margin: 0 auto 22px auto;
+    }
+    .day-header {
+      font-size: 1.5rem;
+      color: #20375a;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      margin: 32px 0 12px 18px;
+      padding-top: 16px;
+      padding-bottom: 3px;
+      width: 100%;
+      border-bottom: 2px solid #eaeaea;
+    }
+    .base-card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.11);
+      padding: 14px 18px 18px 18px;
+      min-width: 340px;
+      flex: 1 1 330px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 6px;
+      margin-top: 0;
+      align-items: flex-start;
+      height: 100%;
+      border: 2.5px solid #e2e8f0;
+    }
+    .base-title {
+      font-size: 1.21rem;
+      font-weight: 600;
+      color: #153e7e;
+      margin-bottom: 2px;
+    }
+    .risk-high {
+      color: #e53e3e;
+      font-weight: bold;
+      font-size: 1.06rem;
+      margin-top: 7px;
+      letter-spacing: 0.5px;
+    }
+    .risk-partial {
+      color: #f59e42;
+      font-weight: bold;
+      font-size: 1.02rem;
+      margin-top: 7px;
+      letter-spacing: 0.5px;
+    }
+    .risk-normal {
+      color: #38a169;
+      font-weight: bold;
+      font-size: 1.02rem;
+      margin-top: 7px;
+      letter-spacing: 0.5px;
+    }
+    .short-forecast {
+      font-size: 1.04rem;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    .base-details {
+      color: #374151;
+      font-size: 0.98rem;
+      margin-bottom: 6px;
+    }
+    .hourly-breakdown {
+      margin-top: 10px;
+      width: 100%;
+      font-size: 0.97rem;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 3px 0px;
+      align-items: center;
+    }
+    .hour-cell {
+      display: inline-block;
+      margin: 2px 1.5px 2px 0;
+      padding: 2px 6px 2px 6px;
+      border-radius: 7px;
+      background: #cbe7f8;
+      color: #184866;
+      font-weight: 500;
+      font-size: 0.96rem;
+      border: 2px solid #b5d2fd;
+      transition: border .15s;
+      min-width: 36px;
+      text-align: center;
+    }
+    .hour-thunder {
+      background: #f7baba;
+      color: #8b2525;
+      font-weight: 600;
+      border-color: #e53e3e;
+    }
+    .hour-severe {
+      background: #ffe1b6;
+      color: #c97911;
+      font-weight: 700;
+      border-color: #c97911;
+    }
+    .hour-clear {
+      background: #d0f5cf;
+      color: #1b661b;
+      font-weight: 500;
+      border-color: #38a169;
+    }
+    .hour-other {
+      background: #f2efb9;
+      color: #847900;
+      font-weight: 500;
+      border-color: #c7c441;
+    }
+    .hour-current {
+      border: 3.5px solid #1e4f9b !important;
+      background: #d0e2fa !important;
+      color: #0f325a !important;
+      box-shadow: 0 0 6px 1px #b3cef6;
+      font-weight: 900 !important;
+      outline: none;
+      z-index: 3;
+    }
+    .hourly-label {
+      font-size: 0.96rem;
+      color: #656565;
+      font-weight: 600;
+      min-width: 80px;
+      margin-right: 7px;
+      margin-bottom: 2px;
+      display: inline-block;
+    }
+    @media (max-width: 1400px) {
+      .daily-row { flex-wrap: wrap; gap: 18px; }
+      .base-card {min-width: 270px; padding: 10px 5px 12px 7px;}
+    }
+    @media (max-width: 900px) {
+      .daily-row {flex-direction: column; width:99vw;}
+      .base-card {width:99vw; min-width:0;}
+      #briefing-summary {font-size:1rem;}
+      .day-header {font-size:1.16rem;}
+    }
+    @media (max-width: 600px) {
+      .base-card {padding: 7px 2vw;}
+      .daily-row {width:100vw;}
+    }
+  </style>
+</head>
+<body>
+  <div id="top-bar">IROP Prediction Dashboard</div>
+  <div id="briefing-summary">Loading crew briefing...</div>
+  <div id="dashboard"></div>
+  <div class="footer" style="margin: 36px auto 26px auto; max-width:1200px; text-align:center; color:#6a788a; font-size:1rem;">
+    Data: <a href="https://www.weather.gov/documentation/services-web-api" target="_blank" style="color:#2a58a5;">NWS API</a>.<br>
+    <strong>IROPS = Irregular Operations.</strong>  
+    All times/dates are local to each airport. "High IROPS": ≥40% wx hours.
+  </div>
+<script>
+const hubs = [
+  { name: "Charlotte Douglas International Airport", iata: "CLT", city: "Charlotte, NC", lat: 35.214, lon: -80.943, tz: "America/New_York" },
+  { name: "Philadelphia International Airport", iata: "PHL", city: "Philadelphia, PA", lat: 39.8744, lon: -75.2424, tz: "America/New_York" },
+  { name: "Ronald Reagan Washington National Airport", iata: "DCA", city: "Washington, DC", lat: 38.8521, lon: -77.0377, tz: "America/New_York" },
+  { name: "Dayton International Airport", iata: "DAY", city: "Dayton, OH", lat: 39.9024, lon: -84.2194, tz: "America/New_York" },
+  { name: "Dallas/Fort Worth International Airport", iata: "DFW", city: "Dallas-Fort Worth, TX", lat: 32.8998, lon: -97.0403, tz: "America/Chicago" }
+];
+const riskConditions = [
+  { key: "Thunder",   risk: "high", label: "Thunderstorm",  regex: /thunderstorm|tstm|t-storm|t\.storm/i, hourClass: "hour-thunder" },
+  { key: "Severe",    risk: "high", label: "Severe",        regex: /severe|tornado|hail|damaging wind|squall/i, hourClass: "hour-severe" },
+  { key: "Snow",      risk: "high", label: "Snow/Ice",      regex: /snow|blizzard|ice|sleet|wintry|freezing rain|freezing drizzle/i, hourClass: "hour-severe" },
+  { key: "HeavyRain", risk: "partial", label: "Heavy Rain", regex: /heavy rain|flood|downpour/i, hourClass: "hour-other" },
+  { key: "Fog",       risk: "partial", label: "Fog/Low Vis",regex: /fog|low visibility|low clouds/i, hourClass: "hour-other" }
+];
+
+function formatLocalDateOnly(dtIso, tz) {
+  try {
+    const d = new Date(dtIso);
+    return new Intl.DateTimeFormat('en-US', {
+      weekday: "short", month: "short", day: "numeric", year: "numeric",
+      timeZone: tz
+    }).format(d);
+  } catch { return dtIso; }
+}
+function getHourRisk(forecast) {
+  if (!forecast) return {risk:"clear", key:null, hourClass: "hour-clear"};
+  for (const cond of riskConditions) {
+    if (cond.regex.test(forecast)) {
+      return { risk: cond.risk, key: cond.key, hourClass: cond.hourClass };
+    }
+  }
+  return { risk: "clear", key: null, hourClass: "hour-clear" };
+}
+function analyzeDayHours(hourlyPeriods, dateYMD, tz, highlightHour) {
+  // Map forecast periods by local hour
+  let hourData = {};
+  for (const period of hourlyPeriods) {
+    const local = new Date(new Date(period.startTime).toLocaleString("en-US", {timeZone: tz}));
+    const ymd = local.getFullYear() + "-" + String(local.getMonth()+1).padStart(2, "0") + "-" + String(local.getDate()).padStart(2, "0");
+    if (ymd !== dateYMD) continue;
+    hourData[local.getHours()] = period;
+  }
+
+  let hourBlocks = [];
+  let total = 0, high = 0, partial = 0;
+  for (let h = 0; h < 24; h++) {
+    let period = hourData[h];
+    let risk, txt;
+    if (period) {
+      risk = getHourRisk((period.shortForecast || "") + " " + (period.detailedForecast || ""));
+      txt = period.shortForecast || "";
+    } else {
+      risk = { risk: "clear", key: null, hourClass: "hour-clear" };
+      txt = "";
+    }
+    if (risk.risk === "high") high++;
+    else if (risk.risk === "partial") partial++;
+    hourBlocks.push({
+      hour: h,
+      txt: txt,
+      risk: risk.risk,
+      hourClass: risk.hourClass + (highlightHour === h ? " hour-current" : "")
+    });
+    total++;
+  }
+  return {
+    hourBlocks,
+    percentHigh: total ? Math.round((high/total)*100) : 0,
+    percentPartial: total ? Math.round((partial/total)*100) : 0,
+    total
+  };
+}
+function getDailyAssessment(percentHigh, percentPartial) {
+  if (percentHigh >= 40) return { label: "⚠️ High IROPS Risk", class: "risk-high", summary: "High IROPS risk" };
+  if (percentHigh >= 10 || percentPartial >= 40) return { label: "⛅ Partial IROPS Risk", class: "risk-partial", summary: "Partial IROPS risk" };
+  if (percentPartial >= 10) return { label: "⛅ Slight IROPS Risk", class: "risk-partial", summary: "Slight IROPS risk" };
+  return { label: "✔️ Normal Ops", class: "risk-normal", summary: "VFR/VMC" };
+}
+
+async function loadDashboard() {
+  const dashboard = document.getElementById('dashboard');
+  dashboard.innerHTML = '<div style="font-size:1.2rem; padding:22px;">Loading weather data for all bases...</div>';
+  let allDayBase = [[],[],[]]; // [[today's bases], [tomorrow's bases], [day3's bases]]
+  let dailyBrief = [{}, {}, {}]; // {high:[], partial:[], normal:[], details:[]} for each day
+  let dayLabels = [];
+  let allDone = 0;
+
+  for (const hub of hubs) {
+    try {
+      const pointsResp = await fetch(`https://api.weather.gov/points/${hub.lat},${hub.lon}`);
+      const points = await pointsResp.json();
+      const [dailyResp, hourlyResp] = await Promise.all([
+        fetch(points.properties.forecast),
+        fetch(points.properties.forecastHourly)
+      ]);
+      const daily = await dailyResp.json();
+      const hourly = await hourlyResp.json();
+      const periods = daily.properties.periods;
+      const now = new Date();
+      let todayIdx = periods.findIndex(p => {
+        const pd = new Date(p.startTime);
+        return pd.getDate() === now.getDate() && pd.getMonth() === now.getMonth();
+      });
+      if (todayIdx === -1) todayIdx = 0; // fallback
+      let nextDaytimePeriods = [], c = 0, i = todayIdx;
+      while (i < periods.length && c < 3) {
+        if (periods[i].isDaytime) { nextDaytimePeriods.push(periods[i]); c++; }
+        i++;
+      }
+      while (nextDaytimePeriods.length < 3 && nextDaytimePeriods.length < periods.length) {
+        nextDaytimePeriods.push(periods[nextDaytimePeriods.length]);
+      }
+      const nowLocal = new Date(new Date().toLocaleString("en-US", {timeZone: hub.tz}));
+      const todayYMD = nowLocal.getFullYear() + "-" + String(nowLocal.getMonth()+1).padStart(2, "0") + "-" + String(nowLocal.getDate()).padStart(2, "0");
+      const nowHour = nowLocal.getHours();
+      for (let dayIdx=0; dayIdx<3; ++dayIdx) {
+        const period = nextDaytimePeriods[dayIdx];
+        const localDate = new Date(new Date(period.startTime).toLocaleString("en-US", {timeZone: hub.tz}));
+        const ymd = localDate.getFullYear() + "-" + String(localDate.getMonth()+1).padStart(2, "0") + "-" + String(localDate.getDate()).padStart(2, "0");
+        if (!dayLabels[dayIdx]) dayLabels[dayIdx] = period.name + " (" + formatLocalDateOnly(period.startTime, hub.tz) + ")";
+        const highlightHour = (ymd === todayYMD) ? nowHour : null;
+        const {hourBlocks, percentHigh, percentPartial, total} = analyzeDayHours(hourly.properties.periods, ymd, hub.tz, highlightHour);
+        const assessment = getDailyAssessment(percentHigh, percentPartial);
+        const card = {
+          hub, name: hub.name, iata: hub.iata, city: hub.city,
+          label: period.name, date: formatLocalDateOnly(period.startTime, hub.tz),
+          temp: period.temperature + "°" + period.temperatureUnit,
+          shortForecast: period.shortForecast,
+          detailedForecast: period.detailedForecast,
+          wind: period.windSpeed + (period.windGust ? `, Gusts ${period.windGust}` : ""),
+          percentHigh, percentPartial,
+          riskLabel: assessment.label,
+          riskClass: assessment.class,
+          hourBlocks,
+          summary: assessment.summary
+        };
+        allDayBase[dayIdx].push(card);
+        // For the briefing
+        if (!dailyBrief[dayIdx][assessment.summary]) dailyBrief[dayIdx][assessment.summary] = [];
+        dailyBrief[dayIdx][assessment.summary].push(hub.iata);
+        if (!dailyBrief[dayIdx].details) dailyBrief[dayIdx].details = [];
+        if (percentHigh>0)
+          dailyBrief[dayIdx].details.push(`${hub.iata}: ${percentHigh}% wx hours (${card.shortForecast})`);
+      }
+      allDone++;
+      if (allDone === hubs.length) renderDashboard(allDayBase, dayLabels, dailyBrief);
+    } catch (err) {
+      // Could handle errors per hub if desired
+      allDone++;
+      if (allDone === hubs.length) renderDashboard(allDayBase, dayLabels, dailyBrief);
+    }
+  }
+}
+
+function renderDashboard(allDayBase, dayLabels, dailyBrief) {
+  // Crew briefing
+  let briefingHTML = "";
+  ["Today", "Tomorrow", "The day after"].forEach((when, idx) => {
+    let b = dailyBrief[idx], txts = [];
+    if (b["High IROPS risk"] && b["High IROPS risk"].length) {
+      txts.push(`<b>High IROPS risk</b> at <b>${b["High IROPS risk"].join(", ")}</b>`);
+    }
+    if (b["Partial IROPS risk"] && b["Partial IROPS risk"].length) {
+      txts.push(`<b>Partial risk</b> at <b>${b["Partial IROPS risk"].join(", ")}</b>`);
+    }
+    if (b["Slight IROPS risk"] && b["Slight IROPS risk"].length) {
+      txts.push(`Slight risk at <b>${b["Slight IROPS risk"].join(", ")}</b>`);
+    }
+    if (b["VFR/VMC"] && b["VFR/VMC"].length) {
+      txts.push(`VFR conditions expected at <b>${b["VFR/VMC"].join(", ")}</b>`);
+    }
+    let detailTxt = b.details && b.details.length ? `<div style="font-size:1rem;color:#7b6000; margin-top:2px;">Details: ${b.details.join("; ")}</div>` : "";
+    briefingHTML += `<div style="margin-bottom:8px;"><b>${when}'s outlook:</b> ${txts.length ? txts.join(", ") : "No weather risk expected."}${detailTxt}</div>`;
+  });
+  document.getElementById('briefing-summary').innerHTML = briefingHTML;
+
+  // Render each row by day
+  let dashHTML = "";
+  for (let dayIdx=0; dayIdx<3; ++dayIdx) {
+    dashHTML += `<div class="day-header">${dayLabels[dayIdx]}</div>`;
+    dashHTML += `<div class="daily-row">${allDayBase[dayIdx].map(card => renderBaseCard(card)).join("")}</div>`;
+  }
+  document.getElementById('dashboard').innerHTML = dashHTML;
+}
+
+function renderBaseCard(card) {
+  return `<div class="base-card">
+    <div class="base-title">${card.name} (${card.iata})<span style="font-size:.96rem;font-weight:400;color:#6a788a;"> – ${card.city}</span></div>
+    <div class="short-forecast">${card.shortForecast}</div>
+    <div style="font-size:0.97rem;margin-bottom:4px;">Temp: ${card.temp}</div>
+    <div class="base-details"><b>Wind:</b> ${card.wind}</div>
+    <details>
+      <summary style="color:#3463c4;font-size:0.93rem;cursor:pointer;">Detailed Forecast</summary>
+      <div style="font-size:0.94rem;">${card.detailedForecast}</div>
+    </details>
+    <div class="${card.riskClass}" style="margin-bottom:5px;">
+      ${card.riskLabel}
+      <span style="font-weight:normal;color:#606868;font-size:0.97rem;display:block;">
+        Thunderstorm/severe wx hours: <b>${card.percentHigh}%</b><br>
+        Other hazard hours: <b>${card.percentPartial}%</b>
+      </span>
+    </div>
+    <div class="hourly-breakdown">
+      <span class="hourly-label">24h risk:</span>
+      ${card.hourBlocks.map(h =>
+        `<span class="hour-cell ${h.hourClass}" title="${h.hour}:00 - ${h.txt}">${String(h.hour).padStart(2,0)}:00</span>`
+      ).join("")}
+    </div>
+  </div>`;
+}
+loadDashboard();
+
+</script>
+<script>
+// Refresh the page at the start of every hour (on the hour)
+function scheduleHourlyRefresh() {
+  const now = new Date();
+  const msToNextHour = (60 - now.getMinutes()) * 60 * 1000 - now.getSeconds() * 1000 - now.getMilliseconds();
+  setTimeout(function() {
+    window.location.reload();
+  }, msToNextHour + 1000); // Add a little buffer to ensure it's past the hour
+}
+scheduleHourlyRefresh();
+</script>
+</body>
+</html>
