@@ -7,120 +7,38 @@
   <link rel="icon" type="image/png" href="static/iropfavicon.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    body {
-      background: #f3f6fa;
-      color: #232323;
-      min-height: 100vh;
-    }
-    #top-bar {
-      background: #213f75;
-      color: #fff;
-      width: 100%;
-      padding: 18px 0 14px 0;
-      text-align: center;
-      font-size: 2.1rem;
-      letter-spacing: 2px;
-      font-weight: 600;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 7px rgba(33,63,117,0.10);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    #briefing-summary {
-      max-width: 1600px;
-      margin: 18px auto 20px auto;
-      padding: 20px 26px 16px 26px;
-      background: #fffbe8;
-      border-left: 8px solid #ffa600;
-      border-radius: 13px;
-      font-size: 1.21rem;
-      font-weight: 500;
-      box-shadow: 0 2px 12px rgba(255, 196, 64, .10);
-      color: #724a00;
-      width: 95vw;
-    }
-    .day-header {
-      font-size: 1.5rem;
-      color: #20375a;
-      font-weight: 700;
-      letter-spacing: 0.8px;
-      margin: 32px 0 12px 18px;
-      padding-top: 16px;
-      padding-bottom: 3px;
-      width: 100%;
-      border-bottom: 2px solid #eaeaea;
-    }
-    .risk-high { color: #e53e3e; font-weight: bold; font-size: 1.06rem; margin-top: 7px; letter-spacing: 0.5px; }
-    .risk-partial { color: #f59e42; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px; }
-    .risk-normal { color: #38a169; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px; }
-    .short-forecast { font-size: 1.04rem; margin-bottom: 5px; font-weight: 500; }
-    .base-details { color: #374151; font-size: 0.98rem; margin-bottom: 6px; }
-    .hourly-breakdown { margin-top: 10px; width: 100%; font-size: 0.97rem; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 0; }
-    .hour-cell {
-      display: inline-block;
-      margin: 2px 2px 2px 0;
-      padding: 2px 7px;
-      border-radius: 7px;
-      background: #cbe7f8;
-      color: #184866;
-      font-weight: 500;
-      font-size: 0.96rem;
-      border: 2px solid #b5d2fd;
-      min-width: 40px;
-      text-align: center;
-      cursor: pointer;
-      transition: border .15s, background .15s;
-      position: relative;
-      z-index: 1;
-    }
-    .hour-thunder { background: #f7baba; color: #8b2525; font-weight: 600; border-color: #e53e3e; }
-    .hour-severe { background: #ffe1b6; color: #c97911; font-weight: 700; border-color: #c97911; }
-    .hour-clear { background: #d0f5cf; color: #1b661b; font-weight: 500; border-color: #38a169; }
-    .hour-other { background: #f2efb9; color: #847900; font-weight: 500; border-color: #c7c441; }
-    .hour-current {
-      z-index: 1 !important;
-      animation: pulse-highlight 2s infinite cubic-bezier(.4,0,.6,1);
-    }
-    @keyframes pulse-highlight {
-      0% { box-shadow: 0 0 0 0 rgba(38,120,230,0.32);}
-      50% { box-shadow: 0 0 0 8px rgba(38,120,230,0.09);}
-      100% { box-shadow: 0 0 0 0 rgba(38,120,230,0.32);}
-    }
-    .hour-current::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      border-radius: 7px;
-      background: rgba(190,210,245,0.41);
-      pointer-events: none;
-      mix-blend-mode: lighten;
-    }
-    .hourly-label {
-      font-size: 0.96rem;
-      color: #656565;
-      font-weight: 600;
-      min-width: 80px;
-      margin-right: 7px;
-      margin-bottom: 2px;
-      display: inline-block;
-    }
+    body {background: #f3f6fa; color: #232323; min-height: 100vh;}
+    #top-bar {background: #213f75; color: #fff; width: 100%; padding: 18px 0 14px 0; text-align: center; font-size: 2.1rem; letter-spacing: 2px; font-weight: 600; margin-bottom: 10px; box-shadow: 0 2px 7px rgba(33,63,117,0.10); position: sticky; top: 0; z-index: 100;}
+    #briefing-summary {max-width: 1600px; margin: 18px auto 20px auto; padding: 20px 26px 16px 26px; background: #fffbe8; border-left: 8px solid #ffa600; border-radius: 13px; font-size: 1.21rem; font-weight: 500; box-shadow: 0 2px 12px rgba(255, 196, 64, .10); color: #724a00; width: 95vw;}
+    .day-header {font-size: 1.5rem; color: #20375a; font-weight: 700; letter-spacing: 0.8px; margin: 32px 0 12px 18px; padding-top: 16px; padding-bottom: 3px; width: 100%; border-bottom: 2px solid #eaeaea;}
+    .risk-high {color: #e53e3e; font-weight: bold; font-size: 1.06rem; margin-top: 7px; letter-spacing: 0.5px;}
+    .risk-partial {color: #f59e42; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px;}
+    .risk-normal {color: #38a169; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px;}
+    .risk-wind {color: #2968c6; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px;}
+    .short-forecast {font-size: 1.04rem; margin-bottom: 5px; font-weight: 500;}
+    .base-details {color: #374151; font-size: 0.98rem; margin-bottom: 6px;}
+    .hourly-breakdown {margin-top: 10px; width: 100%; font-size: 0.97rem; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 0;}
+    .hour-cell {display: inline-block; margin: 2px 2px 2px 0; padding: 2px 7px; border-radius: 7px; background: #cbe7f8; color: #184866; font-weight: 500; font-size: 0.96rem; border: 2px solid #b5d2fd; min-width: 40px; text-align: center; cursor: pointer; transition: border .15s, background .15s; position: relative; z-index: 1;}
+    .hour-thunder {background: #f7baba; color: #8b2525; font-weight: 600; border-color: #e53e3e;}
+    .hour-severe {background: #ffe1b6; color: #c97911; font-weight: 700; border-color: #c97911;}
+    .hour-clear {background: #d0f5cf; color: #1b661b; font-weight: 500; border-color: #38a169;}
+    .hour-other {background: #f2efb9; color: #847900; font-weight: 500; border-color: #c7c441;}
+    .hour-nodata {background: #efefef; color: #9b9b9b; border-color: #ddd; cursor: default; font-style: italic;}
+    .hour-wind {background: #bad7fa; color: #1560a8; font-weight: 600; border-color: #2968c6;}
+    .hour-current {z-index: 1 !important; animation: pulse-highlight 2s infinite cubic-bezier(.4,0,.6,1);}
+    @keyframes pulse-highlight {0% { box-shadow: 0 0 0 0 rgba(38,120,230,0.32);} 50% { box-shadow: 0 0 0 8px rgba(38,120,230,0.09);} 100% { box-shadow: 0 0 0 0 rgba(38,120,230,0.32);}}
+    .hour-current::after {content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 7px; background: rgba(190,210,245,0.41); pointer-events: none; mix-blend-mode: lighten;}
+    .hourly-label {font-size: 0.96rem; color: #656565; font-weight: 600; min-width: 80px; margin-right: 7px; margin-bottom: 2px; display: inline-block;}
     .footer {margin: 36px auto 26px auto; max-width:1200px; text-align:center; color:#6a788a; font-size:1rem;}
     .modal-dialog { max-width: 400px; }
-    @media (max-width: 992px) {
-      #briefing-summary { font-size:1rem; }
-      .day-header { font-size:1.16rem;}
-    }
-    @media (max-width: 600px) {
-      #briefing-summary { padding: 10px 4vw; }
-    }
+    @media (max-width: 992px) {#briefing-summary { font-size:1rem; } .day-header { font-size:1.16rem;}}
+    @media (max-width: 600px) {#briefing-summary { padding: 10px 4vw; }}
   </style>
 </head>
 <body>
   <div id="top-bar">IROP Prediction Dashboard</div>
   <div id="briefing-summary">Loading crew briefing...</div>
   <div id="dashboard" class="container-fluid"></div>
-
   <div class="modal fade" id="hourModal" tabindex="-1" aria-labelledby="hourModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -132,27 +50,141 @@
       </div>
     </div>
   </div>
-
   <div class="footer">
     Data: <a href="https://www.weather.gov/documentation/services-web-api" target="_blank" style="color:#2a58a5;">NWS API</a>.<br>
     <strong>IROPS = Irregular Operations.</strong>
-    All times/dates are local to each airport. "No Weather Risk" means no thunderstorms or weather hazards are forecast for that hour. This does <u>not</u> guarantee VFR or IFR flight conditions.
+    All times/dates are local to each airport. "No Weather Risk" means no thunderstorms or weather hazards are forecast for that hour. Does <u>not</u> guarantee VFR or IFR flight conditions.
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 const hubs = [
-  { name: "Charlotte Douglas International Airport", iata: "CLT", city: "Charlotte, NC", lat: 35.214, lon: -80.943, tz: "America/New_York" },
-  { name: "Philadelphia International Airport", iata: "PHL", city: "Philadelphia, PA", lat: 39.8744, lon: -75.2424, tz: "America/New_York" },
-  { name: "Ronald Reagan Washington National Airport", iata: "DCA", city: "Washington, DC", lat: 38.8521, lon: -77.0377, tz: "America/New_York" },
-  { name: "Dayton International Airport", iata: "DAY", city: "Dayton, OH", lat: 39.9024, lon: -84.2194, tz: "America/New_York" },
-  { name: "Dallas/Fort Worth International Airport", iata: "DFW", city: "Dallas-Fort Worth, TX", lat: 32.8998, lon: -97.0403, tz: "America/Chicago" }
+  { name: "Charlotte Douglas International Airport", iata: "CLT", city: "Charlotte, NC", lat: 35.214, lon: -80.943, tz: "America/New_York",
+    runways: [180, 360, 54, 234] }, // 18/36 (all), 05/23
+  { name: "Philadelphia International Airport", iata: "PHL", city: "Philadelphia, PA", lat: 39.8744, lon: -75.2424, tz: "America/New_York",
+    runways: [90, 270, 170, 350] }, // 09/27, 17/35
+  { name: "Ronald Reagan Washington National Airport", iata: "DCA", city: "Washington, DC", lat: 38.8521, lon: -77.0377, tz: "America/New_York",
+    runways: [10, 190, 150, 330, 40, 220] }, // 01/19, 15/33, 04/22
+  { name: "Dayton International Airport", iata: "DAY", city: "Dayton, OH", lat: 39.9024, lon: -84.2194, tz: "America/New_York",
+    runways: [60, 240, 180, 360] }, // 06/24, 18/36
+  { name: "Dallas/Fort Worth International Airport", iata: "DFW", city: "Dallas-Fort Worth, TX", lat: 32.8998, lon: -97.0403, tz: "America/Chicago",
+    runways: [175, 355, 185, 5, 130, 310, 135, 315] } // 17/35, 18/36, 13/31
 ];
 
+const windDirs = {
+  N:0, NNE:22.5, NE:45, ENE:67.5, E:90, ESE:112.5, SE:135, SSE:157.5,
+  S:180, SSW:202.5, SW:225, WSW:247.5, W:270, WNW:292.5, NW:315, NNW:337.5
+};
+function windDirToDeg(dir) {
+  dir = dir.toUpperCase();
+  if (windDirs[dir] !== undefined) return windDirs[dir];
+  if (/^\d+$/.test(dir)) return Number(dir);
+  return null;
+}
+function windToKts(val) {
+  if (!val) return 0;
+  let v = parseFloat(val);
+  if (/mph/.test(val)) v *= 0.868976;
+  return v;
+}
+function maxCrosswind(runways, windDir, windKts) {
+  let windDeg = windDirToDeg(windDir);
+  if (windDeg === null) return 0;
+  let max = 0;
+  for (let rh of runways) {
+    let angle = Math.abs(rh - windDeg);
+    if (angle > 180) angle = 360 - angle;
+    let rad = angle * Math.PI / 180;
+    let cross = Math.abs(windKts * Math.sin(rad));
+    if (cross > max) max = cross;
+  }
+  return max;
+}
+function analyzeDayHours(hourlyPeriods, dateYMD, tz, highlightHour, baseLabel, ymdStr, runways) {
+  let hourData = {};
+  for (const period of hourlyPeriods) {
+    const local = new Date(new Date(period.startTime).toLocaleString("en-US", {timeZone: tz}));
+    const ymd = local.getFullYear() + "-" + String(local.getMonth()+1).padStart(2, "0") + "-" + String(local.getDate()).padStart(2, "0");
+    if (ymd !== dateYMD) continue;
+    hourData[local.getHours()] = { ...period, local };
+  }
+  let hourBlocks = [];
+  let rawRisks = [];
+  for (let h = 0; h < 24; h++) {
+    let period = hourData[h];
+    let riskObj, txt, shortF="", detailedF="", windRisk=null, windTxt="";
+    if (period) {
+      riskObj = getHourRisk((period.shortForecast || "") + " " + (period.detailedForecast || ""));
+      txt = period.shortForecast || "";
+      shortF = period.shortForecast || "";
+      detailedF = period.detailedForecast || "";
+      let spd = 0, dir = "";
+      if (period.windSpeed && period.windSpeed !== "--") spd = windToKts(period.windSpeed.split(" ")[0]);
+      if (period.windDirection) dir = period.windDirection;
+      let cross = maxCrosswind(runways, dir, spd);
+      windRisk = null;
+      if (spd > 50) { windRisk = "excessive"; windTxt = "Wind > 50 knots"; }
+      else if (cross > 27) { windRisk = "crosswind"; windTxt = `Crosswind ${cross.toFixed(0)} kts`; }
+      if (windRisk === "excessive") riskObj = { risk:"high", key:"Wind", hourClass:"hour-wind"};
+      else if (windRisk === "crosswind" && riskObj.risk!=="high") riskObj = { risk:"partial", key:"Wind", hourClass:"hour-wind"};
+    } else {
+      riskObj = { risk: "nodata", key: null, hourClass: "hour-nodata" };
+      txt = "No data"; shortF = ""; detailedF = "";
+    }
+    rawRisks.push(riskObj.risk);
+    hourBlocks.push({
+      hour: h,
+      txt: txt,
+      risk: riskObj.risk,
+      hourClass: riskObj.hourClass + (highlightHour === h ? " hour-current" : ""),
+      isCurrent: (highlightHour === h),
+      baseLabel: baseLabel || "",
+      ymd: ymdStr || dateYMD,
+      shortF: shortF,
+      detailedF: detailedF,
+      riskClass: riskObj.risk,
+      windRisk,
+      windTxt,
+      isBrief: false
+    });
+  }
+  let countHigh = 0, countPartial = 0, total = 0;
+  let curType = null, curLen = 0, curStart = 0;
+  let highMark = Array(24).fill(false), partialMark = Array(24).fill(false);
+  for (let i=0; i<=24; i++) {
+    let r = i<24 ? rawRisks[i] : null;
+    if (r === curType) { curLen++; }
+    else {
+      if ((curType === "high" || curType === "partial") && curLen > 1) {
+        for (let j=curStart; j<curStart+curLen; j++) {
+          if (curType === "high") highMark[j] = true;
+          else if (curType === "partial") partialMark[j] = true;
+        }
+      }
+      curType = r;
+      curLen = 1;
+      curStart = i;
+    }
+  }
+  for (let h=0; h<24; h++) {
+    if (rawRisks[h] !== "nodata") total++;
+    if (highMark[h]) countHigh++;
+    else if (partialMark[h]) countPartial++;
+  }
+  for (let h=0; h<24; h++) {
+    if ((rawRisks[h]==="high" || rawRisks[h]==="partial") && !highMark[h] && !partialMark[h]) {
+      hourBlocks[h].hourClass += " hour-brief"; hourBlocks[h].isBrief = true;
+    }
+  }
+  return {
+    hourBlocks,
+    percentHigh: total ? Math.round((countHigh/total)*100) : 0,
+    percentPartial: total ? Math.round((countPartial/total)*100) : 0,
+    total
+  };
+}
 function getHourRisk(forecast) {
   if (!forecast) return {risk:"clear", key:null, hourClass: "hour-clear"};
   let forecastL = forecast.toLowerCase();
-
   if (/thunderstorms likely|severe thunderstorm|severe t[- ]?storm|tstm likely|t\.storm likely|t[- ]?storm likely/.test(forecastL)) {
     return { risk: "high", key: "Thunder", hourClass: "hour-thunder" };
   }
@@ -170,82 +202,6 @@ function getHourRisk(forecast) {
   }
   return { risk: "clear", key: null, hourClass: "hour-clear" };
 }
-
-function analyzeDayHours(hourlyPeriods, dateYMD, tz, highlightHour, baseLabel, ymdStr) {
-  let hourData = {};
-  for (const period of hourlyPeriods) {
-    const local = new Date(new Date(period.startTime).toLocaleString("en-US", {timeZone: tz}));
-    const ymd = local.getFullYear() + "-" + String(local.getMonth()+1).padStart(2, "0") + "-" + String(local.getDate()).padStart(2, "0");
-    if (ymd !== dateYMD) continue;
-    hourData[local.getHours()] = { ...period, local };
-  }
-
-  let hourBlocks = [];
-  let rawRisks = [];
-  for (let h = 0; h < 24; h++) {
-    let period = hourData[h];
-    let riskObj, txt, shortF="", detailedF="";
-    if (period) {
-      riskObj = getHourRisk((period.shortForecast || "") + " " + (period.detailedForecast || ""));
-      txt = period.shortForecast || "";
-      shortF = period.shortForecast || "";
-      detailedF = period.detailedForecast || "";
-    } else {
-      riskObj = { risk: "clear", key: null, hourClass: "hour-clear" };
-      txt = ""; shortF = ""; detailedF = "";
-    }
-    rawRisks.push(riskObj.risk);
-    hourBlocks.push({
-      hour: h,
-      txt: txt,
-      risk: riskObj.risk,
-      hourClass: riskObj.hourClass + (highlightHour === h ? " hour-current" : ""),
-      isCurrent: (highlightHour === h),
-      baseLabel: baseLabel || "",
-      ymd: ymdStr || dateYMD,
-      shortF: shortF,
-      detailedF: detailedF,
-      riskClass: riskObj.risk,
-      isBrief: false
-    });
-  }
-  let countHigh = 0, countPartial = 0, total = 24;
-  let curType = null, curLen = 0, curStart = 0;
-  let highMark = Array(24).fill(false), partialMark = Array(24).fill(false);
-  for (let i=0; i<=24; i++) {
-    let r = i<24 ? rawRisks[i] : null;
-    if (r === curType) {
-      curLen++;
-    } else {
-      if ((curType === "high" || curType === "partial") && curLen > 1) {
-        for (let j=curStart; j<curStart+curLen; j++) {
-          if (curType === "high") highMark[j] = true;
-          else if (curType === "partial") partialMark[j] = true;
-        }
-      }
-      curType = r;
-      curLen = 1;
-      curStart = i;
-    }
-  }
-  for (let h=0; h<24; h++) {
-    if (highMark[h]) countHigh++;
-    else if (partialMark[h]) countPartial++;
-  }
-  for (let h=0; h<24; h++) {
-    if ((rawRisks[h]==="high" || rawRisks[h]==="partial") && !highMark[h] && !partialMark[h]) {
-      hourBlocks[h].hourClass += " hour-brief";
-      hourBlocks[h].isBrief = true;
-    }
-  }
-  return {
-    hourBlocks,
-    percentHigh: total ? Math.round((countHigh/total)*100) : 0,
-    percentPartial: total ? Math.round((countPartial/total)*100) : 0,
-    total
-  };
-}
-
 function formatLocalDateOnly(dtIso, tz) {
   try {
     const d = new Date(dtIso);
@@ -255,22 +211,16 @@ function formatLocalDateOnly(dtIso, tz) {
     }).format(d);
   } catch { return dtIso; }
 }
-
 function getDailyAssessment(percentHigh, percentPartial) {
   if (percentHigh >= 30) return { label: "⚠️ High IROPS Risk", class: "risk-high", summary: "High IROPS risk" };
   if (percentHigh >= 10 || percentPartial >= 30) return { label: "⛅ Partial IROPS Risk", class: "risk-partial", summary: "Partial IROPS risk" };
   if (percentPartial >= 10) return { label: "⛅ Slight IROPS Risk", class: "risk-partial", summary: "Slight IROPS risk" };
   return { label: "✔️ No Weather Risk", class: "risk-normal", summary: "No Weather Risk" };
 }
-
 async function loadDashboard() {
   const dashboard = document.getElementById('dashboard');
   dashboard.innerHTML = '<div style="font-size:1.2rem; padding:22px;">Loading weather data for all bases...</div>';
-  let allDayBase = [[],[],[]];
-  let dailyBrief = [{}, {}, {}];
-  let dayLabels = [];
-  let allDone = 0;
-
+  let allDayBase = [[],[],[]], dailyBrief = [{}, {}, {}], dayLabels = [], allDone = 0;
   for (const hub of hubs) {
     try {
       const pointsResp = await fetch(`https://api.weather.gov/points/${hub.lat},${hub.lon}`);
@@ -279,41 +229,34 @@ async function loadDashboard() {
         fetch(points.properties.forecast),
         fetch(points.properties.forecastHourly)
       ]);
-      const daily = await dailyResp.json();
-      const hourly = await hourlyResp.json();
-      const periods = daily.properties.periods;
-      const now = new Date();
-      let todayIdx = periods.findIndex(p => {
-        const pd = new Date(p.startTime);
-        return pd.getDate() === now.getDate() && pd.getMonth() === now.getMonth();
-      });
-      if (todayIdx === -1) todayIdx = 0;
-      let nextDaytimePeriods = [], c = 0, i = todayIdx;
-      while (i < periods.length && c < 3) {
-        if (periods[i].isDaytime) { nextDaytimePeriods.push(periods[i]); c++; }
-        i++;
-      }
-      while (nextDaytimePeriods.length < 3 && nextDaytimePeriods.length < periods.length) {
-        nextDaytimePeriods.push(periods[nextDaytimePeriods.length]);
-      }
+      const daily = await dailyResp.json(), hourly = await hourlyResp.json(), periods = daily.properties.periods;
       const nowLocal = new Date(new Date().toLocaleString("en-US", {timeZone: hub.tz}));
       const todayYMD = nowLocal.getFullYear() + "-" + String(nowLocal.getMonth()+1).padStart(2, "0") + "-" + String(nowLocal.getDate()).padStart(2, "0");
-      const nowHour = nowLocal.getHours();
       for (let dayIdx=0; dayIdx<3; ++dayIdx) {
-        const period = nextDaytimePeriods[dayIdx];
-        const localDate = new Date(new Date(period.startTime).toLocaleString("en-US", {timeZone: hub.tz}));
-        const ymd = localDate.getFullYear() + "-" + String(localDate.getMonth()+1).padStart(2, "0") + "-" + String(localDate.getDate()).padStart(2, "0");
-        if (!dayLabels[dayIdx]) dayLabels[dayIdx] = period.name + " (" + formatLocalDateOnly(period.startTime, hub.tz) + ")";
-        const highlightHour = (ymd === todayYMD) ? nowHour : null;
-        const {hourBlocks, percentHigh, percentPartial, total} = analyzeDayHours(hourly.properties.periods, ymd, hub.tz, highlightHour, hub.name, ymd);
+        const dayDate = new Date(nowLocal.getFullYear(), nowLocal.getMonth(), nowLocal.getDate() + dayIdx);
+        const ymd = dayDate.getFullYear() + "-" + String(dayDate.getMonth()+1).padStart(2, "0") + "-" + String(dayDate.getDate()).padStart(2, "0");
+        let period = periods.find(p=>{
+          const pd = new Date(new Date(p.startTime).toLocaleString("en-US", {timeZone: hub.tz}));
+          const p_ymd = pd.getFullYear() + "-" + String(pd.getMonth()+1).padStart(2,"0") + "-" + String(pd.getDate()).padStart(2,"0");
+          return p_ymd === ymd && p.isDaytime;
+        }) || periods.find(p=>{
+          const pd = new Date(new Date(p.startTime).toLocaleString("en-US", {timeZone: hub.tz}));
+          const p_ymd = pd.getFullYear() + "-" + String(pd.getMonth()+1).padStart(2,"0") + "-" + String(pd.getDate()).padStart(2,"0");
+          return p_ymd === ymd;
+        });
+        if (!dayLabels[dayIdx] && period) dayLabels[dayIdx] = (period.name || "Day") + " (" + formatLocalDateOnly(period.startTime, hub.tz) + ")";
+        else if (!dayLabels[dayIdx]) dayLabels[dayIdx] = formatLocalDateOnly(dayDate, hub.tz);
+        const highlightHour = (ymd === todayYMD) ? nowLocal.getHours() : null;
+        const {hourBlocks, percentHigh, percentPartial, total} = analyzeDayHours(hourly.properties.periods, ymd, hub.tz, highlightHour, hub.name, ymd, hub.runways);
         const assessment = getDailyAssessment(percentHigh, percentPartial);
         const card = {
           hub, name: hub.name, iata: hub.iata, city: hub.city,
-          label: period.name, date: formatLocalDateOnly(period.startTime, hub.tz),
-          temp: period.temperature + "°" + period.temperatureUnit,
-          shortForecast: period.shortForecast,
-          detailedForecast: period.detailedForecast,
-          wind: period.windSpeed + (period.windGust ? `, Gusts ${period.windGust}` : ""),
+          label: (period && period.name) || "Day",
+          date: (period && formatLocalDateOnly(period.startTime, hub.tz)) || formatLocalDateOnly(dayDate, hub.tz),
+          temp: (period && (period.temperature + "°" + period.temperatureUnit)) || "--",
+          shortForecast: (period && period.shortForecast) || "",
+          detailedForecast: (period && period.detailedForecast) || "",
+          wind: (period && (period.windSpeed + (period.windGust ? `, Gusts ${period.windGust}` : ""))) || "--",
           percentHigh, percentPartial,
           riskLabel: assessment.label,
           riskClass: assessment.class,
@@ -335,7 +278,6 @@ async function loadDashboard() {
     }
   }
 }
-
 function renderDashboard(allDayBase, dayLabels, dailyBrief) {
   let briefingHTML = "";
   ["Today", "Tomorrow", "The day after"].forEach((when, idx) => {
@@ -356,7 +298,6 @@ function renderDashboard(allDayBase, dayLabels, dailyBrief) {
     briefingHTML += `<div style="margin-bottom:8px;"><b>${when}'s outlook:</b> ${txts.length ? txts.join(", ") : "No weather risk expected."}${detailTxt}</div>`;
   });
   document.getElementById('briefing-summary').innerHTML = briefingHTML;
-
   let dashHTML = "";
   for (let dayIdx=0; dayIdx<3; ++dayIdx) {
     dashHTML += `<div class="day-header">${dayLabels[dayIdx]}</div>`;
@@ -376,7 +317,6 @@ function renderDashboard(allDayBase, dayLabels, dailyBrief) {
   }
   document.getElementById('dashboard').innerHTML = dashHTML;
 }
-
 function renderBaseCard(card) {
   return `
     <div class="base-title mb-1">${card.name} (${card.iata})<span style="font-size:.93rem;font-weight:400;color:#6a788a;"> – ${card.city}</span></div>
@@ -397,34 +337,31 @@ function renderBaseCard(card) {
     <div class="hourly-breakdown mb-1">
       <span class="hourly-label">24h risk:</span>
       ${card.hourBlocks.map(h =>
-        `<span class="hour-cell ${h.hourClass}" title="${h.hour}:00 - ${h.txt.replace(/"/g,"&quot;")}"
-        onclick='showHourModal(${JSON.stringify(h).replace(/'/g,"&#39;")},${JSON.stringify(card.hub).replace(/'/g,"&#39;")},${JSON.stringify(card.label).replace(/'/g,"&#39;")})'>
+        `<span class="hour-cell ${h.hourClass}" title="${h.hour}:00 - ${h.txt.replace(/"/g,"&quot;")}${h.windTxt ? " | "+h.windTxt : ""}"
+        onclick='${h.risk==="nodata" ? "" : `showHourModal(${JSON.stringify(h).replace(/'/g,"&#39;")},${JSON.stringify(card.hub).replace(/'/g,"&#39;")},${JSON.stringify(card.label).replace(/'/g,"&#39;")})`}'>
           ${String(h.hour).padStart(2,0)}:00
         </span>`
       ).join("")}
     </div>
   `;
 }
-
 function showHourModal(block, base, dayLabel) {
   const modalLabel = document.getElementById('hourModalLabel');
   const modalBody = document.getElementById('hourModalBody');
   let riskStr = '';
-  if (block.isBrief) {
-    riskStr = `<span class="modal-risk-brief">(Brief Weather Event)</span>`;
-  } else if (block.riskClass === "high") {
-    riskStr = `<span class="risk-high">High IROPS risk</span>`;
-  } else if (block.riskClass === "partial") {
-    riskStr = `<span class="risk-partial">Partial risk</span>`;
-  } else {
-    riskStr = `<span class="risk-normal">No Weather Risk</span>`;
-  }
+  if (block.isBrief) riskStr = `<span class="modal-risk-brief">(Brief Weather Event)</span>`;
+  else if (block.riskClass === "high") riskStr = `<span class="risk-high">High IROPS risk</span>`;
+  else if (block.riskClass === "partial") riskStr = `<span class="risk-partial">Partial risk</span>`;
+  else if (block.riskClass === "nodata") riskStr = `<span class="hour-nodata">No data</span>`;
+  else if (block.riskClass === "wind") riskStr = `<span class="risk-wind">Wind risk</span>`;
+  else riskStr = `<span class="risk-normal">No Weather Risk</span>`;
   modalLabel.innerHTML = `${base.name} (${base.iata})`;
   modalBody.innerHTML = `
     <div><span style="font-weight:600;">Local Date:</span> ${block.ymd}</div>
     <div><span style="font-weight:600;">Hour:</span> ${String(block.hour).padStart(2, "0")}:00</div>
     <div style="margin-top:5px;">
       <span style="font-weight:600;">Risk:</span> ${riskStr}
+      ${block.windTxt ? `<div style="margin-top:4px;font-weight:600;" class="risk-wind">${block.windTxt}</div>` : ""}
     </div>
     <div style="margin-top:7px;">
       <span style="font-weight:600;">Short Forecast:</span> <br>
@@ -437,21 +374,17 @@ function showHourModal(block, base, dayLabel) {
     </div>
     ` : ""}
     <div style="margin-top:12px; color:#777; font-size:.92rem;">
-      <em>“No Weather Risk” means no thunderstorms or weather hazards in the forecast. It does <u>not</u> guarantee VFR or IFR flight conditions.</em>
+      <em>“No Weather Risk” means no thunderstorms or weather hazards in the forecast. Does <u>not</u> guarantee VFR or IFR flight conditions.</em>
     </div>
   `;
   let modal = new bootstrap.Modal(document.getElementById('hourModal'));
   modal.show();
 }
-
 function scheduleHourlyRefresh() {
   const now = new Date();
   const msToNextHour = (60 - now.getMinutes()) * 60 * 1000 - now.getSeconds() * 1000 - now.getMilliseconds();
-  setTimeout(function() {
-    window.location.reload();
-  }, msToNextHour + 1000);
+  setTimeout(function() { window.location.reload(); }, msToNextHour + 1000);
 }
-
 document.addEventListener('DOMContentLoaded', ()=>{
   loadDashboard();
   scheduleHourlyRefresh();
