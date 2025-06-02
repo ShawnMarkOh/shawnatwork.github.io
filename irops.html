@@ -3,18 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>IROP Prediction Dashboard</title>
+  <title>Weather IROP Prediction Dashboard</title>
   <link rel="icon" type="image/png" href="static/iropfavicon.png">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {background: #f3f6fa; color: #232323; min-height: 100vh;}
     #top-bar {background: #213f75; color: #fff; width: 100%; padding: 18px 0 14px 0; text-align: center; font-size: 2.1rem; letter-spacing: 2px; font-weight: 600; margin-bottom: 10px; box-shadow: 0 2px 7px rgba(33,63,117,0.10); position: sticky; top: 0; z-index: 100;}
     #briefing-summary {max-width: 1600px; margin: 18px auto 20px auto; padding: 20px 26px 16px 26px; background: #fffbe8; border-left: 8px solid #ffa600; border-radius: 13px; font-size: 1.21rem; font-weight: 500; box-shadow: 0 2px 12px rgba(255, 196, 64, .10); color: #724a00; width: 95vw;}
+    .groundstop-banner {background: #ff2323; color: #fff; font-weight: 700; font-size: 1.35rem; padding: 18px 0; text-align: center; border-radius: 0 0 14px 14px; box-shadow: 0 2px 12px rgba(230,0,0,0.15); margin-bottom: 12px; border-bottom: 3px solid #b20c0c;}
     .day-header {font-size: 1.5rem; color: #20375a; font-weight: 700; letter-spacing: 0.8px; margin: 32px 0 12px 18px; padding-top: 16px; padding-bottom: 3px; width: 100%; border-bottom: 2px solid #eaeaea;}
     .risk-high {color: #e53e3e; font-weight: bold; font-size: 1.06rem; margin-top: 7px; letter-spacing: 0.5px;}
     .risk-partial {color: #f59e42; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px;}
     .risk-normal {color: #38a169; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px;}
     .risk-wind {color: #2968c6; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px;}
+    .risk-wind-high {color: #db710a; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px;}
+    .risk-wind-partial {color: #6c35a3; font-weight: bold; font-size: 1.02rem; margin-top: 7px; letter-spacing: 0.5px;}
     .short-forecast {font-size: 1.04rem; margin-bottom: 5px; font-weight: 500;}
     .base-details {color: #374151; font-size: 0.98rem; margin-bottom: 6px;}
     .hourly-breakdown {margin-top: 10px; width: 100%; font-size: 0.97rem; display: flex; flex-wrap: wrap; align-items: center; gap: 2px 0;}
@@ -25,10 +28,14 @@
     .hour-other {background: #f2efb9; color: #847900; font-weight: 500; border-color: #c7c441;}
     .hour-nodata {background: #efefef; color: #9b9b9b; border-color: #ddd; cursor: default; font-style: italic;}
     .hour-wind {background: #bad7fa; color: #1560a8; font-weight: 600; border-color: #2968c6;}
+    .hour-wind-high {background: #ffe9b8; color: #db710a; font-weight: 700; border-color: #db710a;}
+    .hour-wind-partial {background: #e6d4f7; color: #6c35a3; font-weight: 600; border-color: #6c35a3;}
     .hour-current {z-index: 1 !important; animation: pulse-highlight 2s infinite cubic-bezier(.4,0,.6,1);}
     @keyframes pulse-highlight {0% { box-shadow: 0 0 0 0 rgba(38,120,230,0.32);} 50% { box-shadow: 0 0 0 8px rgba(38,120,230,0.09);} 100% { box-shadow: 0 0 0 0 rgba(38,120,230,0.32);}}
     .hour-current::after {content: ""; position: absolute; top: 0; left: 0; right: 0; bottom: 0; border-radius: 7px; background: rgba(190,210,245,0.41); pointer-events: none; mix-blend-mode: lighten;}
     .hourly-label {font-size: 0.96rem; color: #656565; font-weight: 600; min-width: 80px; margin-right: 7px; margin-bottom: 2px; display: inline-block;}
+    .runway-safe { color: #178a2c; font-weight: 600;}
+    .runway-unsafe { color: #c4171d; font-weight: 600;}
     .footer {margin: 36px auto 26px auto; max-width:1200px; text-align:center; color:#6a788a; font-size:1rem;}
     .modal-dialog { max-width: 400px; }
     @media (max-width: 992px) {#briefing-summary { font-size:1rem; } .day-header { font-size:1.16rem;}}
@@ -36,7 +43,8 @@
   </style>
 </head>
 <body>
-  <div id="top-bar">IROP Prediction Dashboard</div>
+  <div id="top-bar">Weather IROP Prediction Dashboard</div>
+  <div id="groundstop-banner"></div>
   <div id="briefing-summary">Loading crew briefing...</div>
   <div id="dashboard" class="container-fluid"></div>
   <div class="modal fade" id="hourModal" tabindex="-1" aria-labelledby="hourModalLabel" aria-hidden="true">
@@ -51,7 +59,7 @@
     </div>
   </div>
   <div class="footer">
-    Data: <a href="https://www.weather.gov/documentation/services-web-api" target="_blank" style="color:#2a58a5;">NWS API</a>.<br>
+    Data: <a href="https://www.weather.gov/documentation/services-web-api" target="_blank" style="color:#2a58a5;">NWS API</a> and <a href="https://nasstatus.faa.gov/" target="_blank" style="color:#c00;">FAA NAS Status</a>.<br>
     <strong>IROPS = Irregular Operations.</strong>
     All times/dates are local to each airport. "No Weather Risk" means no thunderstorms or weather hazards are forecast for that hour. Does <u>not</u> guarantee VFR or IFR flight conditions.
   </div>
@@ -59,16 +67,77 @@
 <script>
 const hubs = [
   { name: "Charlotte Douglas International Airport", iata: "CLT", city: "Charlotte, NC", lat: 35.214, lon: -80.943, tz: "America/New_York",
-    runways: [180, 360, 54, 234] }, // 18/36 (all), 05/23
+    runways: [
+      { label: "18L/36R", heading: 180, len: 10000 }, { label: "18C/36C", heading: 180, len: 10000 },
+      { label: "18R/36L", heading: 180, len: 9000 }, { label: "05/23", heading: 54, len: 7000 }
+    ] },
   { name: "Philadelphia International Airport", iata: "PHL", city: "Philadelphia, PA", lat: 39.8744, lon: -75.2424, tz: "America/New_York",
-    runways: [90, 270, 170, 350] }, // 09/27, 17/35
+    runways: [
+      { label: "09L/27R", heading: 90, len: 10006 }, { label: "09R/27L", heading: 90, len: 9500 },
+      { label: "17/35", heading: 170, len: 9500 }
+    ] },
   { name: "Ronald Reagan Washington National Airport", iata: "DCA", city: "Washington, DC", lat: 38.8521, lon: -77.0377, tz: "America/New_York",
-    runways: [10, 190, 150, 330, 40, 220] }, // 01/19, 15/33, 04/22
+    runways: [
+      { label: "01/19", heading: 10, len: 6900 }, { label: "15/33", heading: 150, len: 5200 }, { label: "04/22", heading: 40, len: 5000 }
+    ] },
   { name: "Dayton International Airport", iata: "DAY", city: "Dayton, OH", lat: 39.9024, lon: -84.2194, tz: "America/New_York",
-    runways: [60, 240, 180, 360] }, // 06/24, 18/36
+    runways: [
+      { label: "06L/24R", heading: 60, len: 10500 }, { label: "18/36", heading: 180, len: 7100 }
+    ] },
   { name: "Dallas/Fort Worth International Airport", iata: "DFW", city: "Dallas-Fort Worth, TX", lat: 32.8998, lon: -97.0403, tz: "America/Chicago",
-    runways: [175, 355, 185, 5, 130, 310, 135, 315] } // 17/35, 18/36, 13/31
+    runways: [
+      { label: "17C/35C", heading: 170, len: 13400 }, { label: "18L/36R", heading: 180, len: 13400 },
+      { label: "17R/35L", heading: 170, len: 13300 }, { label: "17L/35R", heading: 170, len: 8500 },
+      { label: "13R/31L", heading: 130, len: 9200 }, { label: "13L/31R", heading: 130, len: 8200 }
+    ] }
 ];
+
+let groundstopHubs = {};
+async function fetchGroundStops() {
+  try {
+    const res = await fetch('https://nasstatus.faa.gov/api/airport-status-information');
+    const text = await res.text();
+    const parser = new DOMParser();
+    const xml = parser.parseFromString(text, "text/xml");
+    const airports = xml.getElementsByTagName("airport");
+    let found = {};
+    for (let i=0; i<airports.length; i++) {
+      const iata = airports[i].getElementsByTagName("iata")[0]?.textContent?.trim();
+      const groundStops = airports[i].getElementsByTagName("groundstop");
+      if (iata && groundStops.length) {
+        for (let j=0; j<groundStops.length; j++) {
+          const gs = groundStops[j];
+          const type = gs.getElementsByTagName("type")[0]?.textContent?.trim();
+          const status = gs.getElementsByTagName("status")[0]?.textContent?.trim();
+          if (type && status && status.toLowerCase() === "active") {
+            found[iata] = (gs.getElementsByTagName("reason")[0]?.textContent?.trim() || "Ground Stop");
+          }
+        }
+      }
+    }
+    groundstopHubs = found;
+    showGroundStopBanner();
+  } catch(e) {
+    // Could not fetch ground stop data
+    groundstopHubs = {};
+    showGroundStopBanner();
+  }
+}
+function showGroundStopBanner() {
+  const id = "groundstop-banner";
+  const banner = document.getElementById(id);
+  const watched = hubs.map(h => h.iata);
+  const stopped = Object.keys(groundstopHubs).filter(iata => watched.includes(iata));
+  if (stopped.length > 0) {
+    banner.innerHTML = `⚠️ <b>IMMEDIATE IROPS:</b> <span style="font-weight:600;">${stopped.join(", ")}</span> ground stop active. <span style="font-size:1rem;">${stopped.map(iata=>groundstopHubs[iata]).join("; ")}</span>`;
+    banner.style.display = "";
+  } else {
+    banner.innerHTML = "";
+    banner.style.display = "none";
+  }
+}
+setInterval(fetchGroundStops, 2 * 60 * 1000);
+fetchGroundStops();
 
 const windDirs = {
   N:0, NNE:22.5, NE:45, ENE:67.5, E:90, ESE:112.5, SE:135, SSE:157.5,
@@ -86,18 +155,45 @@ function windToKts(val) {
   if (/mph/.test(val)) v *= 0.868976;
   return v;
 }
-function maxCrosswind(runways, windDir, windKts) {
+function windToMPH(val) {
+  if (!val) return 0;
+  let v = parseFloat(val);
+  if (/mph/.test(val)) return v;
+  return v * 1.15078;
+}
+function crosswindComponent(runwayHeading, windDir, windKts) {
   let windDeg = windDirToDeg(windDir);
   if (windDeg === null) return 0;
-  let max = 0;
-  for (let rh of runways) {
-    let angle = Math.abs(rh - windDeg);
-    if (angle > 180) angle = 360 - angle;
-    let rad = angle * Math.PI / 180;
-    let cross = Math.abs(windKts * Math.sin(rad));
-    if (cross > max) max = cross;
+  let angle = Math.abs(runwayHeading - windDeg);
+  if (angle > 180) angle = 360 - angle;
+  let rad = angle * Math.PI / 180;
+  let cross = Math.abs(windKts * Math.sin(rad));
+  return cross;
+}
+function getHourWindRisk(spd, cross) {
+  if (spd > 50) return {risk:"high", txt:"Wind > 50 kts", class:"hour-wind"};
+  if (spd > 35) return {risk:"wind-high", txt:"High wind ("+spd+" kts)", class:"hour-wind-high"};
+  if (spd > 0 && spd > 27) return {risk:"partial", txt:"Wind ("+spd+" kts)", class:"hour-wind"};
+  if (cross > 27) return {risk:"high", txt:"Crosswind "+cross+" kts", class:"hour-wind"};
+  if (cross > 20) return {risk:"wind-high", txt:"High crosswind ("+cross+" kts)", class:"hour-wind-high"};
+  if (cross > 15) return {risk:"wind-partial", txt:"Moderate crosswind ("+cross+" kts)", class:"hour-wind-partial"};
+  return null;
+}
+function analyzeRunwaySafety(runways, windDir, windKts) {
+  let runwayResults = [];
+  for (let rw of runways) {
+    if (rw.len < 6000) continue;
+    let cross = crosswindComponent(rw.heading, windDir, windKts);
+    let safe = (windKts <= 50) && (cross <= 27);
+    let warning = !safe && windKts > 50 ? "UNSAFE WIND" : (!safe ? "UNSAFE CROSSWIND" : "SAFE");
+    runwayResults.push({
+      label: rw.label,
+      cross: Math.round(cross),
+      safe: safe,
+      warning: warning
+    });
   }
-  return max;
+  return runwayResults;
 }
 function analyzeDayHours(hourlyPeriods, dateYMD, tz, highlightHour, baseLabel, ymdStr, runways) {
   let hourData = {};
@@ -111,21 +207,37 @@ function analyzeDayHours(hourlyPeriods, dateYMD, tz, highlightHour, baseLabel, y
   let rawRisks = [];
   for (let h = 0; h < 24; h++) {
     let period = hourData[h];
-    let riskObj, txt, shortF="", detailedF="", windRisk=null, windTxt="";
+    let riskObj, txt, shortF="", detailedF="", windRisk=null, windTxt="", spdKts=0, spdMPH=0, dir="";
+    let runwayStatus = [];
     if (period) {
       riskObj = getHourRisk((period.shortForecast || "") + " " + (period.detailedForecast || ""));
       txt = period.shortForecast || "";
       shortF = period.shortForecast || "";
       detailedF = period.detailedForecast || "";
-      let spd = 0, dir = "";
-      if (period.windSpeed && period.windSpeed !== "--") spd = windToKts(period.windSpeed.split(" ")[0]);
+      if (period.windSpeed && period.windSpeed !== "--") {
+        spdKts = windToKts(period.windSpeed);
+        spdMPH = windToMPH(period.windSpeed);
+      }
       if (period.windDirection) dir = period.windDirection;
-      let cross = maxCrosswind(runways, dir, spd);
-      windRisk = null;
-      if (spd > 50) { windRisk = "excessive"; windTxt = "Wind > 50 knots"; }
-      else if (cross > 27) { windRisk = "crosswind"; windTxt = `Crosswind ${cross.toFixed(0)} kts`; }
-      if (windRisk === "excessive") riskObj = { risk:"high", key:"Wind", hourClass:"hour-wind"};
-      else if (windRisk === "crosswind" && riskObj.risk!=="high") riskObj = { risk:"partial", key:"Wind", hourClass:"hour-wind"};
+      let crossMax = 0;
+      let windRiskObj = getHourWindRisk(spdKts, 0);
+      runwayStatus = analyzeRunwaySafety(runways, dir, spdKts);
+      let crossMaxStatus = Math.max(...runwayStatus.map(rw=>rw.cross));
+      let crossRiskObj = getHourWindRisk(spdKts, crossMaxStatus);
+      if (windRiskObj && (!riskObj || windRiskObj.risk==="high" || windRiskObj.risk==="wind-high" || windRiskObj.risk==="wind-partial")) {
+        windRisk = windRiskObj.risk; windTxt = windRiskObj.txt;
+        if (windRiskObj.risk==="high") riskObj = { risk:"high", key:"Wind", hourClass:"hour-wind" };
+        else if (windRiskObj.risk==="wind-high") riskObj = { risk:"partial", key:"Wind", hourClass:"hour-wind-high" };
+        else if (windRiskObj.risk==="wind-partial" && riskObj.risk!=="high") riskObj = { risk:"partial", key:"Wind", hourClass:"hour-wind-partial" };
+        else if (windRiskObj.risk==="partial" && riskObj.risk!=="high") riskObj = { risk:"partial", key:"Wind", hourClass:"hour-wind" };
+      }
+      if (crossRiskObj && (!riskObj || crossRiskObj.risk==="high" || crossRiskObj.risk==="wind-high" || crossRiskObj.risk==="wind-partial")) {
+        windRisk = crossRiskObj.risk; windTxt = crossRiskObj.txt;
+        if (crossRiskObj.risk==="high") riskObj = { risk:"high", key:"Wind", hourClass:"hour-wind" };
+        else if (crossRiskObj.risk==="wind-high") riskObj = { risk:"partial", key:"Wind", hourClass:"hour-wind-high" };
+        else if (crossRiskObj.risk==="wind-partial" && riskObj.risk!=="high") riskObj = { risk:"partial", key:"Wind", hourClass:"hour-wind-partial" };
+        else if (crossRiskObj.risk==="partial" && riskObj.risk!=="high") riskObj = { risk:"partial", key:"Wind", hourClass:"hour-wind" };
+      }
     } else {
       riskObj = { risk: "nodata", key: null, hourClass: "hour-nodata" };
       txt = "No data"; shortF = ""; detailedF = "";
@@ -144,6 +256,10 @@ function analyzeDayHours(hourlyPeriods, dateYMD, tz, highlightHour, baseLabel, y
       riskClass: riskObj.risk,
       windRisk,
       windTxt,
+      windDir: dir,
+      windKts: spdKts,
+      windMPH: spdMPH,
+      runways: runwayStatus,
       isBrief: false
     });
   }
@@ -337,7 +453,7 @@ function renderBaseCard(card) {
     <div class="hourly-breakdown mb-1">
       <span class="hourly-label">24h risk:</span>
       ${card.hourBlocks.map(h =>
-        `<span class="hour-cell ${h.hourClass}" title="${h.hour}:00 - ${h.txt.replace(/"/g,"&quot;")}${h.windTxt ? " | "+h.windTxt : ""}"
+        `<span class="hour-cell ${h.hourClass}" title="${h.hour}:00 - ${h.txt.replace(/"/g,"&quot;")}${h.windTxt ? " | "+h.windTxt : ""}${h.windKts>0?` | Wind: ${h.windKts.toFixed(0)}kts (${h.windMPH.toFixed(0)}mph)`:""}"
         onclick='${h.risk==="nodata" ? "" : `showHourModal(${JSON.stringify(h).replace(/'/g,"&#39;")},${JSON.stringify(card.hub).replace(/'/g,"&#39;")},${JSON.stringify(card.label).replace(/'/g,"&#39;")})`}'>
           ${String(h.hour).padStart(2,0)}:00
         </span>`
@@ -352,9 +468,19 @@ function showHourModal(block, base, dayLabel) {
   if (block.isBrief) riskStr = `<span class="modal-risk-brief">(Brief Weather Event)</span>`;
   else if (block.riskClass === "high") riskStr = `<span class="risk-high">High IROPS risk</span>`;
   else if (block.riskClass === "partial") riskStr = `<span class="risk-partial">Partial risk</span>`;
+  else if (block.riskClass === "wind-high") riskStr = `<span class="risk-wind-high">High wind warning</span>`;
+  else if (block.riskClass === "wind-partial") riskStr = `<span class="risk-wind-partial">Moderate crosswind</span>`;
   else if (block.riskClass === "nodata") riskStr = `<span class="hour-nodata">No data</span>`;
   else if (block.riskClass === "wind") riskStr = `<span class="risk-wind">Wind risk</span>`;
   else riskStr = `<span class="risk-normal">No Weather Risk</span>`;
+  let runwayStatusHTML = "";
+  if (block.runways && block.runways.length > 0) {
+    runwayStatusHTML = `<div style="margin-top:9px;"><b>Runway Status:</b><br>`;
+    block.runways.forEach(rw => {
+      runwayStatusHTML += `<span class="${rw.safe ? "runway-safe" : "runway-unsafe"}">Runway ${rw.label.split("/")[0]} ${rw.safe ? "SAFE" : rw.warning}</span> `;
+    });
+    runwayStatusHTML += `</div>`;
+  }
   modalLabel.innerHTML = `${base.name} (${base.iata})`;
   modalBody.innerHTML = `
     <div><span style="font-weight:600;">Local Date:</span> ${block.ymd}</div>
@@ -362,6 +488,7 @@ function showHourModal(block, base, dayLabel) {
     <div style="margin-top:5px;">
       <span style="font-weight:600;">Risk:</span> ${riskStr}
       ${block.windTxt ? `<div style="margin-top:4px;font-weight:600;" class="risk-wind">${block.windTxt}</div>` : ""}
+      ${(block.windKts>0)?`<div style="margin-top:4px;">Wind: <b>${block.windKts.toFixed(0)} kts</b> (${block.windMPH.toFixed(0)} mph)${block.windDir?` from ${block.windDir}`:""}</div>`:""}
     </div>
     <div style="margin-top:7px;">
       <span style="font-weight:600;">Short Forecast:</span> <br>
@@ -373,6 +500,7 @@ function showHourModal(block, base, dayLabel) {
       <span>${block.detailedF}</span>
     </div>
     ` : ""}
+    ${runwayStatusHTML}
     <div style="margin-top:12px; color:#777; font-size:.92rem;">
       <em>“No Weather Risk” means no thunderstorms or weather hazards in the forecast. Does <u>not</u> guarantee VFR or IFR flight conditions.</em>
     </div>
