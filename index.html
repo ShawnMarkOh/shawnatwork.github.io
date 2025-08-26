@@ -55,14 +55,14 @@
                         <h1>
                             <div class="greeting"></div>
                             <h1 class="text-white mb-4">
-                                Shawn Currently Works EVENING/NIGHT SHIFT.<br>
+                                Shawn Currently Works DAY SHIFT.<br>
                                 <br>
                                 <b>His hours are:</b><br>
                                 <span style="font-size:1.2em;">
-                                    Friday: 3:00 PM – 1:00 AM (Sat)<br>
-                                    Saturday: 3:00 PM – 1:00 AM (Sun)<br>
-                                    Sunday: 3:00 PM – 1:00 AM (Mon)<br>
-                                    Monday: 4:00 PM – 2:00 AM (Tue)
+                                    Friday: 05:00 – 15:00<br>
+                                    Saturday: 05:00 – 15:00<br>
+                                    Sunday: 05:00 – 15:00<br>
+                                    Monday: 06:00 – 16:00
                                 </span>
                                 <br>
                                 He works on Friday, Saturday, Sunday, and Monday.
@@ -95,13 +95,13 @@
                             </section>
                             <script>
                                 // Get Shawn's shift for a given day (0=Sun ... 6=Sat)
-                                // Returns: {start: hour, end: hour, endDay: dayOffset, valid: boolean}
+                                // Returns: {start: hour, end: hour, valid: boolean}
                                 function getShawnShift(day) {
                                     // Friday (5), Saturday (6), Sunday (0), Monday (1)
                                     if (day === 5 || day === 6 || day === 0) {
-                                        return { start: 15, end: 1, endDay: (day === 6) ? 0 : day + 1, valid: true }; // 15:00-01:00
+                                        return { start: 5, end: 15, valid: true }; // 05:00-15:00
                                     } else if (day === 1) {
-                                        return { start: 16, end: 2, endDay: 2, valid: true }; // 16:00-02:00
+                                        return { start: 6, end: 16, valid: true }; // 06:00-16:00
                                     } else {
                                         return { valid: false };
                                     }
@@ -117,7 +117,7 @@
                                     if (!shift.valid) return false;
 
                                     if (shift.end > shift.start) {
-                                        // Same-day shift (never used in this schedule)
+                                        // Same-day shift
                                         return (hour > shift.start && hour < shift.end)
                                             || (hour === shift.start && minute >= 0)
                                             || (hour === shift.end && minute === 0);
@@ -136,10 +136,10 @@
                                     // List of workdays in order starting from today
                                     // [dayOfWeek, startHour]
                                     var workdays = [
-                                        { day: 5, start: 15 }, // Friday 15:00
-                                        { day: 6, start: 15 }, // Saturday 15:00
-                                        { day: 0, start: 15 }, // Sunday 15:00
-                                        { day: 1, start: 16 }  // Monday 16:00
+                                        { day: 5, start: 5 }, // Friday 05:00
+                                        { day: 6, start: 5 }, // Saturday 05:00
+                                        { day: 0, start: 5 }, // Sunday 05:00
+                                        { day: 1, start: 6 }  // Monday 06:00
                                     ];
                                     // Get current time in ms since midnight
                                     var nowDay = now.getDay();
@@ -184,9 +184,9 @@
                                     var statusText = "";
                                     var countdownText = "";
 
-                                    // Sleep logic: Shawn sleeps from 4:00 to 14:00 on workdays
-                                    var sleepStart = 4;
-                                    var sleepEnd = 14;
+                                    // Sleep logic: Shawn sleeps from 21:00 to 04:00 on workdays
+                                    var sleepStart = 21;
+                                    var sleepEnd = 4;
 
                                     // Figure out if he's working, sleeping, or neither
                                     if (isDuringShift(now)) {
@@ -197,8 +197,8 @@
                                         var day = now.getDay();
                                         // Is it a work day? (Fri/Sat/Sun/Mon)
                                         var shift = getShawnShift(day);
-                                        // Is sleep time? (between 04:00 and 14:00 EST)
-                                        var isSleepHour = (hour >= sleepStart && hour < sleepEnd);
+                                        // Is sleep time? (between 21:00 and 04:00 EST)
+                                        var isSleepHour = (hour >= sleepStart || hour < sleepEnd);
                                         if (isSleepHour) {
                                             statusText = "SHAWN SHOULD BE ASLEEP";
                                         } else {
@@ -244,7 +244,7 @@
                                 setDayOfWeek();
                             </script>
                             <h3p class="text-white mb-4">
-                                Shawn is typically <b>asleep between 4:00 AM and 2:00 PM EST</b> on his work days.<br>
+                                Shawn is typically <b>asleep between 9:00 PM and 4:00 AM EST</b> on his work days.<br>
                                 On other days, he tries to maintain a similar sleep schedule.<br>
                                 This will be his schedule for the months of May, June, and July.<br>
                             </h3p>
