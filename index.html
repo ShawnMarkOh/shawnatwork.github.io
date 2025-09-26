@@ -58,15 +58,15 @@
                                 Shawn Currently Works DAY SHIFT.<br>
 								
 								<br>
-								He works on Friday, Saturday, Sunday, and Monday.
+								He works on Tuesday, Wednesday, Thursday, and Friday.
                                 <br>
 								<br>
                                 <b>His hours are:</b><br>
                                 <span style="font-size:1.2em;">
-                                    Friday: 05:00 – 15:00<br>
-                                    Saturday: 05:00 – 15:00<br>
-                                    Sunday: 05:00 – 15:00<br>
-                                    Monday: 06:00 – 16:00
+                                    Tuesday: 07:00 – 17:00<br>
+                                    Wednesday: 07:00 – 17:00<br>
+                                    Thursday: 07:00 – 17:00<br>
+                                    Friday: 07:00 – 17:00
                                 </span>
                                 <br>
                                 
@@ -101,11 +101,9 @@
                                 // Get Shawn's shift for a given day (0=Sun ... 6=Sat)
                                 // Returns: {start: hour, end: hour, valid: boolean}
                                 function getShawnShift(day) {
-                                    // Friday (5), Saturday (6), Sunday (0), Monday (1)
-                                    if (day === 5 || day === 6 || day === 0) {
-                                        return { start: 5, end: 15, valid: true }; // 05:00-15:00
-                                    } else if (day === 1) {
-                                        return { start: 6, end: 16, valid: true }; // 06:00-16:00
+                                    // Tuesday (2), Wednesday (3), Thursday (4), Friday (5)
+                                    if (day >= 2 && day <= 5) {
+                                        return { start: 7, end: 17, valid: true }; // 07:00-17:00
                                     } else {
                                         return { valid: false };
                                     }
@@ -140,10 +138,10 @@
                                     // List of workdays in order starting from today
                                     // [dayOfWeek, startHour]
                                     var workdays = [
-                                        { day: 5, start: 5 }, // Friday 05:00
-                                        { day: 6, start: 5 }, // Saturday 05:00
-                                        { day: 0, start: 5 }, // Sunday 05:00
-                                        { day: 1, start: 6 }  // Monday 06:00
+                                        { day: 2, start: 7 }, // Tuesday 07:00
+                                        { day: 3, start: 7 }, // Wednesday 07:00
+                                        { day: 4, start: 7 }, // Thursday 07:00
+                                        { day: 5, start: 7 }  // Friday 07:00
                                     ];
                                     // Get current time in ms since midnight
                                     var nowDay = now.getDay();
@@ -188,9 +186,9 @@
                                     var statusText = "";
                                     var countdownText = "";
 
-                                    // Sleep logic: Shawn sleeps from 21:00 to 04:00 on workdays
-                                    var sleepStart = 21;
-                                    var sleepEnd = 4;
+                                    // Sleep logic: Shawn sleeps from 22:00 to 05:00
+                                    var sleepStart = 22; // 10:00 PM
+                                    var sleepEnd = 5;    // 5:00 AM
 
                                     // Figure out if he's working, sleeping, or neither
                                     if (isDuringShift(now)) {
@@ -199,9 +197,9 @@
                                     } else {
                                         var hour = now.getHours();
                                         var day = now.getDay();
-                                        // Is it a work day? (Fri/Sat/Sun/Mon)
+                                        // Is it a work day? (Tues/Weds/Thurs/Fri)
                                         var shift = getShawnShift(day);
-                                        // Is sleep time? (between 21:00 and 04:00 EST)
+                                        // Is sleep time? (between 22:00 and 05:00 EST)
                                         var isSleepHour = (hour >= sleepStart || hour < sleepEnd);
                                         if (isSleepHour) {
                                             statusText = "SHAWN SHOULD BE ASLEEP";
@@ -248,9 +246,9 @@
                                 setDayOfWeek();
                             </script>
                             <h3p class="text-white mb-4">
-                                Shawn is typically <b>asleep between 9:00 PM and 4:00 AM EST</b> on his work days.<br>
+                                Shawn is typically <b>asleep between 10:00 PM and 5:00 AM EST</b> on his work days.<br>
                                 On other days, he tries to maintain a similar sleep schedule.<br>
-                                This will be his schedule for the months of August, September, and October.<br>
+                                This will be his schedule for the foreseeable future.<br>
                             </h3p>
                     </div>
                 </div>
